@@ -1,3 +1,5 @@
+-- login_usuario (FUNCTION)
+
 CREATE OR REPLACE FUNCTION login_usuario(p_correo TEXT, p_contrasena TEXT)
 RETURNS INTEGER AS $$
 DECLARE
@@ -11,6 +13,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- registrar_usuario (PROCEDURE)
 
 CREATE OR REPLACE PROCEDURE registrar_usuario(
     p_nombre TEXT,
@@ -35,6 +38,8 @@ BEGIN
 END;
 $$;
 
+-- actualizar_password (PROCEDURE)
+
 CREATE OR REPLACE PROCEDURE actualizar_password(
     p_correo TEXT,
     p_nueva_contrasena TEXT
@@ -47,6 +52,8 @@ BEGIN
     WHERE correo = p_correo;
 END;
 $$;
+
+-- actualizar_ultimo_acceso (PROCEDURE)
 
 CREATE OR REPLACE PROCEDURE actualizar_ultimo_acceso(p_usuario_id INTEGER)
 LANGUAGE plpgsql
