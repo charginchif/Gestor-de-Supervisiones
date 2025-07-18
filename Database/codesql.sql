@@ -1,6 +1,6 @@
 -- login_usuario (FUNCTION)
 
-CREATE OR REPLACE FUNCTION login_usuario(p_correo TEXT, p_contrasena TEXT)
+CREATE FUNCTION login_usuario(p_correo TEXT, p_contrasena TEXT)
 RETURNS INTEGER AS $$
 DECLARE
     v_usuario_id INTEGER;
@@ -15,7 +15,7 @@ $$ LANGUAGE plpgsql;
 
 -- registrar_usuario (PROCEDURE)
 
-CREATE OR REPLACE PROCEDURE registrar_usuario(
+CREATE PROCEDURE registrar_usuario(
     p_nombre TEXT,
     p_apellido_paterno TEXT,
     p_apellido_materno TEXT,
@@ -40,7 +40,7 @@ $$;
 
 -- actualizar_password (PROCEDURE)
 
-CREATE OR REPLACE PROCEDURE actualizar_password(
+CREATE PROCEDURE actualizar_password(
     p_correo TEXT,
     p_nueva_contrasena TEXT
 )
@@ -53,9 +53,9 @@ BEGIN
 END;
 $$;
 
--- actualizar_ultimo_acceso (PROCEDURE)
+-- actualizar_ultimo_acceso (-PROCEDURE-) (Trigger)
 
-CREATE OR REPLACE PROCEDURE actualizar_ultimo_acceso(p_usuario_id INTEGER)
+CREATE PROCEDURE actualizar_ultimo_acceso(p_usuario_id INTEGER)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -64,3 +64,77 @@ BEGIN
     WHERE id = p_usuario_id;
 END;
 $$;
+
+-- GROUP B - Gestion de Usuarios
+
+-- inscribir alumno (PROCEDURE)
+
+CREATE PROCEDURE inscribir_alumno(
+    p_id_alumno INTEGER,
+    p_id_grupo INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO InscripcionGrupo(id_grupo, id_alumno)
+    VALUES (p_id_grupo, p_id_alumno);
+END;
+$$;
+
+-- desinscribir_alumno (PROCEDURE)
+
+CREATE PROCEDURE desinscribir_alumno(
+    p_id_alumno INTEGER,
+    p_id_grupo INTEGER
+)
+LANGUAGE plpgsqd 
+AS $$
+BEGIN
+    DELETE FROM InscripcionGrupo
+    WHERE id_grupo = p_id_grupo AND id_alumno = p_id_alumno;
+END;
+$$;
+
+-- asignar_docente (PROCEDURE)
+
+CREATE PROCEDURE asignar_docente(
+    p_id_docente INTEGER,
+    p_id_materia INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO DocenteMateria(id_docente, id_materia)
+    VALUES (p_id_docente, p_id_materia)
+    ON CONFLICT DO NOTHING; 
+END;
+$$;
+
+-- eliminar_docente (PROCEDURE)
+CREATE PROCEDURE eliminar_docente(
+    p_id_docente INTEGER,
+    p_id_materia INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM DocenteMateria
+    WHERE id_docente = p_id_docente AND id_materia = p_id_materia;
+END;
+$$;
+
+-- obtener_materias_docente (FUNCTION)
+
+CREATE FUNCTION obtener_materias_docente(p_id_docente INTEGER)
+RETURNS TABLE(id_materia INTEGER, nombre TEXT, nivel tipo_nivel)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT m.id_materia, m.nombre, m.nivel
+    FROM DocenteMateria dm
+    JOIN Materia m ON m.id_materia = dm.id_materia
+    WHERE dm.id_docente = p_id_docente;
+END;
+$$ LANGUAGE plpgsql;
+
+-- obtener_grupos_alumno (FUNCTION)
