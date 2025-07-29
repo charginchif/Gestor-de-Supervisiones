@@ -349,3 +349,68 @@ $$ LANGUAGE plpgsql;
 
 -- Grupo E Seguridad y gestion de Accesos
 
+-- verificar_credenciales (FUNCTION)
+
+CREATE OR REPLACE FUNCTION verificar_credenciales(
+    p_usuario TEXT,
+    p_contrasena TEXT
+) RETURNS BOOLEAN
+AS $$
+DECLARE
+    v_contrasena_encriptada TEXT;
+BEGIN
+    SELECT contrasena INTO v_contrasena_encriptada
+    FROM Usuario
+    WHERE usuario = p_usuario;
+
+    RETURN v_contrasena_encriptada IS NOT NULL 
+           AND v_contrasena_encriptada = crypt(p_contrasena, v_contrasena_encriptada);
+END;
+$$ LANGUAGE plpgsql;
+
+-- asignar_rol_usuario (PROCEDURE)
+
+CREATE PROCEDURE asignar_rol_usuario(
+    p_id_usuario INTEGER,
+    p_nuevo_rol tipo_rol
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Usuario
+    SET rol = p_nuevo_rol
+    WHERE id_usuario = p_id_usuario;
+END;
+$$;
+
+-- registrar_actividad_usuario (PROCEDURE)
+
+CREATE OR REPLACE PROCEDURE registrar_actividad_usuario(
+    p_id_usuario INTEGER,
+    p_actividad TEXT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO LogUsuario(id_usuario, actividad)
+    VALUES (p_id_usuario, p_actividad);
+END;
+$$;
+
+-- obtener_historial_actividad (FUNCTION)
+
+CREATE OR REPLACE FUNCTION obtener_historial_actividad(p_id_usuario INTEGER)
+RETURNS TABLE (
+    actividad TEXT,
+    fecha_hora TIMESTAMP
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT actividad, fecha_hora
+    FROM LogUsuario
+    WHERE id_usuario = p_id_usuario
+    ORDER BY fecha_hora DESC;
+END;
+$$ LANGUAGE plpgsql;
+
