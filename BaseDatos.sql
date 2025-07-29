@@ -217,6 +217,14 @@ CREATE TABLE "CriteriosEvaluacion" (
   "rubro" rubro NOT NULL
 );
 
+CREATE TABLE login_usuario (
+  id_log SERIAL PRIMARY KEY,
+  id_usuario INTEGER  REFERENCES Usuario(id_usuario),
+  actividad TEXT NOT NULL,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
+
 
 -- Relaciones (FOREIGN KEYS)
 

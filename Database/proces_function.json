@@ -168,6 +168,11 @@
           "nombre": "cambiar_estado_agenda",
           "tipo": "PROCEDURE",
           "descripcion": "Actualiza el estado o prioridad de una agenda de supervisión."
+        },
+        {
+          "nombre": "registro de actividad",
+          "tipo": "PROCEDURE",
+          "descripcion": "Registra la actividad del usuario en el sistema."
         }
       ]
     }
