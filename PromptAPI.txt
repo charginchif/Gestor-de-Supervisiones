@@ -1,0 +1,209 @@
+Rol: Eres un desarrollador experto de backend en PHP, especializado en crear APIs RESTful robustas y seguras.
+
+Tarea: Crea el código completo para una API REST en PHP para una aplicación de gestión pastoral. La API debe manejar usuarios, actividades, notificaciones y solicitudes de creación de actividades.
+
+Requisitos Técnicos:
+
+Versión de PHP: Utiliza PHP 8.1 o una versión más reciente.
+
+Arquitectura: Sigue los principios REST. La API debe ser stateless.
+
+Autenticación: Implementa JWT (JSON Web Tokens) para la autenticación. El endpoint /api/login debe devolver un token, que se enviará en el encabezado Authorization: Bearer <token> para proteger las rutas.
+
+Enrutador: Utiliza una librería de enrutamiento ligera como bramus/router. No uses un framework completo como Laravel o Symfony.
+
+
+
+Respuestas: Todas las respuestas de la API deben estar en formato JSON. Utiliza los códigos de estado HTTP apropiados (200, 201, 400, 401, 403, 404).
+
+Estructura del Proyecto: Organiza el código de forma lógica, separando controladores, modelos y middleware en sus propias carpetas.
+
+Usa estos modelos para definir el esquema de la base de datos y la lógica de la API.
+
+1. Usuario (User)
+
+id (string, UUID): Clave primaria.
+
+email (string, único): Correo electrónico para el login.
+
+password (string): Contraseña hasheada (usa password_hash).
+
+role (enum: 'admin', 'agent'): Nivel de permisos.
+
+createdAt (datetime): Fecha de creación.
+
+updatedAt (datetime): Fecha de última actualización.
+
+2. Actividad (Activity)
+
+id (string, UUID): Clave primaria.
+
+title (string): Título del evento.
+
+description (text): Descripción detallada.
+
+date (date): Fecha del evento (YYYY-MM-DD).
+
+time (time): Hora del evento (HH:MM).
+
+location (string): Ubicación.
+
+createdBy (string, UUID, foreign key -> User.id): ID del administrador que la creó.
+
+createdAt (datetime): Fecha de creación.
+
+updatedAt (datetime): Fecha de última actualización.
+
+3. Notificación (Notification)
+
+id (string, UUID): Clave primaria.
+
+title (string): Título de la notificación.
+
+message (text): Contenido del mensaje.
+
+scheduledAt (datetime): Fecha y hora programada para el envío.
+
+status (enum: 'scheduled', 'sent', 'failed'): Estado del envío. Por defecto: 'scheduled'.
+
+createdBy (string, UUID, foreign key -> User.id): ID del administrador que la programó.
+
+createdAt (datetime): Fecha de creación.
+
+4. Solicitud de Actividad (ActivityRequest)
+
+id (string, UUID): Clave primaria.
+
+title (string): Título propuesto.
+
+description (text): Descripción propuesta.
+
+date (date): Fecha propuesta.
+
+time (time): Hora propuesta.
+
+location (string): Ubicación propuesta.
+
+status (enum: 'pending', 'approved', 'rejected'): Estado de la solicitud. Por defecto: 'pending'.
+
+requestedBy (string, UUID, foreign key -> User.id): ID del agente que la solicita.
+
+reviewedBy (string, UUID, foreign key -> User.id, nullable): ID del admin que la revisó.
+
+createdAt (datetime): Fecha de la solicitud.
+
+reviewedAt (datetime, nullable): Fecha de la revisión.
+
+Implementa los siguientes endpoints con sus respectivos niveles de acceso:
+
+Autenticación (Público)
+
+POST /api/login: Recibe email y password. Devuelve un JWT si las credenciales son correctas.
+
+Actividades (Público)
+
+GET /api/activities: Devuelve un listado de todas las actividades.
+
+GET /api/activities/{id}: Devuelve una actividad específica por su ID.
+
+Actividades (Requiere rol de Administrador)
+
+POST /api/activities: Crea una nueva actividad.
+
+PUT /api/activities/{id}: Actualiza una actividad existente.
+
+DELETE /api/activities/{id}: Elimina una actividad.
+
+Notificaciones (Requiere rol de Administrador)
+
+GET /api/notifications: Devuelve un listado de todas las notificaciones.
+
+POST /api/notifications: Crea y programa una nueva notificación.
+
+DELETE /api/notifications/{id}: Elimina una notificación.
+
+Solicitudes de Actividades
+
+POST /api/activity-requests: Un agente de pastoral envía una nueva propuesta de evento. (Requiere rol de Agente).
+
+GET /api/activity-requests: Devuelve todas las solicitudes de actividades. (Requiere rol de Administrador).
+
+PUT /api/activity-requests/{id}: Un administrador aprueba o rechaza una solicitud. El cuerpo de la petición debe incluir un campo status ('approved' o 'rejected'). (Requiere rol de Administrador).
+
+Resultado Final Esperado:
+
+Proporciona el código PHP completo y funcional, incluyendo el archivo composer.json con las dependencias (bramus/router, firebase/php-jwt, etc.), la configuración del enrutador, los controladores, los modelos, y el middleware para la autenticación y autorización por roles.
+
+
+¿Para Qué Sirve esta API?
+La API que he desarrollado es el backend (la lógica y base de datos) para una aplicación de gestión pastoral. Este tipo de aplicación está diseñada para ser utilizada por una organización religiosa, como una parroquia, diócesis o un grupo eclesiástico, con el fin de organizar y administrar sus operaciones y comunicación con la comunidad.
+
+El objetivo principal es centralizar la gestión de eventos, la comunicación interna y el proceso de incorporación de nuevos miembros activos (agentes de pastoral). En lugar de usar métodos manuales como hojas de cálculo, grupos de chat desorganizados o cadenas de correos, la aplicación (que consumiría esta API) ofrecería una plataforma estructurada, segura y eficiente.
+
+Actores del Sistema
+En el ecosistema de la aplicación, podemos identificar tres roles o "actores" clave, cada uno con diferentes niveles de acceso y capacidades:
+
+Administrador (Admin):
+
+Quién es: Es el usuario con el máximo nivel de control. Generalmente sería el párroco, un líder de pastoral o personal administrativo de la iglesia.
+
+Qué puede hacer:
+
+Crear, ver, actualizar y eliminar Actividades directamente.
+
+Crear y eliminar Notificaciones para la comunidad.
+
+Revisar, aprobar o rechazar las Solicitudes de Actividad enviadas por los agentes.
+
+Revisar, aprobar o rechazar las Solicitudes para ser Agente enviadas por el público.
+
+Tiene una vista completa de toda la información del sistema.
+
+Agente de Pastoral (Agent):
+
+Quién es: Es un miembro activo y verificado de la comunidad (un catequista, un coordinador de jóvenes, etc.) que colabora en la organización de eventos.
+
+Qué puede hacer:
+
+Iniciar sesión en el sistema.
+
+Proponer nuevos eventos enviando una Solicitud de Actividad. No puede crear actividades directamente, necesita la aprobación de un administrador.
+
+Ver la lista de actividades públicas.
+
+Invitado / Usuario Público (Guest):
+
+Quién es: Cualquier persona de la comunidad o del público general que accede a la aplicación sin iniciar sesión.
+
+Qué puede hacer:
+
+Ver la lista de Actividades públicas (por ejemplo, misas, kermeses, eventos abiertos).
+
+Registrarse para crear una cuenta de usuario (signup).
+
+Enviar una Solicitud para ser Agente si desea involucrarse más activamente.
+
+Entidades Principales
+Las "entidades" son los bloques de información fundamentales que el sistema gestiona. Corresponden a las tablas en la base de datos y a los modelos en el código.
+
+Usuario (User):
+
+Descripción: Representa una cuenta en el sistema. Almacena la información de inicio de sesión (email, password), datos de contacto (name, phone) y, lo más importante, el role (admin o agent) que define sus permisos.
+
+Actividad (Activity):
+
+Descripción: Es un evento oficial y aprobado por la administración. Contiene todos los detalles necesarios para que la comunidad asista: título, descripción, fecha, hora y lugar.
+
+Notificación (Notification):
+
+Descripción: Es un mensaje o comunicado que un administrador crea para ser enviado. La API almacena el contenido y la fecha programada para el envío.
+
+Solicitud de Actividad (ActivityRequest):
+
+Descripción: Funciona como un "borrador" de actividad. Cuando un Agente quiere organizar un evento, llena esta solicitud. Un Admin debe revisarla y cambiar su estado a approved (aprobada) o rejected (rechazada). Si se aprueba, se convierte en una Actividad oficial.
+
+Solicitud de Agente (AgentApplication):
+
+Descripción: Es el formulario que llena un Invitado para postularse como agente de pastoral. Contiene los datos del candidato y su motivation. Al igual que la solicitud de actividad, debe ser revisada por un Admin para ser aprobada o rechazada.
+
+En resumen, la API crea un flujo de trabajo digital donde los Administradores tienen el control total, los Agentes colaboran proponiendo iniciativas y los Invitados pueden informarse, registrarse y participar.
