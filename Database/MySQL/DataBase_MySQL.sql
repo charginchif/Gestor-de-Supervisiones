@@ -210,6 +210,14 @@ CREATE TABLE supervision_docente (
   CONSTRAINT fk_sd_agenda  FOREIGN KEY (id_agenda)  REFERENCES agenda_supervisor(id_agenda)
 ) ENGINE=InnoDB;
 
+CREATE TABLE carrera_materia (
+  id_carrera INT NOT NULL,
+  id_materia INT NOT NULL,
+  PRIMARY KEY (id_materia, id_carrera),
+  CONSTRAINT fk_carrmateria_carrera FOREIGN KEY (id_carrera) REFERENCES carrera(id_carrera),
+  CONSTRAINT fk_carrmateria_materia FOREIGN KEY (id_materia) REFERENCES materia(id_materia)
+);
+
 CREATE TABLE criterios_supervision (
   id_supcriterio INT AUTO_INCREMENT PRIMARY KEY,
   descripcion TEXT NOT NULL,
