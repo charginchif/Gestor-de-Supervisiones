@@ -1,29 +1,45 @@
--- login_usuario (FUNCTION)
+-- SQLINES DEMO *** NCTION)
 
-CREATE FUNCTION login_usuario(p_correo TEXT, p_contrasena TEXT)
-RETURNS INTEGER AS $$
-DECLARE
-    v_usuario_id INTEGER;
-BEGIN
+-- SQLINES FOR EVALUATION USE ONLY (14 DAYS)
+DELIMITER //
+
+CREATE FUNCTION login_usuario(p_correo LONGTEXT, p_contrasena LONGTEXT)
+RETURNS INTEGER
+DETERMINISTIC
+ BEGIN
+    DECLARE v_usuario_id INTEGER;
+ 
     SELECT id INTO v_usuario_id
     FROM Usuario
     WHERE correo = p_correo AND contrasena = crypt(p_contrasena, contrasena);
 
     RETURN v_usuario_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+//
 
--- registrar_usuario (PROCEDURE)
+DELIMITER ;
+
+
+
+-- SQLINES DEMO ***  (PROCEDURE)
+
+DELIMITER //
 
 CREATE PROCEDURE registrar_usuario(
-    p_nombre TEXT,
-    p_apellido_paterno TEXT,
-    p_apellido_materno TEXT,
-    p_correo TEXT,
-    p_contrasena TEXT,
+    p_nombre LONGTEXT,
+    p_apellido_paterno LONGTEXT,
+    p_apellido_materno LONGTEXT,
+    p_correo LONGTEXT,
+    p_contrasena LONGTEXT,
     p_rol tipo_rol
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     INSERT INTO Usuario(nombre, apellido_paterno, apellido_materno, correo, contrasena, rol)
@@ -38,13 +54,20 @@ BEGIN
 END;
 $$;
 
--- actualizar_password (PROCEDURE)
+-- SQLINES DEMO *** rd (PROCEDURE)
+
+DELIMITER //
 
 CREATE PROCEDURE actualizar_password(
-    p_correo TEXT,
-    p_nueva_contrasena TEXT
+    p_correo LONGTEXT,
+    p_nueva_contrasena LONGTEXT
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     UPDATE Usuario
@@ -53,10 +76,17 @@ BEGIN
 END;
 $$;
 
--- actualizar_ultimo_acceso (-PROCEDURE-) (Trigger)
+-- SQLINES DEMO *** _acceso (-PROCEDURE-) (Trigger)
+
+DELIMITER //
 
 CREATE PROCEDURE actualizar_ultimo_acceso(p_usuario_id INTEGER)
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     UPDATE Usuario
@@ -65,15 +95,22 @@ BEGIN
 END;
 $$;
 
--- GROUP B - Gestion de Usuarios
+-- SQLINES DEMO ***  de Usuarios
 
--- inscribir alumno (PROCEDURE)
+-- SQLINES DEMO *** (PROCEDURE)
+
+DELIMITER //
 
 CREATE PROCEDURE inscribir_alumno(
     p_id_alumno INTEGER,
     p_id_grupo INTEGER
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     INSERT INTO InscripcionGrupo(id_grupo, id_alumno)
@@ -81,13 +118,20 @@ BEGIN
 END;
 $$;
 
--- desinscribir_alumno (PROCEDURE)
+-- SQLINES DEMO *** no (PROCEDURE)
+
+DELIMITER //
 
 CREATE PROCEDURE desinscribir_alumno(
     p_id_alumno INTEGER,
     p_id_grupo INTEGER
 )
-LANGUAGE plpgsqd 
+LANGUAGE plpgsqd
+//
+
+DELIMITER ;
+
+ 
 AS $$
 BEGIN
     DELETE FROM InscripcionGrupo
@@ -95,13 +139,20 @@ BEGIN
 END;
 $$;
 
--- asignar_docente (PROCEDURE)
+-- SQLINES DEMO *** PROCEDURE)
+
+DELIMITER //
 
 CREATE PROCEDURE asignar_docente(
     p_id_docente INTEGER,
     p_id_materia INTEGER
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     INSERT INTO DocenteMateria(id_docente, id_materia)
@@ -110,12 +161,19 @@ BEGIN
 END;
 $$;
 
--- eliminar_docente (PROCEDURE)
+-- SQLINES DEMO *** (PROCEDURE)
+DELIMITER //
+
 CREATE PROCEDURE eliminar_docente(
     p_id_docente INTEGER,
     p_id_materia INTEGER
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     DELETE FROM DocenteMateria
@@ -123,10 +181,20 @@ BEGIN
 END;
 $$;
 
--- obtener_materias_docente (FUNCTION)
+-- SQLINES DEMO *** docente (FUNCTION)
+
+DELIMITER //
 
 CREATE FUNCTION obtener_materias_docente(p_id_docente INTEGER)
-RETURNS TABLE(id_materia INTEGER, nombre TEXT, nivel tipo_nivel)
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (id_materia
+DECLARE JSONDATA LONGTEXT; INTEGER
+ END
+//
+
+DELIMITER ;
+
+, nombre TEXT, nivel tipo_nivel)
 AS $$
 BEGIN
     RETURN QUERY
@@ -137,10 +205,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- obtener_grupos_alumno (FUNCTION)
+-- SQLINES DEMO *** umno (FUNCTION)
 
-CREATE OR REPLACE FUNCTION obtener_grupos_alumno(p_id_alumno INTEGER)
-RETURNS TABLE(id_grupo INTEGER, acronimo TEXT, nivel tipo_nivel, turno tipo_turno)
+DROP FUNCTION IF EXISTS obtener_grupos_alumno;
+
+DELIMITER //
+
+CREATE FUNCTION obtener_grupos_alumno(p_id_alumno INTEGER)
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (id_grupo
+DECLARE JSONDATA LONGTEXT; INTEGER
+ END
+//
+
+DELIMITER ;
+
+, acronimo TEXT, nivel tipo_nivel, turno tipo_turno)
 AS $$
 BEGIN
     RETURN QUERY
@@ -151,13 +231,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- actualizar_grado_docente (PROCEDURE)
+-- SQLINES DEMO *** docente (PROCEDURE)
 
-CREATE OR REPLACE PROCEDURE actualizar_grado_docente(
+DROP PROCEDURE IF EXISTS actualizar_grado_docente;
+
+DELIMITER //
+
+CREATE PROCEDURE actualizar_grado_docente(
     p_id_docente INTEGER,
-    p_nuevo_grado TEXT
+    p_nuevo_grado LONGTEXT
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     UPDATE Docente
@@ -166,17 +255,26 @@ BEGIN
 END;
 $$;
 
--- Grupo C - Evaluaciones y Supervisión
+-- SQLINES DEMO *** iones y Supervisión
 
--- registrar_evaluacion_docente (PROCEDURE)
+-- SQLINES DEMO *** ion_docente (PROCEDURE)
 
-CREATE OR REPLACE PROCEDURE registrar_evaluacion_docente(
+DROP PROCEDURE IF EXISTS registrar_evaluacion_docente;
+
+DELIMITER //
+
+CREATE PROCEDURE registrar_evaluacion_docente(
     p_id_docente INTEGER,
     p_id_alumno INTEGER,
     p_calificacion INTEGER,
-    p_comentario TEXT
+    p_comentario LONGTEXT
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     INSERT INTO EvaluacionDocente(id_docente, id_alumno, calificacion, comentario, fecha)
@@ -184,15 +282,24 @@ BEGIN
 END;
 $$;
 
--- registrar_agenda_supervision (PROCEDURE)
+-- SQLINES DEMO *** supervision (PROCEDURE)
 
-CREATE OR REPLACE PROCEDURE registrar_agenda_supervision(
+DROP PROCEDURE IF EXISTS registrar_agenda_supervision;
+
+DELIMITER //
+
+CREATE PROCEDURE registrar_agenda_supervision(
     p_id_coordinador INTEGER,
     p_id_grupo INTEGER,
     p_fecha DATE,
-    p_descripcion TEXT
+    p_descripcion LONGTEXT
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     INSERT INTO AgendaSupervisor(id_coordinador, id_grupo, fecha_supervision, descripcion)
@@ -200,11 +307,23 @@ BEGIN
 END;
 $$;
 
--- consultar_evaluaciones_docente (FUNCTION)
+-- SQLINES DEMO *** iones_docente (FUNCTION)
 
-CREATE OR REPLACE FUNCTION consultar_evaluaciones_docente(p_id_docente INTEGER)
-RETURNS TABLE(
-    id_evaluacion INTEGER,
+DROP FUNCTION IF EXISTS consultar_evaluaciones_docente;
+
+DELIMITER //
+
+CREATE FUNCTION consultar_evaluaciones_docente(p_id_docente INTEGER)
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (
+    id_evaluacion
+DECLARE JSONDATA LONGTEXT; INTEGER
+ END
+//
+
+DELIMITER ;
+
+,
     id_alumno INTEGER,
     calificacion INTEGER,
     comentario TEXT,
@@ -220,11 +339,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- consultar_agenda_coordinador (FUNCTION)
+-- SQLINES DEMO *** coordinador (FUNCTION)
 
-CREATE OR REPLACE FUNCTION consultar_agenda_coordinador(p_id_coordinador INTEGER)
-RETURNS TABLE(
-    id_agenda INTEGER,
+DROP FUNCTION IF EXISTS consultar_agenda_coordinador;
+
+DELIMITER //
+
+CREATE FUNCTION consultar_agenda_coordinador(p_id_coordinador INTEGER)
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (
+    id_agenda
+DECLARE JSONDATA LONGTEXT; INTEGER
+ END
+//
+
+DELIMITER ;
+
+,
     id_grupo INTEGER,
     fecha_supervision DATE,
     descripcion TEXT
@@ -239,28 +370,50 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- calcular_promedio_docente (FUNCTION)
+-- SQLINES DEMO *** _docente (FUNCTION)
 
-CREATE OR REPLACE FUNCTION calcular_promedio_docente(p_id_docente INTEGER)
-RETURNS NUMERIC AS $$
-DECLARE
-    v_promedio NUMERIC;
-BEGIN
+DROP FUNCTION IF EXISTS calcular_promedio_docente;
+
+DELIMITER //
+
+CREATE FUNCTION calcular_promedio_docente(p_id_docente INTEGER)
+RETURNS NUMERIC
+DETERMINISTIC
+ BEGIN
+    DECLARE v_promedio NUMERIC;
+ 
     SELECT AVG(calificacion)::NUMERIC(5,2) INTO v_promedio
     FROM EvaluacionDocente
     WHERE id_docente = p_id_docente;
 
     RETURN COALESCE(v_promedio, 0);
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+//
 
--- Grupo D - Reportes y Analisis
+DELIMITER ;
 
--- reporte_evaluaciones_docentes (FUNCTION)
 
-CREATE OR REPLACE FUNCTION reporte_evaluaciones_docentes()
-RETURNS TABLE(
-    id_docente INTEGER,
+
+-- SQLINES DEMO *** s y Analisis
+
+-- SQLINES DEMO *** nes_docentes (FUNCTION)
+
+DROP FUNCTION IF EXISTS reporte_evaluaciones_docentes;
+
+DELIMITER //
+
+CREATE FUNCTION reporte_evaluaciones_docentes()
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (
+    id_docente
+DECLARE JSONDATA LONGTEXT; INTEGER
+ END
+//
+
+DELIMITER ;
+
+,
     nombre_docente TEXT,
     promedio NUMERIC(5,2),
     total_evaluaciones INTEGER
@@ -270,7 +423,7 @@ BEGIN
     RETURN QUERY
     SELECT 
         d.id_docente,
-        u.nombre || ' ' || u.apellido_paterno || ' ' || u.apellido_materno AS nombre_docente,
+        concat(ifnull(u.nombre, '') , ' ' , ifnull(u.apellido_paterno, '') , ' ' , ifnull(u.apellido_materno, '')) AS nombre_docente,
         AVG(e.calificacion)::NUMERIC(5,2),
         COUNT(e.id_evaluacion)
     FROM EvaluacionDocente e
@@ -280,13 +433,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- reporte_asistencia_grupo (IDEA)
+-- SQLINES DEMO *** a_grupo (IDEA)
 
--- reporte_docentes_materias (FUNCTION)
+-- SQLINES DEMO *** materias (FUNCTION)
 
-CREATE OR REPLACE FUNCTION reporte_docentes_por_materia()
-RETURNS TABLE(
-    nombre_docente TEXT,
+DROP FUNCTION IF EXISTS reporte_docentes_por_materia;
+
+DELIMITER //
+
+CREATE FUNCTION reporte_docentes_por_materia()
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (
+    nombre_docente
+DECLARE JSONDATA LONGTEXT; TEXT
+ END
+//
+
+DELIMITER ;
+
+,
     materia TEXT,
     grupo TEXT
 )
@@ -294,7 +459,7 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT 
-        u.nombre || ' ' || u.apellido_paterno || ' ' || u.apellido_materno AS nombre_docente,
+        concat(ifnull(u.nombre, '') , ' ' , ifnull(u.apellido_paterno, '') , ' ' , ifnull(u.apellido_materno, '')) AS nombre_docente,
         m.nombre AS materia,
         g.nombre AS grupo
     FROM Docente d
@@ -304,18 +469,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- reporte_actividad_coordinador (FUNCTION)
+-- SQLINES DEMO *** _coordinador (FUNCTION)
 
-CREATE OR REPLACE FUNCTION reporte_actividad_coordinador()
-RETURNS TABLE(
-    nombre_coordinador TEXT,
+DROP FUNCTION IF EXISTS reporte_actividad_coordinador;
+
+DELIMITER //
+
+CREATE FUNCTION reporte_actividad_coordinador()
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (
+    nombre_coordinador
+DECLARE JSONDATA LONGTEXT; TEXT
+ END
+//
+
+DELIMITER ;
+
+,
     total_supervisiones INTEGER
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT 
-        u.nombre || ' ' || u.apellido_paterno || ' ' || u.apellido_materno AS nombre_coordinador,
+        concat(ifnull(u.nombre, '') , ' ' , ifnull(u.apellido_paterno, '') , ' ' , ifnull(u.apellido_materno, '')) AS nombre_coordinador,
         COUNT(a.id_agenda)
     FROM AgendaSupervisor a
     JOIN Coordinador c ON c.id_coordinador = a.id_coordinador
@@ -324,11 +501,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- reporte_materias_por_periodo (FUNCTION)
+-- SQLINES DEMO *** por_periodo (FUNCTION)
 
-CREATE OR REPLACE FUNCTION reporte_materias_por_periodo(p_periodo tipo_periodo)
-RETURNS TABLE(
-    nombre_materia TEXT,
+DROP FUNCTION IF EXISTS reporte_materias_por_periodo;
+
+DELIMITER //
+
+CREATE FUNCTION reporte_materias_por_periodo(p_periodo tipo_periodo)
+RETURNS LONGTEXT
+DETERMINISTICDECLARE (
+    nombre_materia
+DECLARE JSONDATA LONGTEXT; TEXT
+ END
+//
+
+DELIMITER ;
+
+,
     nombre_docente TEXT,
     grupo TEXT
 )
@@ -337,7 +526,7 @@ BEGIN
     RETURN QUERY
     SELECT 
         m.nombre,
-        u.nombre || ' ' || u.apellido_paterno || ' ' || u.apellido_materno,
+        concat(ifnull(u.nombre, '') , ' ' , ifnull(u.apellido_paterno, '') , ' ' , ifnull(u.apellido_materno, '')),
         g.nombre
     FROM Grupo g
     JOIN Materia m ON m.id_materia = g.id_materia
@@ -347,18 +536,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Grupo E Seguridad y gestion de Accesos
+-- SQLINES DEMO ***  y gestion de Accesos
 
--- verificar_credenciales (FUNCTION)
+-- SQLINES DEMO *** iales (FUNCTION)
 
-CREATE OR REPLACE FUNCTION verificar_credenciales(
-    p_usuario TEXT,
-    p_contrasena TEXT
+DROP FUNCTION IF EXISTS verificar_credenciales;
+
+DELIMITER //
+
+CREATE FUNCTION verificar_credenciales(
+    p_usuario LONGTEXT,
+    p_contrasena LONGTEXT
 ) RETURNS BOOLEAN
-AS $$
-DECLARE
-    v_contrasena_encriptada TEXT;
+DETERMINISTIC
 BEGIN
+    DECLARE v_contrasena_encriptada LONGTEXT;
+ 
     SELECT contrasena INTO v_contrasena_encriptada
     FROM Usuario
     WHERE usuario = p_usuario;
@@ -366,15 +559,27 @@ BEGIN
     RETURN v_contrasena_encriptada IS NOT NULL 
            AND v_contrasena_encriptada = crypt(p_contrasena, v_contrasena_encriptada);
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+//
 
--- asignar_rol_usuario (PROCEDURE)
+DELIMITER ;
+
+
+
+-- SQLINES DEMO *** io (PROCEDURE)
+
+DELIMITER //
 
 CREATE PROCEDURE asignar_rol_usuario(
     p_id_usuario INTEGER,
     p_nuevo_rol tipo_rol
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     UPDATE Usuario
@@ -383,13 +588,22 @@ BEGIN
 END;
 $$;
 
--- registrar_actividad_usuario (PROCEDURE)
+-- SQLINES DEMO *** ad_usuario (PROCEDURE)
 
-CREATE OR REPLACE PROCEDURE registrar_actividad_usuario(
+DROP PROCEDURE IF EXISTS registrar_actividad_usuario;
+
+DELIMITER //
+
+CREATE PROCEDURE registrar_actividad_usuario(
     p_id_usuario INTEGER,
-    p_actividad TEXT
+    p_actividad LONGTEXT
 )
 LANGUAGE plpgsql
+//
+
+DELIMITER ;
+
+
 AS $$
 BEGIN
     INSERT INTO LogUsuario(id_usuario, actividad)
@@ -397,11 +611,23 @@ BEGIN
 END;
 $$;
 
--- obtener_historial_actividad (FUNCTION)
+-- SQLINES DEMO *** _actividad (FUNCTION)
 
-CREATE OR REPLACE FUNCTION obtener_historial_actividad(p_id_usuario INTEGER)
-RETURNS TABLE (
-    actividad TEXT,
+DROP FUNCTION IF EXISTS obtener_historial_actividad;
+
+DELIMITER //
+
+CREATE FUNCTION obtener_historial_actividad(p_id_usuario INTEGER)
+RETURNS LONGTEXT
+DETERMINISTIC DECLARE (
+    actividad
+DECLARE JSONDATA LONGTEXT; TEXT
+ END
+//
+
+DELIMITER ;
+
+,
     fecha_hora TIMESTAMP
 )
 AS $$
