@@ -23,9 +23,11 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
-// $app->withEloquent();
+class_alias(App\Facades\Jwt::class, 'Jwt');
+
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +80,7 @@ $app->configure('app');
 
 $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
+     'auth.jwt' => App\Http\Middleware\JwtMiddleware::class,
 ]);
 
 /*
@@ -91,9 +94,11 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\JwtServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------

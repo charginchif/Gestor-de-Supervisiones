@@ -13,21 +13,37 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable, HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'name', 'email',
+    protected $table = 'usuario';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+
+        protected $fillable = [
+        'nombre',
+        'apellido_paterno',
+        'apellido_materno',
+        'correo',
+        'contrasena',
+        'id_rol',
+        'fecha_registro',
+        'ultimo_acceso'
     ];
 
+    
+    protected $hidden = ['contrasena'];
+
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var string[]
+     * Relación con el catálogo de roles.
      */
-    protected $hidden = [
-        'password',
-    ];
+    public function rol()
+    {
+        return $this->belongsTo(CatRol::class, 'id_rol', 'id');
+    }
+
+    /**
+     * Lumen/Eloquent usa por defecto 'password'. Indicamos que es 'contrasena'.
+     */
+    public function getAuthPassword()
+    {
+        return $this->contrasena;
+    }
 }

@@ -2,62 +2,92 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
 {
-    // Simulación de datos de usuarios (en vez de base de datos)
-    private $usuarios = [
-        1 => ['id' => 1, 'nombre' => 'Juan', 'email' => 'juan@email.com'],
-        2 => ['id' => 2, 'nombre' => 'Ana', 'email' => 'ana@email.com'],
-        3 => ['id' => 3, 'nombre' => 'Luis', 'email' => 'luis@email.com'],
-    ];
-
-    public function listar()
+    public function index()
     {
-        return response()->json(array_values($this->usuarios));
+        $usuarios = User::all();
+        return RespuestaAPI::exito('Lista de usuarios', $usuarios);
     }
 
-    // Ver un usuario por ID
-    public function ver($id)
+    public function show($id)
     {
-        if (isset($this->usuarios[$id])) {
-            return response()->json($this->usuarios[$id]);
+        $usuario = User::find($id);
+        if (!$usuario) {
+            return RespuestaAPI::error('Usuario no encontrado', RespuestaAPI::HTTP_NO_ENCONTRADO);
         }
-        return response()->json(['error' => 'Usuario no encontrado'], 404);
+        return RespuestaAPI::exito('Usuario encontrado', $usuario);
     }
 
-    // Actualizar usuario
-    public function actualizar(Request $request, $id)
+    public function store(Request $request)
     {
-        if (!isset($this->usuarios[$id])) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        try {
+            $this->validate($request, [
+                'nombre' => 'required|string|max:100',
+                'apellido_paterno' => 'required|string|max:100',
+                'apellido_materno' => 'required|string|max:100',
+                'correo' => 'required|email|unique:usuario,correo',
+                'contrasena' => 'required|string|min:8',
+                'id_rol' => 'required|integer|exists:rol,id',
+            ]);
+        } catch (ValidationException $e) {
+            return RespuestaAPI::error('Datos inválidos', RespuestaAPI::HTTP_ERROR_VALIDACION, ['errors' => $e->errors()]);
         }
 
-        $nombre = $request->input('nombre', $this->usuarios[$id]['nombre']);
-        $email = $request->input('email', $this->usuarios[$id]['email']);
+        $data = $request->all();
+        $data['contrasena'] = Hash::make($data['contrasena']);
 
-        $this->usuarios[$id]['nombre'] = $nombre;
-        $this->usuarios[$id]['email'] = $email;
+        $usuario = User::create($data);
 
-        return response()->json([
-            'message' => 'Usuario actualizado exitosamente',
-            'usuario' => $this->usuarios[$id]
-        ]);
+        return RespuestaAPI::exito('Usuario creado exitosamente', $usuario, RespuestaAPI::HTTP_CREADO);
     }
 
-    // Eliminar usuario
-    public function eliminar($id)
+    public function update(Request $request, $id)
     {
-        if (!isset($this->usuarios[$id])) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        $usuario = User::find($id);
+        if (!$usuario) {
+            return RespuestaAPI::error('Usuario no encontrado', RespuestaAPI::HTTP_NO_ENCONTRADO);
         }
 
-        unset($this->usuarios[$id]);
+        try {
+            $this->validate($request, [
+                'nombre' => 'sometimes|required|string|max:100',
+                'apellido_paterno' => 'sometimes|required|string|max:100',
+                'apellido_materno' => 'sometimes|required|string|max:100',
+                'correo' => 'sometimes|required|email|unique:usuario,correo,' . $id,
+                'contrasena' => 'sometimes|string|min:8',
+                'id_rol' => 'sometimes|required|integer|exists:rol,id',
+                'estatus' => 'sometimes|required|in:activo,inactivo',
+            ]);
+        } catch (ValidationException $e) {
+            return RespuestaAPI::error('Datos inválidos', RespuestaAPI::HTTP_ERROR_VALIDACION, ['errors' => $e->errors()]);
+        }
 
-        return response()->json([
-            'message' => 'Usuario eliminado exitosamente',
-            'id' => $id
-        ]);
+        $data = $request->all();
+        if ($request->has('contrasena')) {
+            $data['contrasena'] = Hash::make($data['contrasena']);
+        }
+
+        $usuario->update($data);
+
+        return RespuestaAPI::exito('Usuario actualizado exitosamente', $usuario);
+    }
+
+    public function destroy($id)
+    {
+        $usuario = User::find($id);
+        if (!$usuario) {
+            return RespuestaAPI::error('Usuario no encontrado', RespuestaAPI::HTTP_NO_ENCONTRADO);
+        }
+
+        $usuario->delete();
+
+        return RespuestaAPI::exito('Usuario eliminado exitosamente', null, RespuestaAPI::HTTP_NO_CONTENIDO);
     }
 }

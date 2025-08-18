@@ -41,7 +41,7 @@ class Authenticate
 
         // El token debe ser enviado como: Authorization: Bearer token123
         if ($token !== 'Bearer ' . $validToken) {
-            return response()->json(['error' => 'No autorizado'], 401);
+            return RespuestaAPI::error('No autorizado', RespuestaAPI::HTTP_NO_AUTORIZADO);
         }
 
         return $next($request);
