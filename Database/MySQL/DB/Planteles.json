@@ -1,0 +1,23 @@
+{
+  "planteles": [
+    { "nombre": "Torre UNE Milenio", "dirección": "Av. López Mateos Sur #4175, Col. La Giralda, Zapopan, Jalisco" },
+    { "nombre": "Milenio", "dirección": "Av. López Mateos Sur #4154, Col. La Giralda, Zapopan, Jalisco" },
+    { "nombre": "Plantel Centro", "dirección": "Av. República No. 10, Col. San Juan de Dios, Guadalajara, Jalisco" },
+    { "nombre": "Centro Médico", "dirección": "José María Lozano #1077, Col. Belisario Domínguez, Guadalajara, Jalisco" },
+    { "nombre": "Plaza del Sol", "dirección": "Av. López Mateos Sur #2375, Col. Ciudad del Sol, Guadalajara, Jalisco" },
+    { "nombre": "Tesistán", "dirección": "Av. Juan Gil Preciado #3897, Col. Hogares de Nuevo México, Zapopan, Jalisco" },
+    { "nombre": "Tlajomulco", "dirección": "Av. López Mateos #10100, Col. Los Gavilanes Poniente, Tlajomulco de Zúñiga, Jalisco" },
+    { "nombre": "Tlaquepaque", "dirección": "Blvd. Marcelino García Barragán #2056, Col. Bosques del Boulevard, Tlaquepaque, Jalisco" },
+    { "nombre": "Tonalá", "dirección": "Av. Tonaltecas #333, Col. Agua Escondida, Tonalá, Jalisco" },
+    { "nombre": "Torre Quetzal", "dirección": "Chimalhuacán #3569, Col. Ciudad del Sol, Zapopan, Jalisco" },
+    { "nombre": "Plantel Chapultepec", "dirección": "Av. Vallarta #1458, Col. Americana, Guadalajara, Jalisco" },
+    { "nombre": "Zapopan", "dirección": "Plaza Caudillos, Zapopan, Jalisco" },
+
+    { "nombre": "Puerto Vallarta – Avenida México", "dirección": "Av. México #1255, Col. Agua Zarca, Puerto Vallarta, Jalisco" },
+    { "nombre": "Puerto Vallarta – Plaza Caracol", "dirección": "Blvd. Francisco Medina Ascencio #2180, Col. Díaz Ordaz, Puerto Vallarta, Jalisco" },
+    { "nombre": "Puerto Vallarta – Las Juntas", "dirección": "Carretera a Tepic No. 5657, Col. Las Juntas, C.P. 48291, Puerto Vallarta, Jalisco" },
+    { "nombre": "Puerto Vallarta – Las Juntas (Francisco Murguía)", "dirección": "Francisco Murguía #523, Col. Las Juntas, Puerto Vallarta, Jalisco" },
+
+    { "nombre": "Tepatitlán", "dirección": "Av. Matamoros #505, Col. Alameda, Tepatitlán de Morelos, Jalisco" }
+  ]
+}

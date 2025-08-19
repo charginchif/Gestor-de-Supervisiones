@@ -1,0 +1,180 @@
+{
+  "planificacionFuncionesProcedimientos": [
+    {
+      "grupo": "Autenticación y gestión de usuarios",
+      "descripcion": "Operaciones relacionadas con el inicio de sesión, registro y seguridad de los usuarios.",
+      "elementos": [
+        {
+          "nombre": "login_usuario",
+          "tipo": "FUNCTION",
+          "descripcion": "Verifica las credenciales de acceso y retorna el ID del usuario si es válido."
+        },
+        {
+          "nombre": "registrar_usuario",
+          "tipo": "PROCEDURE",
+          "descripcion": "Registra un nuevo usuario en el sistema con nombre, correo, contraseña y rol."
+        },
+        {
+          "nombre": "actualizar_password",
+          "tipo": "PROCEDURE",
+          "descripcion": "Permite al usuario cambiar su contraseña."
+        },
+        {
+          "nombre": "actualizar_ultimo_acceso",
+          "tipo": "PROCEDURE",
+          "descripcion": "Actualiza la fecha y hora del último acceso del usuario."
+        }
+      ]
+    },
+    {
+      "grupo": "Gestión académica",
+      "descripcion": "Operaciones para asignar docentes, grupos y materias, así como inscripciones de alumnos.",
+      "elementos": [
+        {
+          "nombre": "inscribir_alumno",
+          "tipo": "PROCEDURE",
+          "descripcion": "Inscribe a un alumno en un grupo específico."
+        },
+        {
+          "nombre": "asignar_docente",
+          "tipo": "PROCEDURE",
+          "descripcion": "Asocia un docente con una materia determinada."
+        },
+        {
+          "nombre": "obtener_materias_docente",
+          "tipo": "FUNCTION",
+          "descripcion": "Obtiene las materias que imparte un docente."
+        },
+        {
+          "nombre": "obtener_grupos_alumno",
+          "tipo": "FUNCTION",
+          "descripcion": "Obtiene los grupos en los que está inscrito un alumno."
+        },
+        {
+          "nombre": "actualizar_grado_docente",
+          "tipo": "PROCEDURE",
+          "descripcion": "Permite actualizar el grado académico de un docente."
+        }
+      ]
+    },
+    {
+      "grupo": "Evaluaciones y supervisiones",
+      "descripcion": "Funciones para registrar evaluaciones, supervisiones y consultar resultados.",
+      "elementos": [
+        {
+          "nombre": "registrar_evaluacion",
+          "tipo": "PROCEDURE",
+          "descripcion": "Registra una evaluación docente realizada por un alumno."
+        },
+        {
+          "nombre": "registrar_supervision",
+          "tipo": "PROCEDURE",
+          "descripcion": "Registra una supervisión docente realizada por un coordinador."
+        },
+        {
+          "nombre": "evaluacion_promedio_docente",
+          "tipo": "FUNCTION",
+          "descripcion": "Calcula el promedio de evaluación para un docente determinado."
+        },
+        {
+          "nombre": "criterios_aplicados_evaluacion",
+          "tipo": "FUNCTION",
+          "descripcion": "Obtiene los criterios y sus valores utilizados en una evaluación."
+        }
+      ]
+    },
+    {
+      "grupo": "Horarios y agenda",
+      "descripcion": "Manejo de agendas, horarios y distribución de materias en el calendario.",
+      "elementos": [
+        {
+          "nombre": "crear_agenda_supervision",
+          "tipo": "PROCEDURE",
+          "descripcion": "Crea una agenda de supervisión para un coordinador en una fecha y horario."
+        },
+        {
+          "nombre": "asignar_horario_materia",
+          "tipo": "PROCEDURE",
+          "descripcion": "Asigna un horario específico a una materia."
+        },
+        {
+          "nombre": "generar_horario_grupo",
+          "tipo": "FUNCTION",
+          "descripcion": "Devuelve el horario semanal de un grupo con materias y bloques de tiempo."
+        },
+        {
+          "nombre": "consultar_disponibilidad_docente",
+          "tipo": "FUNCTION",
+          "descripcion": "Consulta si un docente tiene disponibilidad en un horario específico."
+        }
+      ]
+    },
+    {
+      "grupo": "Reportes y consultas",
+      "descripcion": "Funciones para obtener información consolidada y analítica del sistema.",
+      "elementos": [
+        {
+          "nombre": "reporte_evaluacion_docente",
+          "tipo": "FUNCTION",
+          "descripcion": "Genera un reporte con los resultados de las evaluaciones docentes por ciclo."
+        },
+        {
+          "nombre": "reporte_supervisiones_rubro",
+          "tipo": "FUNCTION",
+          "descripcion": "Genera estadísticas de supervisiones agrupadas por rubro."
+        },
+        {
+          "nombre": "reporte_alumnos_por_carrera_turno",
+          "tipo": "FUNCTION",
+          "descripcion": "Lista los alumnos por carrera y turno con conteo."
+        },
+        {
+          "nombre": "reporte_materias_por_nivel",
+          "tipo": "FUNCTION",
+          "descripcion": "Muestra las materias por nivel y carrera."
+        }
+      ]
+    },
+    {
+      "grupo": "Administración general",
+      "descripcion": "Procedimientos para mantenimiento y creación de entidades clave.",
+      "elementos": [
+        {
+          "nombre": "crear_carrera",
+          "tipo": "PROCEDURE",
+          "descripcion": "Crea una nueva carrera en el sistema."
+        },
+        {
+          "nombre": "crear_grupo",
+          "tipo": "PROCEDURE",
+          "descripcion": "Crea un nuevo grupo asociado a un ciclo, nivel y carrera."
+        },
+        {
+          "nombre": "crear_ciclo_escolar",
+          "tipo": "PROCEDURE",
+          "descripcion": "Agrega un nuevo ciclo escolar."
+        },
+        {
+          "nombre": "agregar_criterio_evaluacion",
+          "tipo": "PROCEDURE",
+          "descripcion": "Agrega un nuevo criterio de evaluación para los docentes."
+        },
+        {
+          "nombre": "asociar_plantel_carrera",
+          "tipo": "PROCEDURE",
+          "descripcion": "Relaciona una carrera con un plantel específico."
+        },
+        {
+          "nombre": "cambiar_estado_agenda",
+          "tipo": "PROCEDURE",
+          "descripcion": "Actualiza el estado o prioridad de una agenda de supervisión."
+        },
+        {
+          "nombre": "registro de actividad",
+          "tipo": "PROCEDURE",
+          "descripcion": "Registra la actividad del usuario en el sistema."
+        }
+      ]
+    }
+  ]
+}

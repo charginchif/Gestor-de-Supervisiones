@@ -1,0 +1,69 @@
+{
+  "total_areas": 6,
+  "total_carreras": 33,
+  "areas": [
+    {
+      "area": "1 Economico-Administrativas",
+      "carreras": [
+        "Licenciatura en Administración",
+        "Licenciatura en Administración de Empresas",
+        "Licenciatura en Alta Dirección",
+        "Licenciatura en Contaduría Pública",
+        "Licenciatura en Contaduría y Auditoría",
+        "Licenciatura en Gestión y Creación de PyMEs",
+        "Licenciatura en Mercadotecnia",
+        "Licenciatura en Mercadotecnia Internacional",
+        "Licenciatura en Negocios Internacionales"
+      ]
+    },
+    {
+      "area": "2 Ciencias de la Salud",
+      "carreras": [
+        "Licenciatura en Cirujano Dentista",
+        "Licenciatura en Cultura Física del Deporte",
+        "Licenciatura en Enfermería",
+        "Licenciatura en Nutrición",
+        "Licenciatura en Psicología",
+        "Licenciatura en Terapia Física"
+      ]
+    },
+    {
+      "area": "3 Arquitectura y Diseño",
+      "carreras": [
+        "Licenciatura en Arquitectura",
+        "Licenciatura en Diseño Gráfico"
+      ]
+    },
+    {
+      "area": "4 Ciencias Sociales y Humanidades",
+      "carreras": [
+        "Licenciatura en Abogado",
+        "Licenciatura en Ciencias de la Comunicación",
+        "Licenciatura en Ciencias de la Educación",
+        "Licenciatura en Criminología y Criminalística",
+        "Licenciatura en Derecho",
+        "Licenciatura en Trabajo Social"
+      ]
+    },
+    {
+      "area": "5 Ciencias Exactas e Ingenierías",
+      "carreras": [
+        "Ingenieria Civil",
+        "Ingenieria Industrial",
+        "Ingenieria Mecánica",
+        "Ingenieria Química",
+        "Ingenieria Químico Farmacéutico Biólogo",
+        "Ingenieria de Datos y Ciberseguridad",
+        "Ingenieria en Computación",
+        "Ingenieria en Comunicaciones y Electrónica",
+        "Ingenieria en Desarrollo de Software"
+      ]
+    },
+    {
+      "area": "6 Hospitalidad",
+      "carreras": [
+        "Licenciatura en Gastronomía"
+      ]
+    }
+  ]
+}
