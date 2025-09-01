@@ -49,7 +49,7 @@ class AuthController extends Controller
         return RespuestaAPI::exito('Inicio de sesión exitoso', [
             'access_token' => $token,
             'token_type'  => 'Bearer',
-            'expires_in' => (int) env('JWT_TTL', 3600),
+           // 'expires_in' => (int) env('JWT_TTL', 3600),
             'user' => [
                 'id' => $user->id,
                 'name' => $user->nombre,

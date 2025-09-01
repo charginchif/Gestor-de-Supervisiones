@@ -27,8 +27,8 @@ class JwtService
             'iss' => $this->iss,
             'aud' => $this->aud,
             'iat' => $now,
-            'nbf' => $now,
-            'exp' => $now + $this->ttl,
+            'nbf' => $now
+            //'exp' => $now + $this->ttl,
         ], $claims);
 
         return JWT::encode($payload, $this->secret, 'HS256');

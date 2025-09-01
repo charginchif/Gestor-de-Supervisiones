@@ -1,26 +1,75 @@
-# Lumen PHP Framework
+# API Documentation
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/lumen-framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/lumen-framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/lumen)](https://packagist.org/packages/laravel/lumen-framework)
+This document provides instructions for connecting to the API. The API is used to manage users, students, teachers, and coordinators.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## Base URL
 
-> **Note:** In the years since releasing Lumen, PHP has made a variety of wonderful performance improvements. For this reason, along with the availability of [Laravel Octane](https://laravel.com/docs/octane), we no longer recommend that you begin new projects with Lumen. Instead, we recommend always beginning new projects with [Laravel](https://laravel.com).
+The base URL for all API endpoints is:
 
-## Official Documentation
+```
+http://your-domain.com/api
+```
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+## Authentication
 
-## Contributing
+To access the protected endpoints, you need to obtain an authentication token by making a `POST` request to the `/login` endpoint.
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Login
 
-## Security Vulnerabilities
+* **Endpoint:** `POST /login`
+* **Description:** Authenticates a user and returns an access token.
+* **Request Body:**
+    * `correo` (string, required): The user's email.
+    * `contrasena` (string, required): The user's password.
+* **Example Response:**
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+```json
+{
+    "status": "éxito",
+    "mensaje": "Inicio de sesión exitoso",
+    "data": {
+        "access_token": "your-jwt-token",
+        "token_type": "Bearer",
+        "user": {
+            "id": 1,
+            "name": "Admin User",
+            "email": "admin@example.com",
+            "role": 1
+        }
+    }
+}
+```
 
-## License
+Once you have the `access_token`, you must include it in the `Authorization` header for all subsequent requests to protected endpoints:
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+Authorization: Bearer your-jwt-token
+```
+
+## User Modification Endpoints
+
+These endpoints are used to update user information. All of these endpoints are protected and require an authentication token.
+
+### Update User
+
+*   **Endpoint:** `PUT /usuario/{id}`
+*   **Description:** Update a generic user's information.
+*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo`, `contrasena`, `id_rol` (all optional).
+
+### Update Student
+
+*   **Endpoint:** `PUT /alumnos/{id}`
+*   **Description:** Update a student's information.
+*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo`, `matricula`, `id_carrera` (all optional).
+
+### Update Teacher
+
+*   **Endpoint:** `PUT /docentes/{id}`
+*   **Description:** Update a teacher's information.
+*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo`, `grado_academico` (all optional).
+
+### Update Coordinator
+
+*   **Endpoint:** `PUT /coordinadores/{id}`
+*   **Description:** Update a coordinator's information.
+*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo` (all optional).

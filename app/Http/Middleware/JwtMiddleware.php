@@ -16,6 +16,7 @@ class JwtMiddleware
 
     public function handle($request, Closure $next)
     {
+        error_log('Authorization Header: ' . $request->header('Authorization'));
         $auth = $request->header('Authorization');
         if (!$auth || stripos($auth, 'Bearer ') !== 0) {
             return RespuestaAPI::error('Token no enviado', RespuestaAPI::HTTP_NO_AUTORIZADO);
