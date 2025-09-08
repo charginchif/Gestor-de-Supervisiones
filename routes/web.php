@@ -23,7 +23,9 @@ use App\Models\User;
 
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    $str1 = "algo";
+    $str2 = "algo2";
+    return $router->app->version().$str1.$str2;
 });
 
 
