@@ -20,8 +20,11 @@ use App\Models\User;
 // You can access it at /create-test-user from your project's public folder.
 
 
+$str1 = "algo";
+$str2 = "algo2";
+
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return $router->app->version()." ".$str1." ".$str2;
 });
 
 
