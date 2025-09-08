@@ -217,7 +217,8 @@ CREATE TABLE criterios_evaluacion (
   rubro rubro NOT NULL
 );
 
-CREATE TABLE login_usuario (
+-- Registro de actividades de los usuarios
+CREATE TABLE logger_usuario (
   id_log SERIAL PRIMARY KEY,
   id_usuario INTEGER  REFERENCES usuario(id_usuario),
   actividad TEXT NOT NULL,
