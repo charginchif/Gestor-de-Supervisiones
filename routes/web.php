@@ -24,7 +24,7 @@ $str1 = "algo";
 $str2 = "algo2";
 
 $router->get('/', function () use ($router) {
-    return $router->app->version()." ".$str1." ".$str2;
+    return $router->app->version().$str1.$str2;
 });
 
 
