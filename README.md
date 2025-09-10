@@ -34,7 +34,8 @@ To access the protected endpoints, you need to obtain an authentication token by
             "id": 1,
             "name": "Admin User",
             "email": "admin@example.com",
-            "role": 1
+            "id_role": 1,
+            "rol": "Administrador"
         }
     }
 }
