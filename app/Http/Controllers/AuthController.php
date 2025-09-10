@@ -44,7 +44,7 @@ class AuthController extends Controller
         $user->save();
 
         $token = $this->jwt->crearToken([
-            'sub'   => $user->id,
+            'usuario_id'   => $user->id,
             'rol'   => $user->id_rol ?? null,
             'email' => $user->correo,
         ]);

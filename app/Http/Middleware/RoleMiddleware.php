@@ -12,11 +12,11 @@ class RoleMiddleware
     {
         $claims = $request->attributes->get('jwt_claims');
 
-        if (!$claims || !isset($claims['sub'])) {
+        if (!$claims || !isset($claims['usuario_id'])) {
             return RespuestaAPI::error('No autorizado para acceder a este recurso', RespuestaAPI::HTTP_NO_AUTORIZADO);
         }
 
-        $usuario = User::find($claims['sub']);
+        $usuario = User::find($claims['usuario_id']);
 
         if (!$usuario) {
             return RespuestaAPI::error('Usuario no encontrado', RespuestaAPI::HTTP_NO_AUTORIZADO);
@@ -31,11 +31,11 @@ class RoleMiddleware
         $requiredRoleId = $rol->id;
 
         // Check if the user's role ID matches the required role ID
-        if ($usuario->id_rol != $requiredRoleId) {
+        if ($usuario->id_rol === $requiredRoleId) {
+            return $next($request);
+        } else {
             return RespuestaAPI::error('No tienes permisos para acceder a este recurso', RespuestaAPI::HTTP_PROHIBIDO);
         }
-
-        return $next($request);
     }
 
 }

@@ -90,6 +90,14 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`GET /coordinadores/{id}`**: Get a specific coordinator by ID.
 *   **`PUT /coordinadores/{id}`**: Update a coordinator's information.
 
+### Career Management
+
+*   **`GET /carreras`**: Get a list of all careers.
+*   **`POST /carreras`**: Create a new career.
+*   **`GET /carreras/{id}`**: Get a specific career by ID.
+*   **`PUT /carreras/{id}`**: Update a career's information.
+*   **`DELETE /carreras/{id}`**: Delete a career.
+
 ---
 
 ## Endpoints for Coordinator
@@ -112,4 +120,4 @@ These endpoints are protected and require an authentication token with the `coor
 
 ### Campus Management
 
-*   **`GET /planteles`**: Get a list of all campuses associated with the coordinator.
+*   **`GET /coordinador-planteles`**: Get a list of all campuses associated with the coordinator.

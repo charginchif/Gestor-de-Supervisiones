@@ -59,31 +59,50 @@ class PlantelController extends Controller
 
     public function update(Request $request, $id)
     {
-        $plantel = Plantel::find($id);
-        if (!$plantel) {
-            return RespuestaAPI::error('Plantel no encontrado', 404);
-        }
-
         $this->validate($request, [
             'nombre' => 'required|string|max:255',
             'ubicacion' => 'required|string|max:255',
         ]);
 
-        $plantel->update($request->all());
+        try {
+            DB::statement(
+                'CALL sp_admin_editar_plantel(?, ?, ?)',
+                [$id, $request->input('nombre'), $request->input('ubicacion')]
+            );
 
-        return RespuestaAPI::exito('Plantel actualizado exitosamente', $plantel);
+            // Después de la actualización, obtenemos el plantel actualizado para devolverlo.
+            $plantelActualizado = Plantel::find($id);
+
+            return RespuestaAPI::exito('Plantel actualizado exitosamente', $plantelActualizado);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '45000') {
+                return RespuestaAPI::error($e->errorInfo[2], 400);
+            }
+            return RespuestaAPI::error('Error al actualizar el plantel: ' . $e->getMessage(), 500);
+        }
     }
 
     public function destroy($id)
     {
-        $plantel = Plantel::find($id);
-        if (!$plantel) {
-            return RespuestaAPI::error('Plantel no encontrado', 404);
+        try {
+            // Llama al procedimiento almacenado para eliminar el plantel.
+            $resultado = DB::statement('CALL sp_admin_eliminar_plantel(?)', [$id]);
+
+            // El procedimiento almacenado podría no devolver un valor indicativo de éxito
+            // o podría lanzar una excepción (que sería capturada por el bloque catch).
+            // Si no hay excepción, asumimos que la operación fue exitosa.
+            return RespuestaAPI::exito('Plantel eliminado exitosamente', null, 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // El SP puede señalar un error con un código de estado SQL '45000'.
+            if ($e->getCode() === '45000') {
+                // El mensaje de error viene del procedimiento almacenado.
+                return RespuestaAPI::error($e->errorInfo[2], 400);
+            }
+            // Para otros errores de base de datos.
+            return RespuestaAPI::error('Error al eliminar el plantel: ' . $e->getMessage(), 500);
         }
-
-        $plantel->delete();
-
-        return RespuestaAPI::exito('Plantel eliminado exitosamente');
     }
 
     /**
