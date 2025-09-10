@@ -46,30 +46,69 @@ Once you have the `access_token`, you must include it in the `Authorization` hea
 Authorization: Bearer your-jwt-token
 ```
 
-## User Modification Endpoints
+---
 
-These endpoints are used to update user information. All of these endpoints are protected and require an authentication token.
+## Endpoints for Administrator
 
-### Update User
+These endpoints are protected and require an authentication token with the `administrador` role.
 
-*   **Endpoint:** `PUT /usuario/{id}`
-*   **Description:** Update a generic user's information.
-*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo`, `contrasena`, `id_rol` (all optional).
+### User Management
 
-### Update Student
+*   **`GET /usuario`**: Get a list of all users.
+*   **`POST /usuario`**: Create a new user.
+*   **`GET /usuario/{id}`**: Get a specific user by ID.
+*   **`PUT /usuario/{id}`**: Update a user's information.
+*   **`DELETE /usuario/{id}`**: Delete a user.
 
-*   **Endpoint:** `PUT /alumnos/{id}`
-*   **Description:** Update a student's information.
-*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo`, `matricula`, `id_carrera` (all optional).
+### Campus Management
 
-### Update Teacher
+*   **`GET /planteles`**: Get a list of all campuses.
+*   **`POST /planteles`**: Create a new campus.
+*   **`GET /planteles/{id}`**: Get a specific campus by ID.
+*   **`PUT /planteles/{id}`**: Update a campus's information.
+*   **`DELETE /planteles/{id}`**: Delete a campus.
 
-*   **Endpoint:** `PUT /docentes/{id}`
-*   **Description:** Update a teacher's information.
-*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo`, `grado_academico` (all optional).
+### Student Management
 
-### Update Coordinator
+*   **`GET /alumnos`**: Get a list of all students.
+*   **`POST /alumnos`**: Create a new student.
+*   **`GET /alumnos/{id}`**: Get a specific student by ID.
+*   **`PUT /alumnos/{id}`**: Update a student's information.
 
-*   **Endpoint:** `PUT /coordinadores/{id}`
-*   **Description:** Update a coordinator's information.
-*   **Body:** `nombre`, `apellido_paterno`, `apellido_materno`, `correo` (all optional).
+### Teacher Management
+
+*   **`GET /docentes`**: Get a list of all teachers.
+*   **`POST /docentes`**: Create a new teacher.
+*   **`GET /docentes/{id}`**: Get a specific teacher by ID.
+*   **`PUT /docentes/{id}`**: Update a teacher's information.
+
+### Coordinator Management
+
+*   **`GET /coordinadores`**: Get a list of all coordinators.
+*   **`POST /coordinadores`**: Create a new coordinator.
+*   **`GET /coordinadores/{id}`**: Get a specific coordinator by ID.
+*   **`PUT /coordinadores/{id}`**: Update a coordinator's information.
+
+---
+
+## Endpoints for Coordinator
+
+These endpoints are protected and require an authentication token with the `coordinador` role.
+
+### Student Management
+
+*   **`GET /alumnos`**: Get a list of all students.
+*   **`POST /alumnos`**: Create a new student.
+*   **`GET /alumnos/{id}`**: Get a specific student by ID.
+*   **`PUT /alumnos/{id}`**: Update a student's information.
+
+### Teacher Management
+
+*   **`GET /docentes`**: Get a list of all teachers.
+*   **`POST /docentes`**: Create a new teacher.
+*   **`GET /docentes/{id}`**: Get a specific teacher by ID.
+*   **`PUT /docentes/{id}`**: Update a teacher's information.
+
+### Campus Management
+
+*   **`GET /planteles`**: Get a list of all campuses associated with the coordinator.
