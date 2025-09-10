@@ -7,7 +7,7 @@ This document provides instructions for connecting to the API. The API is used t
 The base URL for all API endpoints is:
 
 ```
-http://your-domain.com/api
+https://syed-api.joannesystem.com/public/
 ```
 
 ## Authentication
