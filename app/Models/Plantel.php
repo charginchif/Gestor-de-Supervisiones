@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB; // Added this line
 
 class Plantel extends Model
 {
-    protected $table = 'planteles';
+    protected $table = 'plantel';
     protected $primaryKey = 'id_plantel';
     public $timestamps = false;
 

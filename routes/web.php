@@ -27,14 +27,13 @@ $router->get('/', function () use ($router) {
 
 
 
-// API Route Group
-$router->group(['prefix' => 'api'], function () use ($router) {
+
     // Public route for login
     $router->post('login', 'AuthController@iniciarSesion');
    
 
         // Rutas para Administrador
-    $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function () use ($router) {
+    $router->group(['middleware' => ['auth.jwt', 'role:Administrador']], function () use ($router) {
         // Rutas para la gestión de usuarios
         $router->get('usuario', 'UsuarioController@index');
         $router->post('usuario', 'UsuarioController@store');
@@ -72,7 +71,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     
 
         // Rutas para Coordinador
-    $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () use ($router) {
+    $router->group(['middleware' => ['auth.jwt', 'role:Coordinador']], function () use ($router) {
               // Rutas para la gestión de alumnos (para Coordinador)
             $router->get('alumnos', 'UsuarioController@indexAlumnos');
             $router->post('alumnos', 'UsuarioController@storeAlumno');
@@ -86,6 +85,5 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->put('docentes/{id}', 'UsuarioController@updateDocente');
 
             // Rutas para la gestión de planteles (para Coordinador)
-            $router->get('planteles', 'PlantelController@indexCoordinadorPlanteles');
+            //$router->get('planteles', 'PlantelController@indexCoordinadorPlanteles');
     });
-});

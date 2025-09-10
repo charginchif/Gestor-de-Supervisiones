@@ -28,7 +28,7 @@ class JwtService
             'aud' => $this->aud,
             'iat' => $now,
             'nbf' => $now,
-            'exp' => $now + $this->ttl,
+            // 'exp' => $now + $this->ttl, // Comentado para generar tokens estáticos para pruebas
         ], $claims);
 
         return JWT::encode($payload, $this->secret, 'HS256');
