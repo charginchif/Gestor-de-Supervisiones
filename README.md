@@ -4,7 +4,7 @@ This document provides instructions for connecting to the API. The API is used t
 
 ## Base URL
 
-The base URL for all API endpoints is:
+The base URL for all API endpoints is your application's public directory. For local development, it is typically `http://localhost/your-project/public/`. For the production environment, it might be something like:
 
 ```
 https://syed-api.joannesystem.com/public/
@@ -98,6 +98,22 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`PUT /carreras/{id}`**: Update a career's information.
 *   **`DELETE /carreras/{id}`**: Delete a career.
 
+### Accounting Supervision Criteria Management
+
+*   **`GET /supervision/contable`**: Get a list of all accounting supervision criteria.
+*   **`POST /supervision/contable`**: Create a new accounting supervision criterion.
+*   **`GET /supervision/contable/{id}`**: Get a specific accounting supervision criterion by ID.
+*   **`PUT /supervision/contable/{id}`**: Update an accounting supervision criterion.
+*   **`DELETE /supervision/contable/{id}`**: Delete an accounting supervision criterion.
+
+### Non-Accounting Supervision Criteria Management
+
+*   **`GET /supervision/no-contable`**: Get a list of all non-accounting supervision criteria.
+*   **`POST /supervision/no-contable`**: Create a new non-accounting supervision criterion.
+*   **`GET /supervision/no-contable/{id}`**: Get a specific non-accounting supervision criterion by ID.
+*   **`PUT /supervision/no-contable/{id}`**: Update a non-accounting supervision criterion.
+*   **`DELETE /supervision/no-contable/{id}`**: Delete a non-accounting supervision criterion.
+
 ---
 
 ## Endpoints for Coordinator
@@ -106,17 +122,17 @@ These endpoints are protected and require an authentication token with the `coor
 
 ### Student Management
 
-*   **`GET /alumnos`**: Get a list of all students.
-*   **`POST /alumnos`**: Create a new student.
-*   **`GET /alumnos/{id}`**: Get a specific student by ID.
-*   **`PUT /alumnos/{id}`**: Update a student's information.
+*   **`GET /coordinador-alumnos`**: Get a list of all students.
+*   **`POST /coordinador-alumnos`**: Create a new student.
+*   **`GET /coordinador-alumnos/{id}`**: Get a specific student by ID.
+*   **`PUT /coordinador-alumnos/{id}`**: Update a student's information.
 
 ### Teacher Management
 
-*   **`GET /docentes`**: Get a list of all teachers.
-*   **`POST /docentes`**: Create a new teacher.
-*   **`GET /docentes/{id}`**: Get a specific teacher by ID.
-*   **`PUT /docentes/{id}`**: Update a teacher's information.
+*   **`GET /coordinador-docentes`**: Get a list of all teachers.
+*   **`POST /coordinador-docentes`**: Create a new teacher.
+*   **`GET /coordinador-docentes/{id}`**: Get a specific teacher by ID.
+*   **`PUT /coordinador-docentes/{id}`**: Update a teacher's information.
 
 ### Campus Management
 
