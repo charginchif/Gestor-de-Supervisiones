@@ -21,13 +21,13 @@ class CarreraController extends Controller
     public function show($id)
     {
         try {
-            $carrera = DB::select('SELECT * FROM vw_admin_carreras WHERE id = ?', [$id]);
+            $carrera = DB::select('SELECT * FROM vw_admin_carreras WHERE id_carrera = ?', [$id]);
             if (empty($carrera)) {
                 return RespuestaAPI::error('Carrera no encontrada', 404);
             }
             return RespuestaAPI::exito('Carrera encontrada', $carrera[0]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return RespuestaAPI::error('Error al obtener la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_INTERNAL_SERVER_ERROR);
+            return RespuestaAPI::error('Error al obtener la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_ERROR_INTERNO );
         }
     }
 
@@ -39,7 +39,7 @@ class CarreraController extends Controller
 
         try {
             DB::statement(
-                'CALL sp_admin_registrar_carrera(?)',
+                'CALL sp_carrera_insertar(?)',
                 [$request->input('nombre')]
             );
 
@@ -55,14 +55,13 @@ class CarreraController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'nombre' => 'required|string|max:100',
-            'id_plantel' => 'required|integer',
+            'nombre' => 'required|string|max:100'
         ]);
 
         try {
             DB::statement(
-                'CALL sp_admin_editar_carrera(?, ?, ?)',
-                [$id, $request->input('nombre'), $request->input('id_plantel')]
+                'CALL sp_carrera_actualizar(?)',
+                [$id, $request->input('nombre')]
             );
 
             return RespuestaAPI::exito('Carrera actualizada exitosamente', $request->all());
@@ -78,7 +77,7 @@ class CarreraController extends Controller
     public function destroy($id)
     {
         try {
-            DB::statement('CALL sp_admin_eliminar_carrera(?)', [$id]);
+            DB::statement('CALL sp_carrera_eliminar(?)', [$id]);
             return RespuestaAPI::exito('Carrera eliminada exitosamente', null, 200);
 
         } catch (\Illuminate\Database\QueryException $e) {

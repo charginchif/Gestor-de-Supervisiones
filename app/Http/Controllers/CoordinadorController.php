@@ -130,23 +130,29 @@ class CoordinadorController extends Controller
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al actualizar el coordinador: ' . $e->getMessage(), 500);
         }
-    }
-
-    /**
-     * Elimina un coordinador.
-     */
-    public function destroy($id)
-    {
-        $coordinador = Coordinador::find($id);
-        if (!$coordinador) {
-            return RespuestaAPI::error('Coordinador no encontrado', 404);
-        }
-
-        try {
+    try {
             DB::statement('CALL sp_eliminar_usuario(?)', [$coordinador->id_usuario]);
             return RespuestaAPI::exito('Coordinador eliminado exitosamente', null, 200);
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al eliminar el coordinador: ' . $e->getMessage(), 500);
         }
+    }
+
+    /**
+     * Muestra una lista de todos los criterios de supervisión contables.
+     */
+    public function criteriosContables()
+    {
+        $criterios = CriterioSupervision::where('contable', 1)->get();
+        return RespuestaAPI::exito('Criterios de supervisión contables obtenidos con éxito', $criterios);
+    }
+
+    /**
+     * Muestra una lista de todos los criterios de supervisión no contables.
+     */
+    public function criteriosNoContables()
+    {
+        $criterios = CriterioSupervision::where('contable', 0)->get();
+        return RespuestaAPI::exito('Criterios de supervisión no contables obtenidos con éxito', $criterios);
     }
 }

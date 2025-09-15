@@ -40,7 +40,7 @@ class PlantelController extends Controller
 
         try {
             DB::statement(
-                'CALL sp_admin_registrar_plantel(?, ?)',
+                'CALL sp_plantel_insertar(?, ?)',
                 [$request->input('nombre'), $request->input('ubicacion')]
             );
 
@@ -66,7 +66,7 @@ class PlantelController extends Controller
 
         try {
             DB::statement(
-                'CALL sp_admin_editar_plantel(?, ?, ?)',
+                'CALL sp_plantel_actualizar(?, ?, ?)',
                 [$id, $request->input('nombre'), $request->input('ubicacion')]
             );
 
@@ -87,7 +87,7 @@ class PlantelController extends Controller
     {
         try {
             // Llama al procedimiento almacenado para eliminar el plantel.
-            $resultado = DB::statement('CALL sp_admin_eliminar_plantel(?)', [$id]);
+            $resultado = DB::statement('CALL sp_plantel_eliminar(?)', [$id]);
 
             // El procedimiento almacenado podría no devolver un valor indicativo de éxito
             // o podría lanzar una excepción (que sería capturada por el bloque catch).

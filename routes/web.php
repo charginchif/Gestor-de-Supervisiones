@@ -66,22 +66,38 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->get('carreras/{id}', 'CarreraController@show');
     $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
+
+    // Rutas para la gestión de criterios de supervisión
+    $router->get('supervision/contable', 'SupervisionController@indexContable');
+    $router->get('supervision/contable/{id}', 'SupervisionController@showContable');
+    $router->post('supervision/contable', 'SupervisionController@storeContable');
+    $router->put('supervision/contable/{id}', 'SupervisionController@updateContable');
+    $router->delete('supervision/contable/{id}', 'SupervisionController@destroyContable');
+
+    $router->get('supervision/no-contable', 'SupervisionController@indexNoContable');
+    $router->get('supervision/no-contable/{id}', 'SupervisionController@showNoContable');
+    $router->post('supervision/no-contable', 'SupervisionController@storeNoContable');
+    $router->put('supervision/no-contable/{id}', 'SupervisionController@updateNoContable');
+    $router->delete('supervision/no-contable/{id}', 'SupervisionController@destroyNoContable');
+
+
 });
 
 // Rutas para Coordinador
 $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () use ($router) {
     // Rutas para la gestión de alumnos (para Coordinador)
-    $router->get('alumnos', 'UsuarioController@indexAlumnos');
-    $router->post('alumnos', 'UsuarioController@storeAlumno');
-    $router->get('alumnos/{id}', 'UsuarioController@showAlumno');
-    $router->put('alumnos/{id}', 'UsuarioController@updateAlumno');
+    $router->get('coordinador-alumnos', 'UsuarioController@indexAlumnos');
+    $router->post('coordinador-alumnos', 'UsuarioController@storeAlumno');
+    $router->get('coordinador-alumnos/{id}', 'UsuarioController@showAlumno');
+    $router->put('coordinador-alumnos/{id}', 'UsuarioController@updateAlumno');
 
     // Rutas para la gestión de docentes (para Coordinador)
-    $router->get('docentes', 'UsuarioController@indexDocentes');
-    $router->post('docentes', 'UsuarioController@storeDocente');
-    $router->get('docentes/{id}', 'UsuarioController@showDocente');
-    $router->put('docentes/{id}', 'UsuarioController@updateDocente');
+    $router->get('coordinador-docentes', 'UsuarioController@indexDocentes');
+    $router->post('coordinador-docentes', 'UsuarioController@storeDocente');
+    $router->get('coordinador-docentes/{id}', 'UsuarioController@showDocente');
+    $router->put('coordinador-docentes/{id}', 'UsuarioController@updateDocente');
 
     // Rutas para la gestión de planteles (para Coordinador)
     $router->get('coordinador-planteles', 'PlantelController@indexCoordinadorPlanteles');
+
 });
