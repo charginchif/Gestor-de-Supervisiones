@@ -11,7 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { careers as allCareers, subjects, Career } from "@/lib/data"
+import { careers as allCareers, subjects } from "@/lib/data"
+import { Career } from "@/lib/modelos"
 import { Button } from "@/components/ui/button"
 import { Book, Pencil, Trash2 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -121,7 +122,7 @@ export default function CareerPlansPage() {
               Modalidades disponibles para esta carrera.
           </p>
         </div>
-        {user?.rol === 'administrator' && (
+        {user?.rol === 'administrador' && (
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                     <Button>Crear Plan de Estudio</Button>
@@ -156,7 +157,7 @@ export default function CareerPlansPage() {
                                 <CardDescription>{modality.campus}</CardDescription>
                                 <p className="text-xs text-muted-foreground pt-2">{modality.coordinator}</p>
                             </div>
-                            {user?.rol === 'administrator' && (
+                            {user?.rol === 'administrador' && (
                               <div className="flex gap-2">
                                   <Button size="icon" variant="warning">
                                       <Pencil className="h-4 w-4" />
@@ -186,7 +187,7 @@ export default function CareerPlansPage() {
                 <h3 className="text-lg font-semibold text-white">No hay planes de estudio</h3>
                 <p className="text-muted-foreground mt-2">
                     Aún no se han creado planes de estudio para esta carrera. <br/>
-                    {user?.rol === 'administrator' && `Usa el botón "Crear Plan de Estudio" para empezar.`}
+                    {user?.rol === 'administrador' && `Usa el botón "Crear Plan de Estudio" para empezar.`}
                 </p>
             </div>
         )}

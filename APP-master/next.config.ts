@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -19,8 +20,7 @@ const nextConfig: NextConfig = {
     ],
   },
   env: {
-    NEXT_PUBLIC_API_BASE_URL: 'http://172.16.33.36.:81/Practicas/syed/public/api',
-    // NEXT_PUBLIC_API_BASE_URL: 'https://syed.joannesystem.com',
+    NEXT_PUBLIC_API_BASE_URL: 'https://syed-api.joannesystem.com/public',
   }
 };
 

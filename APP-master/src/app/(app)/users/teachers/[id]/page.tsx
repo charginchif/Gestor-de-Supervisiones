@@ -13,8 +13,8 @@ import {
   subjects as allSubjects,
   schedules,
   groups as allGroups,
-  Evaluation,
 } from "@/lib/data"
+import { Evaluation } from "@/lib/modelos"
 import {
   Card,
   CardContent,
@@ -80,7 +80,7 @@ export default function TeacherProfilePage() {
 
   const teacherData = useMemo(() => {
     const teacherUser = users.find(
-      (user) => user.id === teacherId && user.rol === "teacher"
+      (user) => user.id === teacherId && user.rol === "docente"
     );
     
     if (!teacherUser) return null;

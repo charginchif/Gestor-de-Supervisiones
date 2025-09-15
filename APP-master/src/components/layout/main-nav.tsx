@@ -25,17 +25,17 @@ import {
 import { useAuth } from "@/context/auth-context"
 
 export const allLinks = [
-  { href: "/dashboard", label: "Panel de Control", icon: LayoutDashboard, roles: ['administrator', 'coordinator', 'teacher', 'student'], exact: true },
-  { href: "/users", label: "Usuarios", icon: Users, roles: ['administrator', 'coordinator'], exact: false },
-  { href: "/planteles", label: "Planteles", icon: Building, roles: ['administrator'], exact: true },
-  { href: "/carreras", label: "Carreras", icon: BookOpenCheck, roles: ['administrator', 'coordinator'], exact: true },
-  { href: "/groups", label: "Grupos", icon: Users, roles: ['administrator', 'coordinator'], exact: true },
-  { href: "/schedules", label: "Horarios", icon: CalendarClock, roles: ['administrator', 'coordinator', 'teacher', 'student'], exact: true },
-  { href: "/supervisions", label: "Agenda", icon: ClipboardList, roles: ['administrator', 'coordinator'], exact: true },
-  { href: "/supervisions-management", label: "Supervisiones", icon: ShieldCheck, roles: ['administrator', 'coordinator'], exact: true },
-  { href: "/supervision-rubrics", label: "Gestión de Rúbricas", icon: ClipboardCheck, roles: ['administrator'], exact: true },
-  { href: "/evaluations", label: "Evaluaciones", icon: BookUser, roles: ['administrator', 'coordinator', 'student'], exact: false },
-  { href: "/palpa", label: "Palpa", icon: HeartHandshake, roles: ['teacher'], exact: true },
+  { href: "/dashboard", label: "Panel de Control", icon: LayoutDashboard, roles: ['administrador', 'coordinador', 'docente', 'alumno'], exact: true },
+  { href: "/users", label: "Usuarios", icon: Users, roles: ['administrador', 'coordinador'], exact: false },
+  { href: "/planteles", label: "Planteles", icon: Building, roles: ['administrador'], exact: true },
+  { href: "/carreras", label: "Carreras", icon: BookOpenCheck, roles: ['administrador', 'coordinador'], exact: true },
+  { href: "/groups", label: "Grupos", icon: Users, roles: ['administrador', 'coordinador'], exact: true },
+  { href: "/schedules", label: "Horarios", icon: CalendarClock, roles: ['administrador', 'coordinador', 'docente', 'alumno'], exact: true },
+  { href: "/supervisions", label: "Agenda", icon: ClipboardList, roles: ['administrador', 'coordinador'], exact: true },
+  { href: "/supervisions-management", label: "Supervisiones", icon: ShieldCheck, roles: ['administrador', 'coordinador'], exact: true },
+  { href: "/supervision-rubrics", label: "Gestión de Rúbricas", icon: ClipboardCheck, roles: ['administrador'], exact: true },
+  { href: "/evaluations", label: "Evaluaciones", icon: BookUser, roles: ['administrador', 'coordinador', 'alumno'], exact: false },
+  { href: "/palpa", label: "Palpa", icon: HeartHandshake, roles: ['docente'], exact: true },
 ]
 
 export function MainNav() {
@@ -46,29 +46,26 @@ export function MainNav() {
   const links = allLinks.filter(link => user && link.roles.includes(user.rol));
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <SidebarMenu>
-        {links.map((link) => {
-            const Icon = link.icon
-            const isActive = link.exact ? pathname === link.href : pathname.startsWith(link.href)
-            return (
-            <SidebarMenuItem key={link.href}>
-                <SidebarMenuButton
-                asChild
-                isActive={isActive}
-                tooltip={link.label}
-                onClick={() => setOpenMobile(false)}
-                size="lg"
-                >
-                <Link href={link.href}>
-                    <Icon />
-                    <span>{link.label}</span>
-                </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            )
-        })}
-        </SidebarMenu>
-    </div>
+    <SidebarMenu>
+      {links.map((link) => {
+        const Icon = link.icon
+        const isActive = link.exact ? pathname === link.href : pathname.startsWith(link.href)
+        return (
+          <SidebarMenuItem key={link.href}>
+            <SidebarMenuButton
+              asChild
+              isActive={isActive}
+              tooltip={link.label}
+              onClick={() => setOpenMobile(false)}
+            >
+              <Link href={link.href} className="gap-3">
+                <Icon className="size-5 shrink-0" />
+                <span>{link.label}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )
+      })}
+    </SidebarMenu>
   )
 }

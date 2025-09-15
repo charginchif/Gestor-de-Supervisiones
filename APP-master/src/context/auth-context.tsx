@@ -3,7 +3,8 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { User, Role } from '@/lib/data';
+import { User, Roles, getRedirectPath, roleRedirects } from '@/lib/modelos';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
@@ -15,18 +16,25 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const roleMapping: { [key: number]: Role } = {
-  1: 'administrator',
-  2: 'coordinator',
-  3: 'teacher',
-  4: 'student'
-};
+type Role = 'administrador' | 'coordinador' | 'docente' | 'alumno';
+
+const roleIdToName = (id: number): Role => {
+    switch (id) {
+        case Roles.Administrador: return 'administrador';
+        case Roles.Coordinador: return 'coordinador';
+        case Roles.Docente: return 'docente';
+        case Roles.Alumno: return 'alumno';
+        default: throw new Error(`Unknown role ID: ${id}`);
+    }
+}
+
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const { toast } = useToast();
 
   useEffect(() => {
     try {
@@ -66,41 +74,62 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({ correo: email, contrasena: password }),
         });
 
         const result = await response.json();
-
-        if (response.ok && result.status === 'éxito') {
-            const apiUser = result.data.user;
+        
+        if (result.exito) {
+            const apiUser = result.datos.user;
             
-            // Map the API user structure to our local User interface
+            const internalRole = roleIdToName(apiUser.id_rol);
+
             const loggedInUser: User = {
                 id: apiUser.id,
-                nombre: apiUser.name.split(' ')[0], // Simple split for name
-                apellido_paterno: apiUser.name.split(' ').slice(1).join(' '), // The rest is surname
-                apellido_materno: '', // Not provided by API
+                nombre: apiUser.nombre,
+                apellido_paterno: apiUser.apellido_paterno,
+                apellido_materno: apiUser.apellido_materno,
                 correo: apiUser.email,
-                rol: roleMapping[apiUser.role] || 'student', // Default to student if role is unknown
-                // Other fields like 'grupo', 'fecha_registro' are not in the API response,
-                // so they'll be undefined or you can set defaults.
-                grupo: undefined,
-                fecha_registro: new Date().toISOString(),
-                ultimo_acceso: new Date().toISOString(),
+                id_rol: apiUser.id_rol,
+                rol: internalRole,
+                rol_nombre: apiUser.rol,
+                fecha_registro: apiUser.fecha_registro,
+                ultimo_acceso: apiUser.ultimo_acceso,
             };
             
             localStorage.setItem('user', JSON.stringify(loggedInUser));
-            localStorage.setItem('access_token', result.data.access_token);
+            localStorage.setItem('access_token', result.datos.access_token);
             setUser(loggedInUser);
-            router.push('/dashboard');
+            
+            toast({
+              variant: "success",
+              title: "Inicio de Sesión Exitoso",
+              description: `¡Bienvenido de nuevo, ${loggedInUser.nombre}!`,
+            });
+            
+            const redirectPath = getRedirectPath(loggedInUser.id_rol);
+            router.push(redirectPath);
             return true;
         } else {
-            console.error("Login failed:", result.mensaje);
+            const errorMessages = result.datos?.errors 
+                ? Object.values(result.datos.errors).flat().join(' ') 
+                : result.mensaje || "Ocurrió un error desconocido.";
+            toast({
+              variant: "destructive",
+              title: "Error al iniciar sesión",
+              description: errorMessages,
+            });
             return false;
         }
     } catch (error) {
         console.error("Error during login request:", error);
+        toast({
+          variant: "destructive",
+          title: "Error de Conexión",
+          description: "No se pudo conectar con el servidor. Por favor, inténtalo de nuevo más tarde.",
+        });
         return false;
     } finally {
         setIsLoading(false);

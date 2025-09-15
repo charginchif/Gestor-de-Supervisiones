@@ -13,7 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { careers as allCareers, subjects, Career, planteles } from "@/lib/data"
+import { careers as allCareers, subjects, planteles } from "@/lib/data"
+import { Career } from "@/lib/modelos"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -196,7 +197,7 @@ export default function CareersPage() {
                 </div>
             </div>
             <div className="flex gap-2 shrink-0">
-                {user?.rol === 'administrator' && (
+                {user?.rol === 'administrador' && (
                   <>
                     <Button size="icon" variant="warning" onClick={(e) => e.stopPropagation()}>
                         <Pencil className="h-4 w-4" />
@@ -298,7 +299,7 @@ export default function CareersPage() {
         <h1 className="font-headline text-3xl font-bold tracking-tight text-white">
           Carreras
         </h1>
-        {user?.rol === 'administrator' && (
+        {user?.rol === 'administrador' && (
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                     <Button>
@@ -339,7 +340,7 @@ export default function CareersPage() {
         </div>
       </div>
       
-      {user?.rol === 'administrator' ? renderAdminView() : renderDefaultView()}
+      {user?.rol === 'administrador' ? renderAdminView() : renderDefaultView()}
 
     </div>
   )

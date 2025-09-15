@@ -16,7 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { schedules, teachers, groups as allGroups, subjects, Group, careers as allCareers } from "@/lib/data"
+import { schedules, teachers, groups as allGroups, subjects, careers as allCareers } from "@/lib/data"
+import { Group } from "@/lib/modelos"
 import {
   Select,
   SelectContent,
@@ -47,7 +48,7 @@ export default function SchedulesPage() {
 
 
   useEffect(() => {
-    if (user?.rol === 'teacher') {
+    if (user?.rol === 'docente') {
         setFilterType('group');
         const teacherSchedules = schedules.filter(s => s.teacherId === user.id);
         const groupIds = [...new Set(teacherSchedules.map(s => s.groupId))];
@@ -67,7 +68,7 @@ export default function SchedulesPage() {
   const getSchedulesForDay = (day: string) => {
     let filteredSchedules = schedules
 
-    if (user?.rol === 'student') {
+    if (user?.rol === 'alumno') {
         const studentGroup = allGroups.find(g => g.name === user.grupo);
         if (studentGroup) {
             filteredSchedules = schedules.filter(s => s.groupId === studentGroup.id);
@@ -89,7 +90,7 @@ export default function SchedulesPage() {
             .map(g => g.id);
         filteredSchedules = schedules.filter(s => groupIdsInCareer.includes(s.groupId));
       }
-    } else if (user?.rol !== 'administrator' && user?.rol !== 'coordinator') {
+    } else if (user?.rol !== 'administrador' && user?.rol !== 'coordinador') {
         // Default to empty if no filter is selected and user is not admin/coord
         return [];
     }
@@ -161,7 +162,7 @@ export default function SchedulesPage() {
     }
   }
 
-  const shouldShowFilters = user?.rol === 'administrator' || user?.rol === 'coordinator' || user?.rol === 'teacher';
+  const shouldShowFilters = user?.rol === 'administrador' || user?.rol === 'coordinador' || user?.rol === 'docente';
 
   return (
     <div className="flex flex-col gap-8">
@@ -171,7 +172,7 @@ export default function SchedulesPage() {
         </h1>
         {shouldShowFilters && (
             <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
-                {user?.rol === 'teacher' ? (
+                {user?.rol === 'docente' ? (
                     <Select value={filterType} onValueChange={(value) => { setFilterType(value); setSelectedFilter(null); }}>
                         <SelectTrigger className="w-full md:w-[150px]">
                             <SelectValue placeholder="Filtrar por..." />
@@ -217,9 +218,9 @@ export default function SchedulesPage() {
                         <TableHead className="w-[100px] md:w-[150px]">Hora</TableHead>
                         <TableHead>Materia</TableHead>
                         <TableHead>Docente</TableHead>
-                        {user?.rol !== 'student' && <TableHead>Carrera</TableHead>}
-                        {user?.rol !== 'student' && <TableHead>Nivel</TableHead>}
-                        {user?.rol !== 'student' && <TableHead>Grupo</TableHead>}
+                        {user?.rol !== 'alumno' && <TableHead>Carrera</TableHead>}
+                        {user?.rol !== 'alumno' && <TableHead>Nivel</TableHead>}
+                        {user?.rol !== 'alumno' && <TableHead>Grupo</TableHead>}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -234,9 +235,9 @@ export default function SchedulesPage() {
                                 <div>{getEntityName("subject", schedule.subjectId)}</div>
                             </TableCell>
                             <TableCell>{getEntityName("teacher", schedule.teacherId)}</TableCell>
-                            {user?.rol !== 'student' && <TableCell>{groupDetails?.career || 'N/A'}</TableCell>}
-                            {user?.rol !== 'student' && <TableCell>{groupDetails?.semester ? `${groupDetails.semester}°` : 'N/A'}</TableCell>}
-                            {user?.rol !== 'student' && <TableCell>{groupDetails?.name || 'N/A'}</TableCell>}
+                            {user?.rol !== 'alumno' && <TableCell>{groupDetails?.career || 'N/A'}</TableCell>}
+                            {user?.rol !== 'alumno' && <TableCell>{groupDetails?.semester ? `${groupDetails.semester}°` : 'N/A'}</TableCell>}
+                            {user?.rol !== 'alumno' && <TableCell>{groupDetails?.name || 'N/A'}</TableCell>}
                             </TableRow>
                         )
                       })}
