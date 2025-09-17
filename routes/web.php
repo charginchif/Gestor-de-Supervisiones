@@ -67,6 +67,24 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
 
+    // Rutas para la asignación de carreras a coordinadores
+    $router->get('carrerasPorCoordinador/{id}', 'CarreraController@getCarrerasPorCoordinador');
+    $router->get('carrerasPorCoordinador', 'CarreraController@getAllAsignaciones');
+    $router->post('asignarCarreraCoordinador', 'CarreraController@asignarCarreraCoordinador');
+    $router->put('asignarCarreraCoordinador', 'CarreraController@actualizarCarreraCoordinador');
+    $router->delete('asignarCarreraCoordinador', 'CarreraController@eliminarCarreraCoordinador');
+
+    // Rutas para la asignación de carreras a planteles
+    $router->post('asignarCarreraPlantel', 'CarreraController@asignarCarreraPlantel');
+    $router->delete('eliminarCarreraPlantel', 'CarreraController@eliminarCarreraPlantel');
+    $router->get('carrerasPorPlantel', 'CarreraController@getAllCarrerasPorPlantel');
+    $router->get('carrerasPorPlantel/{id}', 'CarreraController@getCarrerasPorPlantel');
+
+    // Rutas para la asignación de turnos a planteles
+    $router->post('plantel-turno', 'CarreraController@asignarTurnoPlantel');
+    $router->delete('plantel-turno/{id}', 'CarreraController@eliminarTurnoPlantel');
+    $router->put('plantel-turno/{id}', 'CarreraController@actualizarTurnoPlantel');
+
     // Rutas para la gestión de criterios de supervisión
     $router->get('supervision/contable', 'SupervisionController@indexContable');
     $router->get('supervision/contable/{id}', 'SupervisionController@showContable');
