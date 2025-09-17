@@ -88,8 +88,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public static function crearAlumno(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, string $p_matricula, int $p_id_carrera)
     {
         $sql = 'CALL sp_crear_alumno(?, ?, ?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_alumno)';
-        DB::select($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash, $p_matricula, $p_id_carrera]);
+        $success = DB::statement($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash, $p_matricula, $p_id_carrera]);
+
+        if (!$success) {
+            return null; 
+        }
+
         $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_alumno as id_alumno');
+
+        if (empty($results) || !isset($results[0]->id_usuario)) {
+            return null; // Stored procedure executed, but didn't return expected IDs
+        }
+
         return $results[0];
     }
 

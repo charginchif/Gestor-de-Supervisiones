@@ -140,57 +140,36 @@ class UsuarioController extends Controller
      */
     public function storeAlumno(Request $request)
     {
-        $usersData = $request->all();
-        $results = [];
-        $errors = [];
+        $userData = $request->all();
 
-        if (!is_array(reset($usersData))) {
-            $usersData = [$usersData];
+        $validator = Validator::make($userData, [
+            'matricula'        => 'required|string|max:15|unique:alumno,matricula',
+            'nombre'           => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:100',
+            'apellido_materno' => 'required|string|max:100',
+            'correo'           => 'required|email|unique:usuario,correo',
+            'contrasena'       => 'required|string|min:8',
+            'id_carrera'       => 'required|integer|exists:carrera,id_carrera',
+        ]);
+
+        if ($validator->fails()) {
+            return RespuestaAPI::error('Datos inválidos', 422, $validator->errors());
         }
 
-        foreach ($usersData as $userData) {
-            $validator = Validator::make($userData, [
-                'nombre'           => 'required|string|max:100',
-                'apellido_paterno' => 'required|string|max:100',
-                'apellido_materno' => 'required|string|max:100',
-                'correo'           => 'required|email|unique:usuario,correo',
-                'contrasena'       => 'required|string|min:8',
-                'matricula'        => 'required|string|max:15|unique:alumno,matricula',
-                'id_carrera'       => 'required|integer|exists:carreras,id_carrera',
-            ]);
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'correo' => $userData['correo'] ?? 'N/A',
-                    'errors' => $validator->errors()
-                ];
-                continue;
-            }
-
-            try {
-                $result = User::crearAlumno(
-                    $userData['nombre'],
-                    $userData['apellido_paterno'],
-                    $userData['apellido_materno'],
-                    $userData['correo'],
-                    Hash::make($userData['contrasena']),
-                    $userData['matricula'],
-                    $userData['id_carrera']
-                );
-                $results[] = $result;
-            } catch (\Exception $e) {
-                $errors[] = [
-                    'correo' => $userData['correo'],
-                    'error' => $e->getMessage()
-                ];
-            }
+        try {
+            $result = User::crearAlumno(
+                $userData['nombre'],
+                $userData['apellido_paterno'],
+                $userData['apellido_materno'],
+                $userData['correo'],
+                Hash::make($userData['contrasena']),
+                $userData['matricula'],
+                $userData['id_carrera']
+            );
+            return RespuestaAPI::exito('Alumno creado exitosamente', $result, 201);
+        } catch (\Exception $e) {
+            return RespuestaAPI::error('Error al crear el alumno: ' . $e->getMessage(), 500);
         }
-
-        if (!empty($errors)) {
-            return RespuestaAPI::error('Algunos alumnos no pudieron ser creados', 422, ['errors' => $errors, 'created' => $results]);
-        }
-
-        return RespuestaAPI::exito('Alumnos creados exitosamente', $results, 201);
     }
 
     /**
