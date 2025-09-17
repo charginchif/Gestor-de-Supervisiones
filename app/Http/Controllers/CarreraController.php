@@ -235,7 +235,7 @@ class CarreraController extends Controller
             $query = 'SELECT * FROM vw_plantel_carreras WHERE id_plantel = ?';
             $carreras = DB::select($query, [$id]);
             return RespuestaAPI::exito('Listado de carreras del plantel ' . $id, $carreras);
-        } catch (\\Illuminate\\Database\\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener las carreras del plantel: ' . $e->getMessage(), 500);
         }
     }
@@ -247,7 +247,7 @@ class CarreraController extends Controller
         try {
             $asignaciones = DB::select('SELECT * FROM vw_admin_plantel_carrera');
             return RespuestaAPI::exito('Listado de todas las asignaciones de carreras a planteles', $asignaciones);
-        } catch (\\Illuminate\\Database\\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener las asignaciones: ' . $e->getMessage(), 500);
         }
     }
@@ -283,7 +283,7 @@ class CarreraController extends Controller
             );
 
             return RespuestaAPI::exito('Turno asignado a plantel exitosamente', null, 201);
-        } catch (\\Illuminate\\Database\\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -297,7 +297,7 @@ class CarreraController extends Controller
             DB::statement('CALL sp_plantel_turno_eliminar(?)', [$id]);
             return RespuestaAPI::exito('Turno de plantel eliminado exitosamente', null, 200);
 
-        } catch (\\Illuminate\\Database\\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -335,7 +335,7 @@ class CarreraController extends Controller
             );
 
             return RespuestaAPI::exito('Turno de plantel actualizado exitosamente', null);
-        } catch (\\Illuminate\\Database\\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }

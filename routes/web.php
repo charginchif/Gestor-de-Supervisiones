@@ -61,11 +61,11 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('coordinadores/{id}', 'CoordinadorController@update');
 
     // Rutas para la gestión de carreras
-    $router->get('carreras', 'CarreraController@index');
-    $router->post('carreras', 'CarreraController@store');
-    $router->get('carreras/{id}', 'CarreraController@show');
-    $router->put('carreras/{id}', 'CarreraController@update');
-    $router->delete('carreras/{id}', 'CarreraController@destroy');
+     $router->get('carreras', 'CarreraController@index');
+    // $router->post('carreras', 'CarreraController@store');
+    // $router->get('carreras/{id}', 'CarreraController@show');
+    // $router->put('carreras/{id}', 'CarreraController@update');
+    // $router->delete('carreras/{id}', 'CarreraController@destroy');
 
     // Rutas para la asignación de carreras a coordinadores
     $router->get('carrerasPorCoordinador/{id}', 'CarreraController@getCarrerasPorCoordinador');
