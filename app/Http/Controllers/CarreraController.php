@@ -62,7 +62,7 @@ class CarreraController extends Controller
 
         try {
             DB::statement(
-                'CALL sp_carrera_actualizar(?)',
+                'CALL sp_carrera_actualizar(?, ?)',
                 [$id, $request->input('nombre')]
             );
 
@@ -72,7 +72,7 @@ class CarreraController extends Controller
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
-            return RespuestaAPI::error('Error al actualizar la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_INTERNAL_SERVER_ERROR);
+            return RespuestaAPI::error('Error al actualizar la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_ERROR_INTERNO);
         }
     }
 
@@ -86,7 +86,7 @@ class CarreraController extends Controller
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
-            return RespuestaAPI::error('Error al eliminar la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_INTERNAL_SERVER_ERROR);
+            return RespuestaAPI::error('Error al eliminar la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_ERROR_INTERNO);
         }
     }
 
