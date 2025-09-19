@@ -119,3 +119,5 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->get('coordinador-planteles', 'PlantelController@indexCoordinadorPlanteles');
 
 });
+
+//Soy un comentario
