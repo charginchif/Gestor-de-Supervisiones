@@ -64,8 +64,15 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
      $router->get('carreras', 'CarreraController@index');
     $router->post('carreras', 'CarreraController@store');
     $router->get('carreras/{id}', 'CarreraController@show');
-    $router->put('carreras/{id}', 'CarreraController@update');
+        $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
+
+    // Rutas para la gestión de materias
+    $router->get('materias', 'MateriaController@index');
+    $router->post('materias', 'MateriaController@store');
+    $router->get('materias/{id}', 'MateriaController@show');
+    $router->put('materias/{id}', 'MateriaController@update');
+    $router->delete('materias/{id}', 'MateriaController@destroy');
 
     // Rutas para la asignación de carreras a coordinadores
     $router->get('carrerasPorCoordinador/{id}', 'CarreraController@getCarrerasPorCoordinador');
@@ -98,7 +105,12 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('supervision/no-contable/{id}', 'SupervisionController@updateNoContable');
     $router->delete('supervision/no-contable/{id}', 'SupervisionController@destroyNoContable');
 
-
+    // Rutas para la gestión de plan de estudios
+    $router->get('plan-estudio', 'PlanEstudioController@indexAll');
+    $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
+    $router->post('plan-estudio', 'PlanEstudioController@store');
+    $router->put('plan-estudio', 'PlanEstudioController@update');
+    $router->delete('plan-estudio', 'PlanEstudioController@destroy');
 });
 
 // Rutas para Coordinador

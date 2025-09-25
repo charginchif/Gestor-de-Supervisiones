@@ -29,7 +29,7 @@ class CarreraController extends Controller
             }
             return RespuestaAPI::exito('Carrera encontrada', $carrera[0]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return RespuestaAPI::error('Error al obtener la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_ERROR_INTERNO );
+            return RespuestaAPI::error('Error al obtener la carrera: ' . $e->getMessage(), RespuestaAPI::HTTP_ERROR_INTERNO);
         }
     }
 
