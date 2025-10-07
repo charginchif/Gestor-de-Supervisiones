@@ -232,7 +232,7 @@ class CarreraController extends Controller
     public function getCarrerasPorPlantel($id)
     {
         try {
-            $query = 'SELECT * FROM vw_plantel_carreras WHERE id_plantel = ?';
+            $query = 'SELECT c.id_carrera, c.nombre, c.id_incorporacion, pc.id_plantel FROM carrera c JOIN plantel_carrera pc ON c.id_carrera = pc.id_carrera WHERE pc.id_plantel = ?';
             $carreras = DB::select($query, [$id]);
             return RespuestaAPI::exito('Listado de carreras del plantel ' . $id, $carreras);
         } catch (\Illuminate\Database\QueryException $e) {

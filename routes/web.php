@@ -61,10 +61,10 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('coordinadores/{id}', 'CoordinadorController@update');
 
     // Rutas para la gestión de carreras
-     $router->get('carreras', 'CarreraController@index');
+    $router->get('carreras', 'CarreraController@index');
     $router->post('carreras', 'CarreraController@store');
     $router->get('carreras/{id}', 'CarreraController@show');
-        $router->put('carreras/{id}', 'CarreraController@update');
+    $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
 
     // Rutas para la gestión de materias
@@ -132,4 +132,13 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
 
 });
 
+// Rutas para Alumno
+$router->group(['middleware' => ['auth.jwt', 'role:alumno']], function () use ($router) {
+    $router->get('mis-docentes', 'AlumnoDocenteController@index');
+    $router->post('evaluar-docente', 'AlumnoDocenteController@evaluar');
+    $router->post('inscribir-grupo', 'AlumnoDocenteController@inscribirGrupo');
+});
+
 //Soy un comentario
+
+

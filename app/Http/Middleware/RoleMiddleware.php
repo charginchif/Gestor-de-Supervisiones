@@ -2,24 +2,19 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\User;
 use App\Models\CatRol;
 use App\Utils\RespuestaAPI;
+use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
     public function handle($request, Closure $next, $rolRequerido)
     {
-        $claims = $request->attributes->get('jwt_claims');
-
-        if (!$claims || !isset($claims['usuario_id'])) {
-            return RespuestaAPI::error('No autorizado para acceder a este recurso', RespuestaAPI::HTTP_NO_AUTORIZADO);
-        }
-
-        $usuario = User::find($claims['usuario_id']);
+        $usuario = Auth::user(); // Obtener usuario ya autenticado por JwtMiddleware
 
         if (!$usuario) {
-            return RespuestaAPI::error('Usuario no encontrado', RespuestaAPI::HTTP_NO_AUTORIZADO);
+            // Este caso no debería ocurrir si JwtMiddleware se ejecuta primero
+            return RespuestaAPI::error('Usuario no autenticado', RespuestaAPI::HTTP_NO_AUTORIZADO);
         }
 
         $rol = CatRol::where('nombre', $rolRequerido)->first();
@@ -28,10 +23,8 @@ class RoleMiddleware
             return RespuestaAPI::error('Rol no válido', RespuestaAPI::HTTP_PROHIBIDO);
         }
 
-        $requiredRoleId = $rol->id;
-
-        // Check if the user's role ID matches the required role ID
-        if ($usuario->id_rol === $requiredRoleId) {
+        // Compara el id_rol del usuario con el id del rol requerido
+        if ($usuario->id_rol === $rol->id) {
             return $next($request);
         } else {
             return RespuestaAPI::error('No tienes permisos para acceder a este recurso', RespuestaAPI::HTTP_PROHIBIDO);
