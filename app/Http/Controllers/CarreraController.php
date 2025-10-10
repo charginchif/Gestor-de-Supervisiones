@@ -47,6 +47,9 @@ class CarreraController extends Controller
 
             return RespuestaAPI::exito('Carrera creada exitosamente', $request->all(), 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La carrera ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -69,6 +72,9 @@ class CarreraController extends Controller
             return RespuestaAPI::exito('Carrera actualizada exitosamente', $request->all());
 
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La carrera ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -105,6 +111,9 @@ class CarreraController extends Controller
 
             return RespuestaAPI::exito('Carrera asignada a coordinador exitosamente', null, 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La asignación ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -134,6 +143,9 @@ class CarreraController extends Controller
 
             return RespuestaAPI::exito('Asignación actualizada exitosamente', null);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La asignación ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -200,6 +212,9 @@ class CarreraController extends Controller
 
             return RespuestaAPI::exito('Carrera asignada a plantel exitosamente', null, 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La asignación ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -232,7 +247,7 @@ class CarreraController extends Controller
     public function getCarrerasPorPlantel($id)
     {
         try {
-            $query = 'SELECT c.id_carrera, c.nombre, c.id_incorporacion, pc.id_plantel FROM carrera c JOIN plantel_carrera pc ON c.id_carrera = pc.id_carrera WHERE pc.id_plantel = ?';
+            $query = 'SELECT * FROM vw_admin_plantel_carrera WHERE id_plantel = ?';
             $carreras = DB::select($query, [$id]);
             return RespuestaAPI::exito('Listado de carreras del plantel ' . $id, $carreras);
         } catch (\Illuminate\Database\QueryException $e) {
@@ -284,6 +299,9 @@ class CarreraController extends Controller
 
             return RespuestaAPI::exito('Turno asignado a plantel exitosamente', null, 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La asignación ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
@@ -336,6 +354,9 @@ class CarreraController extends Controller
 
             return RespuestaAPI::exito('Turno de plantel actualizado exitosamente', null);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return RespuestaAPI::error('La asignación ya existe', 400);
+            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
