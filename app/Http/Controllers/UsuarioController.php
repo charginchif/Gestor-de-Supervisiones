@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Alumno;
 use App\Models\Docente;
+use App\Models\Coordinador;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +59,60 @@ class UsuarioController extends Controller
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al crear el usuario: ' . $e->getMessage(), 500);
         }
+    }
+
+    /**
+     * Crea un nuevo coordinador.
+     */
+    public function storeCoordinador(Request $request)
+    {
+        $usersData = $request->all();
+        $results = [];
+        $errors = [];
+
+        if (!is_array(reset($usersData))) {
+            $usersData = [$usersData];
+        }
+
+        foreach ($usersData as $userData) {
+            $validator = Validator::make($userData, [
+                'nombre'           => 'required|string|max:100',
+                'apellido_paterno' => 'required|string|max:100',
+                'apellido_materno' => 'required|string|max:100',
+                'correo'           => 'required|email|unique:usuario,correo',
+                'contrasena'       => 'required|string|min:8',
+            ]);
+
+            if ($validator->fails()) {
+                $errors[] = [
+                    'correo' => $userData['correo'] ?? 'N/A',
+                    'errors' => $validator->errors()
+                ];
+                continue;
+            }
+
+            try {
+                $result = Coordinador::crearCoordinador(
+                    $userData['nombre'],
+                    $userData['apellido_paterno'],
+                    $userData['apellido_materno'],
+                    $userData['correo'],
+                    Hash::make($userData['contrasena'])
+                );
+                $results[] = $result;
+            } catch (\Exception $e) {
+                $errors[] = [
+                    'correo' => $userData['correo'],
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+
+        if (!empty($errors)) {
+            return RespuestaAPI::error('Algunos coordinadores no pudieron ser creados', 422, ['errors' => $errors, 'created' => $results]);
+        }
+
+        return RespuestaAPI::exito('Coordinadores creados exitosamente', $results, 201);
     }
 
     public function update(Request $request, $id)
@@ -157,7 +212,7 @@ class UsuarioController extends Controller
         }
 
         try {
-            $result = User::crearAlumno(
+            $result = Alumno::crearAlumno(
                 $userData['nombre'],
                 $userData['apellido_paterno'],
                 $userData['apellido_materno'],
@@ -277,7 +332,7 @@ class UsuarioController extends Controller
             }
 
             try {
-                $result = User::crearDocente(
+                $result = Docente::crearDocente(
                     $userData['nombre'],
                     $userData['apellido_paterno'],
                     $userData['apellido_materno'],

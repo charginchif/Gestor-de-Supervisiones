@@ -2,8 +2,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
-class Alumno extends Model
+class Alumno extends Model 
 {
     // Nombre de la vista
     protected $table = 'vw_alumno_perfil';
@@ -41,5 +42,23 @@ class Alumno extends Model
     public function getNombreCompletoAttribute()
     {
         return trim("{$this->nombre} {$this->apellido_paterno} {$this->apellido_materno}");
+    }
+
+    public static function crearAlumno(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, string $p_matricula, int $p_id_carrera)
+    {
+        $sql = 'CALL sp_crear_alumno(?, ?, ?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_alumno)';
+        $success = DB::statement($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash, $p_matricula, $p_id_carrera]);
+
+        if (!$success) {
+            return null; 
+        }
+
+        $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_alumno as id_alumno');
+
+        if (empty($results) || !isset($results[0]->id_usuario)) {
+            return null; // Stored procedure executed, but didn't return expected IDs
+        }
+
+        return $results[0];
     }
 }

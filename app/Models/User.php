@@ -37,9 +37,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(CatRol::class, 'id_rol', 'id');
     }
 
-    public function alumno()
+    public function coordinador()
     {
-        return $this->hasOne(Alumno::class, 'usuario_id', 'id');
+        return $this->hasOne(Coordinador::class, 'id_usuario', 'id');
     }
 
     
@@ -82,37 +82,4 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         );
     }
 
-    public static function crearDocente(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, ?string $p_grado_academico)
-    {
-        $sql = 'CALL sp_crear_docente(?, ?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_docente)';
-        DB::select($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash, $p_grado_academico]);
-        $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_docente as id_docente');
-        return $results[0];
-    }
-
-    public static function crearAlumno(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, string $p_matricula, int $p_id_carrera)
-    {
-        $sql = 'CALL sp_crear_alumno(?, ?, ?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_alumno)';
-        $success = DB::statement($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash, $p_matricula, $p_id_carrera]);
-
-        if (!$success) {
-            return null; 
-        }
-
-        $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_alumno as id_alumno');
-
-        if (empty($results) || !isset($results[0]->id_usuario)) {
-            return null; // Stored procedure executed, but didn't return expected IDs
-        }
-
-        return $results[0];
-    }
-
-    public static function crearCoordinador(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash)
-    {
-        $sql = 'CALL sp_crear_coordinador(?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_coordinador)';
-        DB::select($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash]);
-        $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_coordinador as id_coordinador');
-        return $results[0];
-    }
 }

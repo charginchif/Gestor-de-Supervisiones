@@ -120,24 +120,29 @@ class AlumnoDocenteController extends Controller
 
             $idAlumno = $alumno->id_alumno;
 
-            // TODO: Asumimos la existencia de una tabla 'grupo_alumnos' que relaciona alumnos y grupos.
-            // Esta tabla debería tener al menos 'id_grupo' y 'id_alumno'.
-            DB::table('grupo_alumnos')->insert([
-                'id_grupo' => $idGrupo,
-                'id_alumno' => $idAlumno,
+            // Llamar al procedimiento almacenado para inscribir al alumno.
+            $resultadoInscripcion = DB::select('CALL sp_inscripcion_grupo_alumno(?, ?)', [
+                $idGrupo,
+                $idAlumno
             ]);
 
-            return RespuestaAPI::exito('Inscripción al grupo exitosa.', [
-                'id_grupo' => $idGrupo,
-                'id_alumno' => $idAlumno
-            ]);
+            // El procedimiento devuelve un array con un objeto de resultado, lo extraemos.
+            $datosResultado = $resultadoInscripcion[0] ?? null;
+x
+            // Determinar el mensaje de éxito basado en el resultado del SP.
+            $mensaje = 'Inscripción al grupo procesada.';
+            if ($datosResultado && $datosResultado->resultado === 'YA_INSCRITO') {
+                $mensaje = 'El alumno ya se encontraba inscrito en este grupo.';
+            } elseif ($datosResultado && $datosResultado->resultado === 'INSCRIPCION_CREADA') {
+                $mensaje = 'Inscripción al grupo exitosa.';
+            }
+
+            return RespuestaAPI::exito($mensaje, $datosResultado);
 
         } catch (QueryException $e) {
-            // Error de llave duplicada
-            if ($e->getCode() == 23000) {
-                return RespuestaAPI::error('El alumno ya está inscrito en este grupo.', 409);
-            }
-            return RespuestaAPI::error('Error en la base de datos al inscribir al grupo.', 500, ['details' => $e->getMessage()]);
+            // Capturar errores específicos de la base de datos (ej. SIGNAL SQLSTATE)
+            $errorMessage = $e->errorInfo[2] ?? 'Error en la base de datos al inscribir al grupo.';
+            return RespuestaAPI::error($errorMessage, 400);
         } catch (\Exception $e) {
             return RespuestaAPI::error('Ocurrió un error al inscribir al grupo.', 500, ['details' => $e->getMessage()]);
         }

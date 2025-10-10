@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Docente extends Model
 {
@@ -51,5 +52,13 @@ class Docente extends Model
     public function usuario()
     {
         return $this->belongsTo(User::class, 'id_usuario', 'id');
+    }
+
+    public static function crearDocente(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, ?string $p_grado_academico)
+    {
+        $sql = 'CALL sp_crear_docente(?, ?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_docente)';
+        DB::select($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash, $p_grado_academico]);
+        $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_docente as id_docente');
+        return $results[0];
     }
 }

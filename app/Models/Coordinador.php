@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
-class Coordinador extends Model
+class Coordinador extends User
 {
     /**
      * La tabla de base de datos asociada con el modelo.
@@ -20,35 +20,11 @@ class Coordinador extends Model
      */
     protected $primaryKey = 'id_coordinador';
 
-    /**
-     * Indica si el modelo debe tener timestamps.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'id_coordinador',
-        'id_usuario',
-        'nombre',
-        'apellido_paterno',
-        'apellido_materno',
-        'correo',
-        'fecha_registro',
-        'ultimo_acceso',
-        'id_rol'
-    ];
-
-    /**
-     * Obtiene el usuario asociado con el coordinador.
-     */
-    public function usuario()
+    public static function crearCoordinador(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash)
     {
-        return $this->belongsTo(User::class, 'id_usuario', 'id');
+        $sql = 'CALL sp_crear_coordinador(?, ?, ?, ?, ?, @p_out_id_usuario, @p_out_id_coordinador)';
+        DB::select($sql, [$p_nombre, $p_apellido_paterno, $p_apellido_materno, $p_correo, $p_contrasena_hash]);
+        $results = DB::select('SELECT @p_out_id_usuario as id_usuario, @p_out_id_coordinador as id_coordinador');
+        return $results[0];
     }
 }

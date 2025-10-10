@@ -98,6 +98,35 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`PUT /carreras/{id}`**: Update a career's information.
 *   **`DELETE /carreras/{id}`**: Delete a career.
 
+### Subject Management
+
+*   **`GET /materias`**: Get a list of all subjects.
+*   **`POST /materias`**: Create a new subject.
+*   **`GET /materias/{id}`**: Get a specific subject by ID.
+*   **`PUT /materias/{id}`**: Update a subject's information.
+*   **`DELETE /materias/{id}`**: Delete a subject.
+
+### Coordinator Career Assignment
+
+*   **`GET /carrerasPorCoordinador/{id}`**: Get careers assigned to a coordinator.
+*   **`GET /carrerasPorCoordinador`**: Get all career assignments.
+*   **`POST /asignarCarreraCoordinador`**: Assign a career to a coordinator.
+*   **`PUT /asignarCarreraCoordinador`**: Update a career assignment.
+*   **`DELETE /asignarCarreraCoordinador`**: Delete a career assignment.
+
+### Campus Career Assignment
+
+*   **`POST /asignarCarreraPlantel`**: Assign a career to a campus.
+*   **`DELETE /eliminarCarreraPlantel`**: Delete a career assignment from a campus.
+*   **`GET /carrerasPorPlantel`**: Get all careers for all campuses.
+*   **`GET /carrerasPorPlantel/{id}`**: Get all careers for a specific campus.
+
+### Campus Shift Assignment
+
+*   **`POST /plantel-turno`**: Assign a shift to a campus.
+*   **`DELETE /plantel-turno/{id}`**: Delete a shift assignment from a campus.
+*   **`PUT /plantel-turno/{id}`**: Update a shift assignment for a campus.
+
 ### Accounting Supervision Criteria Management
 
 *   **`GET /supervision/contable`**: Get a list of all accounting supervision criteria.
@@ -113,6 +142,14 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`GET /supervision/no-contable/{id}`**: Get a specific non-accounting supervision criterion by ID.
 *   **`PUT /supervision/no-contable/{id}`**: Update a non-accounting supervision criterion.
 *   **`DELETE /supervision/no-contable/{id}`**: Delete a non-accounting supervision criterion.
+
+### Curriculum Management
+
+*   **`GET /plan-estudio`**: Get all curricula.
+*   **`GET /plan-estudio/{id_carrera}`**: Get the curriculum for a specific career.
+*   **`POST /plan-estudio`**: Create a new curriculum.
+*   **`PUT /plan-estudio`**: Update a curriculum.
+*   **`DELETE /plan-estudio`**: Delete a curriculum.
 
 ---
 
@@ -137,3 +174,15 @@ These endpoints are protected and require an authentication token with the `coor
 ### Campus Management
 
 *   **`GET /coordinador-planteles`**: Get a list of all campuses associated with the coordinator.
+
+---
+
+## Endpoints for Student
+
+These endpoints are protected and require an authentication token with the `alumno` role.
+
+### Teacher Management
+
+*   **`GET /mis-docentes`**: Get a list of the student's teachers.
+*   **`POST /evaluar-docente`**: Evaluate a teacher.
+*   **`POST /inscribir-grupo`**: Enroll in a group.
