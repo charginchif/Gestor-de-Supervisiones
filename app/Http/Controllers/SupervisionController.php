@@ -16,7 +16,26 @@ class SupervisionController extends Controller
     public function indexContable()
     {
         $criterios = CriterioSupervisionContableModelo::all();
-        return RespuestaAPI::exito('Criterios de supervisión contables obtenidos con éxito', $criterios);
+        $rubros = [];
+
+        foreach ($criterios as $criterio) {
+            if (!isset($rubros[$criterio->id_rubro])) {
+                $rubros[$criterio->id_rubro] = [
+                    'id_rubro' => $criterio->id_rubro,
+                    'nombre' => $criterio->rubro,
+                    'criterios' => [],
+                ];
+            }
+
+            $rubros[$criterio->id_rubro]['criterios'][] = [
+                'id_criterio' => $criterio->id_supcriterio,
+                'criterio' => $criterio->criterio,
+            ];
+        }
+
+        $datos = ['rubros' => array_values($rubros)];
+
+        return RespuestaAPI::exito('Criterios de supervisión contables obtenidos con éxito', $datos);
     }
 
     public function showContable($id)
@@ -98,7 +117,26 @@ class SupervisionController extends Controller
     public function indexNoContable()
     {
         $criterios = CriterioSupervisionNoContableModelo::all();
-        return RespuestaAPI::exito('Criterios de supervisión no contables obtenidos con éxito', $criterios);
+        $rubros = [];
+
+        foreach ($criterios as $criterio) {
+            if (!isset($rubros[$criterio->id_nc_rubro])) {
+                $rubros[$criterio->id_nc_rubro] = [
+                    'id_nc_rubro' => $criterio->id_nc_rubro,
+                    'nombre' => $criterio->rubro,
+                    'criterios' => [],
+                ];
+            }
+
+            $rubros[$criterio->id_nc_rubro]['criterios'][] = [
+                'id_nc_criterio' => $criterio->id_nc_criterio,
+                'criterio' => $criterio->criterio,
+            ];
+        }
+
+        $datos = ['rubros' => array_values($rubros)];
+
+        return RespuestaAPI::exito('Criterios de supervisión no contables obtenidos con éxito', $datos);
     }
 
     public function showNoContable($id)
