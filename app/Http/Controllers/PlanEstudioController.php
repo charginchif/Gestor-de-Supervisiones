@@ -11,7 +11,18 @@ class PlanEstudioController extends Controller
 {
     public function index($id_carrera)
     {
+        // Primero, verificar si la carrera existe
+        $carrera = DB::table('carrera')->where('id_carrera', $id_carrera)->first();
+        if (!$carrera) {
+            return RespuestaAPI::error('La carrera no existe', 404);
+        }
+
         $planEstudio = DB::table('vw_admin_plan_estudio')->where('id_carrera', $id_carrera)->get();
+
+        if ($planEstudio->isEmpty()) {
+            return RespuestaAPI::error('No se encontró un plan de estudio para la carrera especificada', 404);
+        }
+
         return RespuestaAPI::exito('Éxito', $planEstudio);
     }
 
@@ -23,7 +34,7 @@ class PlanEstudioController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $this->validate($request, [
             'id_carrera' => 'required|integer',
             'id_cat_nivel' => 'required|integer',
             'id_modalidad' => 'required|integer',
@@ -48,7 +59,7 @@ class PlanEstudioController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
+        $this->validate($request, [
             'id_carrera' => 'required|integer',
             'id_cat_nivel' => 'required|integer',
             'id_modalidad' => 'required|integer',
@@ -73,7 +84,7 @@ class PlanEstudioController extends Controller
 
     public function destroy(Request $request)
     {
-        $request->validate([
+        $this->validate($request, [
             'id_carrera' => 'required|integer',
             'id_materia' => 'required|integer',
             'id_cat_nivel' => 'required|integer',

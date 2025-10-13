@@ -105,12 +105,23 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('supervision/no-contable/{id}', 'SupervisionController@updateNoContable');
     $router->delete('supervision/no-contable/{id}', 'SupervisionController@destroyNoContable');
 
+    //REVISAE PLAN DE ESTUDIO EN POST 
     // Rutas para la gestión de plan de estudios
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
     $router->post('plan-estudio', 'PlanEstudioController@store');
     $router->put('plan-estudio', 'PlanEstudioController@update');
     $router->delete('plan-estudio', 'PlanEstudioController@destroy');
+
+    //Criterios de evaluacion docente
+    $router->get('rubros', 'RubroController@index');
+    $router->get('criterios-evaluacion', 'CriterioEvaluacionController@index');
+    $router->post('criterios-evaluacion', 'CriterioEvaluacionController@store');
+    $router->get('criterios-evaluacion/{id}', 'CriterioEvaluacionController@show');
+    $router->put('criterios-evaluacion/{id}', 'CriterioEvaluacionController@update');
+    $router->delete('criterios-evaluacion/{id}', 'CriterioEvaluacionController@destroy');
+
+    
 });
 
 // Rutas para Coordinador

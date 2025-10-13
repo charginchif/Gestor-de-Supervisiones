@@ -151,6 +151,15 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`PUT /plan-estudio`**: Update a curriculum.
 *   **`DELETE /plan-estudio`**: Delete a curriculum.
 
+### Teacher Evaluation Criteria Management
+
+*   **`GET /rubros`**: Get a list of all evaluation rubrics.
+*   **`GET /criterios-evaluacion`**: Get a list of all evaluation criteria.
+*   **`POST /criterios-evaluacion`**: Create a new evaluation criterion.
+*   **`GET /criterios-evaluacion/{id}`**: Get a specific evaluation criterion by ID.
+*   **`PUT /criterios-evaluacion/{id}`**: Update an evaluation criterion.
+*   **`DELETE /criterios-evaluacion/{id}`**: Delete an evaluation criterion.
+
 ---
 
 ## Endpoints for Coordinator
