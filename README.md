@@ -143,6 +143,11 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`PUT /supervision/no-contable/{id}`**: Update a non-accounting supervision criterion.
 *   **`DELETE /supervision/no-contable/{id}`**: Delete a non-accounting supervision criterion.
 
+### Supervision Rubros Management
+
+*   **`GET /supervision/rubros/contable`**: Get a list of all accounting supervision rubros.
+*   **`GET /supervision/rubros/no-contable`**: Get a list of all non-accounting supervision rubros.
+
 ### Curriculum Management
 
 *   **`GET /plan-estudio`**: Get all curricula.

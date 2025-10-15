@@ -105,6 +105,10 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('supervision/no-contable/{id}', 'SupervisionController@updateNoContable');
     $router->delete('supervision/no-contable/{id}', 'SupervisionController@destroyNoContable');
 
+    //Rubros para criterios de supervision
+    $router->get('supervision/rubros/contable', 'RubroController@indexContable');
+    $router->get('supervision/rubros/no-contable', 'RubroController@indexNoContable');
+
     // Rutas para la gestión de plan de estudios
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
@@ -147,6 +151,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:alumno']], function () use ($
     $router->get('mis-docentes', 'AlumnoDocenteController@index');
     $router->post('evaluar-docente', 'AlumnoDocenteController@evaluar');
     $router->post('inscribir-grupo', 'AlumnoDocenteController@inscribirGrupo');
+    $router->get('mi-horario', 'HorarioController@getMiHorario');
 });
 
 //Soy un comentario
