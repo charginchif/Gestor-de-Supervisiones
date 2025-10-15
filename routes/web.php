@@ -105,7 +105,6 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('supervision/no-contable/{id}', 'SupervisionController@updateNoContable');
     $router->delete('supervision/no-contable/{id}', 'SupervisionController@destroyNoContable');
 
-    //REVISAE PLAN DE ESTUDIO EN POST 
     // Rutas para la gestión de plan de estudios
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
