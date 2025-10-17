@@ -107,7 +107,15 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
 
     //Rubros para criterios de supervision
     $router->get('supervision/rubros/contable', 'RubroController@indexContable');
+    $router->post('supervision/rubros/contable', 'RubroController@storeContable');
+    $router->get('supervision/rubros/contable/{id}', 'RubroController@showContable');
+    $router->put('supervision/rubros/contable/{id}', 'RubroController@updateContable');
+    $router->delete('supervision/rubros/contable/{id}', 'RubroController@destroyContable');
     $router->get('supervision/rubros/no-contable', 'RubroController@indexNoContable');
+    $router->post('supervision/rubros/no-contable', 'RubroController@storeNoContable');
+    $router->get('supervision/rubros/no-contable/{id}', 'RubroController@showNoContable');
+    $router->put('supervision/rubros/no-contable/{id}', 'RubroController@updateNoContable');
+    $router->delete('supervision/rubros/no-contable/{id}', 'RubroController@destroyNoContable');
 
     // Rutas para la gestión de plan de estudios
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
@@ -118,6 +126,10 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
 
     //Criterios de evaluacion docente
     $router->get('rubros', 'RubroController@index');
+    $router->post('rubros', 'RubroController@store');
+    $router->get('rubros/{id}', 'RubroController@show');
+    $router->put('rubros/{id}', 'RubroController@update');
+    $router->delete('rubros/{id}', 'RubroController@destroy');
     $router->get('criterios-evaluacion', 'CriterioEvaluacionController@index');
     $router->post('criterios-evaluacion', 'CriterioEvaluacionController@store');
     $router->get('criterios-evaluacion/{id}', 'CriterioEvaluacionController@show');
