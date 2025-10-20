@@ -128,7 +128,7 @@ class AlumnoDocenteController extends Controller
 
             // El procedimiento devuelve un array con un objeto de resultado, lo extraemos.
             $datosResultado = $resultadoInscripcion[0] ?? null;
-x
+
             // Determinar el mensaje de éxito basado en el resultado del SP.
             $mensaje = 'Inscripción al grupo procesada.';
             if ($datosResultado && $datosResultado->resultado === 'YA_INSCRITO') {

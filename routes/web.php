@@ -80,6 +80,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->post('asignarCarreraCoordinador', 'CarreraController@asignarCarreraCoordinador');
     $router->put('asignarCarreraCoordinador', 'CarreraController@actualizarCarreraCoordinador');
     $router->delete('asignarCarreraCoordinador', 'CarreraController@eliminarCarreraCoordinador');
+    $router->get('asignarCarreraCoordinador', 'CarreraController@getAllAsignaciones');
 
     // Rutas para la asignación de carreras a planteles
     $router->post('asignarCarreraPlantel', 'CarreraController@asignarCarreraPlantel');
@@ -136,7 +137,13 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('criterios-evaluacion/{id}', 'CriterioEvaluacionController@update');
     $router->delete('criterios-evaluacion/{id}', 'CriterioEvaluacionController@destroy');
 
-    
+    // Rutas para la gestión de modalidades
+    $router->get('modalidades', 'ModalidadController@list');
+    $router->post('modalidades', 'ModalidadController@create');
+    $router->get('modalidades/{id}', 'ModalidadController@get');
+    $router->put('modalidades/{id}', 'ModalidadController@update');
+    $router->delete('modalidades/{id}', 'ModalidadController@delete');
+    $router->post('modalidades/bulk-upsert', 'ModalidadController@bulkUpsert');
 });
 
 // Rutas para Coordinador
@@ -156,6 +163,9 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     // Rutas para la gestión de planteles (para Coordinador)
     $router->get('coordinador-planteles', 'PlantelController@indexCoordinadorPlanteles');
 
+    $router->post('materias/asignar-docente', 'MateriaController@asignarDocente');
+
+    // listar las carreras asignadas al coordinador autenticado
 });
 
 // Rutas para Alumno

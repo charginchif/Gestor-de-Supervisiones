@@ -8,6 +8,7 @@ use App\Models\Docente;
 use App\Models\Coordinador;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -170,10 +171,49 @@ class UsuarioController extends Controller
     /**
      * Muestra una lista de todos los alumnos.
      */
+    private function getCarrerasDelCoordinador($idUsuario)
+    {
+        $coordinador = DB::table('coordinador')->where('usuario_id', $idUsuario)->first();
+        if (!$coordinador) {
+            return null; // O manejar como un error si se espera que siempre exista
+        }
+
+        return DB::table('coordinador_carrera')
+                 ->where('id_coordinador', $coordinador->id_coordinador)
+                 ->pluck('id_carrera')->toArray();
+    }
+
     public function indexAlumnos()
     {
-        $alumnos = Alumno::all();
-        return RespuestaAPI::exito('Lista de alumnos', $alumnos);
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return RespuestaAPI::error('Usuario no autenticado.', 401);
+            }
+
+            $rol = strtolower($user->rol);
+
+            if ($rol === 'administrador') {
+                $alumnos = Alumno::all();
+                return RespuestaAPI::exito('Lista de todos los alumnos para el administrador', $alumnos);
+            }
+
+            if ($rol === 'coordinador') {
+                $carreraIds = $this->getCarrerasDelCoordinador($user->id);
+
+                if (empty($carreraIds)) {
+                    return RespuestaAPI::exito('El coordinador no tiene carreras asignadas.', []);
+                }
+
+                $alumnos = Alumno::whereIn('id_carrera', $carreraIds)->get();
+                return RespuestaAPI::exito('Lista de alumnos de las carreras coordinadas', $alumnos);
+            }
+            
+            return RespuestaAPI::error('No tienes permiso para ver esta lista de alumnos.', 403);
+
+        } catch (\Exception $e) {
+            return RespuestaAPI::error('Error al obtener la lista de alumnos: ' . $e->getMessage(), 500);
+        }
     }
 
     /**
@@ -181,10 +221,20 @@ class UsuarioController extends Controller
      */
     public function showAlumno($id)
     {
+        $user = Auth::user();
+        $rol = strtolower($user->rol);
+
         $alumno = Alumno::find($id);
 
         if (!$alumno) {
             return RespuestaAPI::error('Alumno no encontrado', 404);
+        }
+
+        if ($rol === 'coordinador') {
+            $carreraIds = $this->getCarrerasDelCoordinador($user->id);
+            if (!in_array($alumno->id_carrera, $carreraIds)) {
+                return RespuestaAPI::error('No tienes permiso para ver este alumno.', 403);
+            }
         }
 
         return RespuestaAPI::exito('Alumno encontrado', $alumno);
@@ -195,6 +245,9 @@ class UsuarioController extends Controller
      */
     public function storeAlumno(Request $request)
     {
+        $user = Auth::user();
+        $rol = strtolower($user->rol);
+
         $userData = $request->all();
 
         $validator = Validator::make($userData, [
@@ -209,6 +262,13 @@ class UsuarioController extends Controller
 
         if ($validator->fails()) {
             return RespuestaAPI::error('Datos inválidos', 422, $validator->errors());
+        }
+
+        if ($rol === 'coordinador') {
+            $carreraIds = $this->getCarrerasDelCoordinador($user->id);
+            if (!in_array($request->input('id_carrera'), $carreraIds)) {
+                return RespuestaAPI::error('No tienes permiso para registrar alumnos en esta carrera.', 403);
+            }
         }
 
         try {
@@ -232,9 +292,23 @@ class UsuarioController extends Controller
      */
     public function updateAlumno(Request $request, $id)
     {
+        $user = Auth::user();
+        $rol = strtolower($user->rol);
+
         $alumno = Alumno::find($id);
         if (!$alumno) {
             return RespuestaAPI::error('Alumno no encontrado', 404);
+        }
+
+        if ($rol === 'coordinador') {
+            $carreraIds = $this->getCarrerasDelCoordinador($user->id);
+            if (!in_array($alumno->id_carrera, $carreraIds)) {
+                return RespuestaAPI::error('No tienes permiso para modificar este alumno.', 403);
+            }
+            // Si se intenta cambiar la carrera, verificar que la nueva carrera también sea coordinada
+            if ($request->has('id_carrera') && !in_array($request->input('id_carrera'), $carreraIds)) {
+                return RespuestaAPI::error('No tienes permiso para transferir alumnos a esta carrera.', 403);
+            }
         }
 
         $validator = Validator::make($request->all(), [
@@ -243,7 +317,7 @@ class UsuarioController extends Controller
             'apellido_materno' => 'sometimes|string|max:100|regex:/^[\pL\s\-]+$/u',
             'correo'           => 'sometimes|email|unique:usuario,correo,' . $alumno->id_usuario,
             'matricula'        => 'sometimes|string|max:15|unique:alumno,matricula,' . $id,
-            'id_carrera'       => 'sometimes|integer|exists:carreras,id_carrera',
+            'id_carrera'       => 'sometimes|integer|exists:carrera,id_carrera',
         ]);
 
         if ($validator->fails()) {
