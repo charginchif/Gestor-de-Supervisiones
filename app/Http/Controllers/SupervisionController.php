@@ -9,10 +9,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Controlador para gestionar los criterios de supervisión.
+ *
+ * Este controlador maneja la lógica de negocio para los criterios de supervisión,
+ * tanto contables como no contables.
+ */
 class SupervisionController extends Controller
 {
+    /**
+     * Devuelve una lista de todos los rubros contables y no contables.
+     */
+    public function listarRubrosContablesNoContables(Request $request)
+    {
+        $contables = CriterioSupervisionContableModelo::all();
+        $noContables = CriterioSupervisionNoContableModelo::all();
+
+        $rubros = [];
+        return RespuestaAPI::exito('Criterios de supervisión contables y no contables obtenidos con éxito', [
+            'contables' => $contables,
+            'no_contables' => $noContables,
+        ]);
+    }
+
     // --- Criterios Contables ---
 
+    /**
+     * Devuelve todos los criterios de supervisión contables, agrupados por rubro.
+     */
     public function indexContable()
     {
         $criterios = CriterioSupervisionContableModelo::all();
@@ -38,6 +62,9 @@ class SupervisionController extends Controller
         return RespuestaAPI::exito('Criterios de supervisión contables obtenidos con éxito', $datos);
     }
 
+    /**
+     * Muestra un criterio de supervisión contable específico.
+     */
     public function showContable($id)
     {
         $criterio = CriterioSupervisionContableModelo::find($id);
@@ -48,6 +75,9 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Almacena un nuevo criterio de supervisión contable.
+     */
     public function storeContable(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -73,6 +103,9 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Actualiza un criterio de supervisión contable existente.
+     */
     public function updateContable(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -99,6 +132,9 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Elimina un criterio de supervisión contable.
+     */
     public function destroyContable($id)
     {
         try {
@@ -112,8 +148,58 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Busca criterios de supervisión contables por id_rubro y/o nombre del rubro.
+     */
+    public function buscarContable(Request $request)
+    {
+        if (!$request->has('id_rubro') && !$request->has('nombre')) {
+            return RespuestaAPI::error('Debe proporcionar al menos un parámetro de búsqueda (id_rubro o nombre).', RespuestaAPI::HTTP_ERROR_VALIDACION);
+        }
+
+        $query = CriterioSupervisionContableModelo::query();
+
+        if ($request->has('id_rubro')) {
+            $query->where('id_rubro', $request->input('id_rubro'));
+        }
+
+        if ($request->has('nombre')) {
+            $query->where('rubro', 'like', '%' . $request->input('nombre') . '%');
+        }
+
+        $criterios = $query->get();
+
+        if ($criterios->isEmpty()) {
+            return RespuestaAPI::exito('No se encontraron criterios con los parámetros de búsqueda proporcionados.', []);
+        }
+
+        $rubros = [];
+
+        foreach ($criterios as $criterio) {
+            if (!isset($rubros[$criterio->id_rubro])) {
+                $rubros[$criterio->id_rubro] = [
+                    'id_rubro' => $criterio->id_rubro,
+                    'nombre' => $criterio->rubro,
+                    'criterios' => [],
+                ];
+            }
+
+            $rubros[$criterio->id_rubro]['criterios'][] = [
+                'id_criterio' => $criterio->id_supcriterio,
+                'criterio' => $criterio->criterio,
+            ];
+        }
+
+        $datos = ['rubros' => array_values($rubros)];
+
+        return RespuestaAPI::exito('Criterios de supervisión contables filtrados obtenidos con éxito', $datos);
+    }
+
     // --- Criterios No Contables ---
 
+    /**
+     * Devuelve todos los criterios de supervisión no contables, agrupados por rubro.
+     */
     public function indexNoContable()
     {
         $criterios = CriterioSupervisionNoContableModelo::all();
@@ -139,6 +225,9 @@ class SupervisionController extends Controller
         return RespuestaAPI::exito('Criterios de supervisión no contables obtenidos con éxito', $datos);
     }
 
+    /**
+     * Muestra un criterio de supervisión no contable específico.
+     */
     public function showNoContable($id)
     {
         $criterio = CriterioSupervisionNoContableModelo::find($id);
@@ -149,6 +238,9 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Almacena un nuevo criterio de supervisión no contable.
+     */
     public function storeNoContable(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -174,6 +266,9 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Actualiza un criterio de supervisión no contable existente.
+     */
     public function updateNoContable(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -200,6 +295,9 @@ class SupervisionController extends Controller
         }
     }
 
+    /**
+     * Elimina un criterio de supervisión no contable.
+     */
     public function destroyNoContable($id)
     {
         try {

@@ -93,49 +93,78 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->delete('plantel-turno/{id}', 'CarreraController@eliminarTurnoPlantel');
     $router->put('plantel-turno/{id}', 'CarreraController@actualizarTurnoPlantel');
 
-    // Rutas para la gestión de criterios de supervisión
-    $router->get('supervision/contable', 'SupervisionController@indexContable');
-    $router->get('supervision/contable/{id}', 'SupervisionController@showContable');
-    $router->post('supervision/contable', 'SupervisionController@storeContable');
-    $router->put('supervision/contable/{id}', 'SupervisionController@updateContable');
-    $router->delete('supervision/contable/{id}', 'SupervisionController@destroyContable');
+    // Rutas para la gestión de Criterios de Supervisión
+    $router->group(['prefix' => 'supervision'], function () use ($router) {
+        // Criterios Contables
+        $router->group(['prefix' => 'contable'], function () use ($router) {
+            $router->get('/', 'SupervisionController@indexContable');
+            $router->post('/', 'SupervisionController@storeContable');
+            $router->get('buscar', 'SupervisionController@buscarContable');
+            $router->get('{id}', 'SupervisionController@showContable');
+            $router->put('{id}', 'SupervisionController@updateContable');
+            $router->delete('{id}', 'SupervisionController@destroyContable');
+        });
 
-    $router->get('supervision/no-contable', 'SupervisionController@indexNoContable');
-    $router->get('supervision/no-contable/{id}', 'SupervisionController@showNoContable');
-    $router->post('supervision/no-contable', 'SupervisionController@storeNoContable');
-    $router->put('supervision/no-contable/{id}', 'SupervisionController@updateNoContable');
-    $router->delete('supervision/no-contable/{id}', 'SupervisionController@destroyNoContable');
+        // Criterios No Contables
+        $router->group(['prefix' => 'no-contable'], function () use ($router) {
+            $router->get('/', 'SupervisionController@indexNoContable');
+            $router->post('/', 'SupervisionController@storeNoContable');
+            $router->get('{id}', 'SupervisionController@showNoContable');
+            $router->put('{id}', 'SupervisionController@updateNoContable');
+            $router->delete('{id}', 'SupervisionController@destroyNoContable');
+        });
 
-    //Rubros para criterios de supervision
-    $router->get('supervision/rubros/contable', 'RubroController@indexContable');
-    $router->post('supervision/rubros/contable', 'RubroController@storeContable');
-    $router->get('supervision/rubros/contable/{id}', 'RubroController@showContable');
-    $router->put('supervision/rubros/contable/{id}', 'RubroController@updateContable');
-    $router->delete('supervision/rubros/contable/{id}', 'RubroController@destroyContable');
-    $router->get('supervision/rubros/no-contable', 'RubroController@indexNoContable');
-    $router->post('supervision/rubros/no-contable', 'RubroController@storeNoContable');
-    $router->get('supervision/rubros/no-contable/{id}', 'RubroController@showNoContable');
-    $router->put('supervision/rubros/no-contable/{id}', 'RubroController@updateNoContable');
-    $router->delete('supervision/rubros/no-contable/{id}', 'RubroController@destroyNoContable');
+        // Rubros de Supervisión
+        $router->group(['prefix' => 'rubros'], function () use ($router) {
+            $router->get('/', 'SupervisionController@listarRubrosContablesNoContables');
+            
+            // Rubros Contables
+            $router->group(['prefix' => 'contable'], function () use ($router) {
+                $router->get('/', 'RubroController@indexContable');
+                $router->post('/', 'RubroController@storeContable');
+                $router->get('{id}', 'RubroController@showContable');
+                $router->put('{id}', 'RubroController@updateContable');
+                $router->delete('{id}', 'RubroController@destroyContable');
+            });
 
-    // Rutas para la gestión de plan de estudios
+            // Rubros No Contables
+            $router->group(['prefix' => 'no-contable'], function () use ($router) {
+                $router->get('/', 'RubroController@indexNoContable');
+                $router->post('/', 'RubroController@storeNoContable');
+                $router->get('{id}', 'RubroController@showNoContable');
+                $router->put('{id}', 'RubroController@updateNoContable');
+                $router->delete('{id}', 'RubroController@destroyNoContable');
+            });
+        });
+    });
+
+    // Rutas para la gestión de Plan de Estudios
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
     $router->post('plan-estudio', 'PlanEstudioController@store');
     $router->put('plan-estudio', 'PlanEstudioController@update');
     $router->delete('plan-estudio', 'PlanEstudioController@destroy');
 
-    //Criterios de evaluacion docente
-    $router->get('rubros', 'RubroController@index');
-    $router->post('rubros', 'RubroController@store');
-    $router->get('rubros/{id}', 'RubroController@show');
-    $router->put('rubros/{id}', 'RubroController@update');
-    $router->delete('rubros/{id}', 'RubroController@destroy');
-    $router->get('criterios-evaluacion', 'CriterioEvaluacionController@index');
-    $router->post('criterios-evaluacion', 'CriterioEvaluacionController@store');
-    $router->get('criterios-evaluacion/{id}', 'CriterioEvaluacionController@show');
-    $router->put('criterios-evaluacion/{id}', 'CriterioEvaluacionController@update');
-    $router->delete('criterios-evaluacion/{id}', 'CriterioEvaluacionController@destroy');
+    // Rutas para la gestión de Evaluación Docente
+    $router->group(['prefix' => 'evaluacion-docente'], function () use ($router) {
+        // Rubros de Evaluación
+        $router->group(['prefix' => 'rubros'], function () use ($router) {
+            $router->get('/', 'RubroController@index');
+            $router->post('/', 'RubroController@store');
+            $router->get('{id}', 'RubroController@show');
+            $router->put('{id}', 'RubroController@update');
+            $router->delete('{id}', 'RubroController@destroy');
+        });
+
+        // Criterios de Evaluación
+        $router->group(['prefix' => 'criterios'], function () use ($router) {
+            $router->get('/', 'CriterioEvaluacionController@index');
+            $router->post('/', 'CriterioEvaluacionController@store');
+            $router->get('{id}', 'CriterioEvaluacionController@show');
+            $router->put('{id}', 'CriterioEvaluacionController@update');
+            $router->delete('{id}', 'CriterioEvaluacionController@destroy');
+        });
+    });
 
     // Rutas para la gestión de modalidades
     $router->get('modalidades', 'ModalidadController@list');

@@ -6,8 +6,17 @@ use Illuminate\Http\Request;
 use App\Utils\RespuestaAPI;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Controlador para gestionar los criterios de evaluación docente.
+ *
+ * Este controlador maneja la lógica de negocio para los criterios de evaluación
+ * que se aplican a los docentes.
+ */
 class CriterioEvaluacionController extends Controller
 {
+    /**
+     * Devuelve todos los criterios de evaluación docente.
+     */
     public function index()
     {
         try {
@@ -18,6 +27,9 @@ class CriterioEvaluacionController extends Controller
         }
     }
 
+    /**
+     * Muestra un criterio de evaluación docente específico.
+     */
     public function show($id)
     {
         try {
@@ -31,6 +43,9 @@ class CriterioEvaluacionController extends Controller
         }
     }
 
+    /**
+     * Almacena un nuevo criterio de evaluación docente.
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -53,6 +68,9 @@ class CriterioEvaluacionController extends Controller
         }
     }
 
+    /**
+     * Actualiza un criterio de evaluación docente existente.
+     */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -76,6 +94,9 @@ class CriterioEvaluacionController extends Controller
         }
     }
 
+    /**
+     * Elimina un criterio de evaluación docente.
+     */
     public function destroy($id)
     {
         try {

@@ -127,24 +127,27 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`DELETE /plantel-turno/{id}`**: Delete a shift assignment from a campus.
 *   **`PUT /plantel-turno/{id}`**: Update a shift assignment for a campus.
 
-### Accounting Supervision Criteria Management
+### Supervision Management
 
+All supervision endpoints are prefixed with `/supervision`.
+
+#### Accounting Criteria
 *   **`GET /supervision/contable`**: Get a list of all accounting supervision criteria.
 *   **`POST /supervision/contable`**: Create a new accounting supervision criterion.
+*   **`GET /supervision/contable/buscar`**: Search for accounting supervision criteria by `id_rubro` and/or `nombre` of the rubro.
 *   **`GET /supervision/contable/{id}`**: Get a specific accounting supervision criterion by ID.
 *   **`PUT /supervision/contable/{id}`**: Update an accounting supervision criterion.
 *   **`DELETE /supervision/contable/{id}`**: Delete an accounting supervision criterion.
 
-### Non-Accounting Supervision Criteria Management
-
+#### Non-Accounting Criteria
 *   **`GET /supervision/no-contable`**: Get a list of all non-accounting supervision criteria.
 *   **`POST /supervision/no-contable`**: Create a new non-accounting supervision criterion.
 *   **`GET /supervision/no-contable/{id}`**: Get a specific non-accounting supervision criterion by ID.
 *   **`PUT /supervision/no-contable/{id}`**: Update a non-accounting supervision criterion.
 *   **`DELETE /supervision/no-contable/{id}`**: Delete a non-accounting supervision criterion.
 
-### Supervision Rubros Management
-
+#### Supervision Rubros
+*   **`GET /supervision/rubros`**: Get a list of all supervision rubros (both accounting and non-accounting).
 *   **`GET /supervision/rubros/contable`**: Get a list of all accounting supervision rubros.
 *   **`POST /supervision/rubros/contable`**: Create a new accounting supervision rubro.
 *   **`GET /supervision/rubros/contable/{id}`**: Get a specific accounting supervision rubro by ID.
@@ -164,18 +167,23 @@ These endpoints are protected and require an authentication token with the `admi
 *   **`PUT /plan-estudio`**: Update a curriculum.
 *   **`DELETE /plan-estudio`**: Delete a curriculum.
 
-### Teacher Evaluation Criteria Management
+### Teacher Evaluation Management
 
-*   **`GET /rubros`**: Get a list of all evaluation rubrics.
-*   **`POST /rubros`**: Create a new evaluation rubric.
-*   **`GET /rubros/{id}`**: Get a specific evaluation rubric by ID.
-*   **`PUT /rubros/{id}`**: Update an evaluation rubric.
-*   **`DELETE /rubros/{id}`**: Delete an evaluation rubric.
-*   **`GET /criterios-evaluacion`**: Get a list of all evaluation criteria.
-*   **`POST /criterios-evaluacion`**: Create a new evaluation criterion.
-*   **`GET /criterios-evaluacion/{id}`**: Get a specific evaluation criterion by ID.
-*   **`PUT /criterios-evaluacion/{id}`**: Update an evaluation criterion.
-*   **`DELETE /criterios-evaluacion/{id}`**: Delete an evaluation criterion.
+All teacher evaluation endpoints are prefixed with `/evaluacion-docente`.
+
+#### Evaluation Rubros
+*   **`GET /evaluacion-docente/rubros`**: Get a list of all evaluation rubrics.
+*   **`POST /evaluacion-docente/rubros`**: Create a new evaluation rubric.
+*   **`GET /evaluacion-docente/rubros/{id}`**: Get a specific evaluation rubric by ID.
+*   **`PUT /evaluacion-docente/rubros/{id}`**: Update an evaluation rubric.
+*   **`DELETE /evaluacion-docente/rubros/{id}`**: Delete an evaluation rubric.
+
+#### Evaluation Criteria
+*   **`GET /evaluacion-docente/criterios`**: Get a list of all evaluation criteria.
+*   **`POST /evaluacion-docente/criterios`**: Create a new evaluation criterion.
+*   **`GET /evaluacion-docente/criterios/{id}`**: Get a specific evaluation criterion by ID.
+*   **`PUT /evaluacion-docente/criterios/{id}`**: Update an evaluation criterion.
+*   **`DELETE /evaluacion-docente/criterios/{id}`**: Delete an evaluation criterion.
 
 ---
 

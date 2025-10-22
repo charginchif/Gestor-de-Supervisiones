@@ -7,8 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Controlador para gestionar los rubros.
+ *
+ * Este controlador maneja la lógica de negocio para los rubros de evaluación de docentes
+ * y los rubros de supervisión (contables y no contables).
+ */
 class RubroController extends Controller
 {
+    // --- Rubros de Evaluación Docente ---
+
+    /**
+     * Devuelve todos los rubros de evaluación docente.
+     */
     public function index()
     {
         try {
@@ -19,6 +30,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Muestra un rubro de evaluación docente específico.
+     */
     public function show($id)
     {
         try {
@@ -32,6 +46,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Almacena un nuevo rubro de evaluación docente.
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -54,6 +71,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Actualiza un rubro de evaluación docente existente.
+     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -96,6 +116,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Elimina un rubro de evaluación docente.
+     */
     public function destroy($id)
     {
         try {
@@ -113,6 +136,11 @@ class RubroController extends Controller
         }
     }
 
+    // --- Rubros de Supervisión Contable ---
+
+    /**
+     * Devuelve todos los rubros de supervisión contable.
+     */
     public function indexContable()
     {
         try {
@@ -123,6 +151,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Muestra un rubro de supervisión contable específico.
+     */
     public function showContable($id)
     {
         try {
@@ -136,6 +167,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Almacena un nuevo rubro de supervisión contable.
+     */
     public function storeContable(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -158,6 +192,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Actualiza un rubro de supervisión contable existente.
+     */
     public function updateContable(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -200,6 +237,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Elimina un rubro de supervisión contable.
+     */
     public function destroyContable($id)
     {
         try {
@@ -217,6 +257,11 @@ class RubroController extends Controller
         }
     }
 
+    // --- Rubros de Supervisión No Contable ---
+
+    /**
+     * Devuelve todos los rubros de supervisión no contable.
+     */
     public function indexNoContable()
     {
         try {
@@ -227,6 +272,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Muestra un rubro de supervisión no contable específico.
+     */
     public function showNoContable($id)
     {
         try {
@@ -240,6 +288,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Almacena un nuevo rubro de supervisión no contable.
+     */
     public function storeNoContable(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -262,6 +313,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Actualiza un rubro de supervisión no contable existente.
+     */
     public function updateNoContable(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -304,6 +358,9 @@ class RubroController extends Controller
         }
     }
 
+    /**
+     * Elimina un rubro de supervisión no contable.
+     */
     public function destroyNoContable($id)
     {
         try {
