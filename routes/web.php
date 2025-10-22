@@ -67,6 +67,11 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
 
+    // Rutas para la gestión de carrera-modalidad
+    $router->get('carrera-modalidad', 'CarreraController@indexCarreraModalidad');
+    $router->post('carrera-modalidad', 'CarreraController@storeCarreraModalidad');
+    $router->delete('carrera-modalidad', 'CarreraController@destroyCarreraModalidad');
+
     // Rutas para la gestión de materias
     $router->get('materias', 'MateriaController@index');
     $router->post('materias', 'MateriaController@store');

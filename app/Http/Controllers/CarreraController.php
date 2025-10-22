@@ -323,44 +323,74 @@ class CarreraController extends Controller
         }
     }
 
-    public function actualizarTurnoPlantel(Request $request, $id)
+    // --- Métodos para la gestión de Carrera-Modalidad ---
+
+    public function indexCarreraModalidad()
+    {
+        try {
+            $data = DB::select('SELECT * FROM vw_carrera_modalidades');
+            return RespuestaAPI::exito('Listado de carreras y sus modalidades', $data);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return RespuestaAPI::error('Error al obtener los datos: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function storeCarreraModalidad(Request $request)
     {
         $this->validate($request, [
-            'id_plantel' => 'sometimes|integer',
-            'id_dia' => 'sometimes|integer',
-            'id_turno' => 'sometimes|integer',
-            'hora_inicio' => 'sometimes',
-            'hora_fin' => 'sometimes',
-            'hora_descanso' => 'sometimes',
-            'duracion_bloques' => 'sometimes|integer',
-            'duracion_descanso' => 'sometimes|integer',
+            'id_carrera'   => 'required|integer',
+            'id_modalidad' => 'required|integer',
         ]);
 
         try {
             DB::statement(
-                'CALL sp_plantel_turno_actualizar(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                'CALL sp_carrera_modalidad_agregar(?, ?)',
                 [
-                    $id,
-                    $request->input('id_plantel'),
-                    $request->input('id_dia'),
-                    $request->input('id_turno'),
-                    $request->input('hora_inicio'),
-                    $request->input('hora_fin'),
-                    $request->input('hora_descanso'),
-                    $request->input('duracion_bloques'),
-                    $request->input('duracion_descanso'),
+                    $request->input('id_carrera'),
+                    $request->input('id_modalidad'),
                 ]
             );
 
-            return RespuestaAPI::exito('Turno de plantel actualizado exitosamente', null);
+            return RespuestaAPI::exito('Modalidad asignada a la carrera exitosamente', null, 201);
         } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() == 23000) {
-                return RespuestaAPI::error('La asignación ya existe', 400);
-            }
             if ($e->getCode() === '45000') {
                 return RespuestaAPI::error($e->errorInfo[2], 400);
             }
-            return RespuestaAPI::error('Error al actualizar el turno del plantel: ' . $e->getMessage(), 500);
+            // Handle duplicate entry
+            if ($e->errorInfo[1] == 1062) {
+                return RespuestaAPI::error('Esta modalidad ya está asignada a esta carrera.', 409);
+            }
+            return RespuestaAPI::error('Error al asignar la modalidad: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function destroyCarreraModalidad(Request $request)
+    {
+        $this->validate($request, [
+            'id_carrera'   => 'required|integer',
+            'id_modalidad' => 'required|integer',
+        ]);
+
+        try {
+            $result = DB::select(
+                'CALL sp_carrera_modalidad_eliminar(?, ?)',
+                [
+                    $request->input('id_carrera'),
+                    $request->input('id_modalidad'),
+                ]
+            );
+
+            if (isset($result[0]->filas_afectadas) && $result[0]->filas_afectadas > 0) {
+                return RespuestaAPI::exito('Asignación de modalidad eliminada exitosamente', null, 200);
+            } else {
+                return RespuestaAPI::error('No se encontró la asignación para eliminar o ya fue eliminada.', 404);
+            }
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '45000') {
+                return RespuestaAPI::error($e->errorInfo[2], 400);
+            }
+            return RespuestaAPI::error('Error al eliminar la asignación: ' . $e->getMessage(), 500);
         }
     }
 }
