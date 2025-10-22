@@ -67,6 +67,9 @@ class RubroController extends Controller
             $rubro = DB::selectOne('SELECT * FROM cat_rubro_alumno_docente WHERE id = ?', [$id]);
             return RespuestaAPI::exito('Rubro creado exitosamente', $rubro, 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return RespuestaAPI::error('Ya existe un rubro con este nombre.', 409);
+            }
             return RespuestaAPI::error('Error al crear el rubro: ' . $e->getMessage(), 500);
         }
     }
@@ -188,6 +191,9 @@ class RubroController extends Controller
             $rubro = DB::selectOne('SELECT * FROM cat_rubro WHERE id = ?', [$id]);
             return RespuestaAPI::exito('Rubro contable creado exitosamente', $rubro, 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return RespuestaAPI::error('Ya existe un rubro con este nombre.', 409);
+            }
             return RespuestaAPI::error('Error al crear el rubro contable: ' . $e->getMessage(), 500);
         }
     }
@@ -309,6 +315,9 @@ class RubroController extends Controller
             $rubro = DB::selectOne('SELECT * FROM cat_rubro_no_contable WHERE id = ?', [$id]);
             return RespuestaAPI::exito('Rubro no contable creado exitosamente', $rubro, 201);
         } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return RespuestaAPI::error('Ya existe un rubro con este nombre.', 409);
+            }
             return RespuestaAPI::error('Error al crear el rubro no contable: ' . $e->getMessage(), 500);
         }
     }

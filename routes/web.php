@@ -113,7 +113,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
             $router->put('{id}', 'SupervisionController@updateNoContable');
             $router->delete('{id}', 'SupervisionController@destroyNoContable');
         });
-
+        
         // Rubros de Supervisión
         $router->group(['prefix' => 'rubros'], function () use ($router) {
             $router->get('/', 'SupervisionController@listarRubrosContablesNoContables');
