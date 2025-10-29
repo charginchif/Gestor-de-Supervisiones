@@ -144,6 +144,7 @@ These endpoints are protected and require an authentication token with the `admi
 | POST   | `/plan-estudio`                        | Create a new curriculum.                     |
 | PUT    | `/plan-estudio`                        | Update a curriculum.                         |
 | DELETE | `/plan-estudio`                        | Delete a curriculum.                         |
+| DELETE | `/plan-estudio/materia`                | Delete a subject from a curriculum.          |
 | GET    | `/evaluacion-docente/rubros`           | Get all evaluation rubrics.                  |
 | POST   | `/evaluacion-docente/rubros`           | Create a new evaluation rubric.              |
 | GET    | `/evaluacion-docente/rubros/{id}`      | Get a specific evaluation rubric by ID.      |

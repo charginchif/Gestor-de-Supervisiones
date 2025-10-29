@@ -123,4 +123,27 @@ class PlanEstudioController extends Controller
             return RespuestaAPI::error('Error al eliminar el plan de estudio: ' . $e->getMessage(), 500);
         }
     }
+
+    public function destroyMateria(Request $request)
+    {
+        try {
+            $this->validate($request, [
+                'id_plan_estudio' => 'required|integer',
+                'id_cat_nivel'    => 'required|integer',
+                'id_materia'      => 'required|integer',
+            ]);
+
+            DB::select('CALL sp_plan_estudio_eliminar_materia(?, ?, ?)', [
+                $request->id_plan_estudio,
+                $request->id_cat_nivel,
+                $request->id_materia
+            ]);
+            
+            return RespuestaAPI::exito('Materia eliminada del plan de estudio con éxito');
+        } catch (ValidationException $e) {
+            return RespuestaAPI::error('Datos de entrada no válidos', 422, $e->errors());
+        } catch (\Exception $e) {
+            return RespuestaAPI::error('Error al eliminar la materia del plan de estudio: ' . $e->getMessage(), 500);
+        }
+    }
 }
