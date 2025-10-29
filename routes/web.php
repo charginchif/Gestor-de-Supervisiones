@@ -178,6 +178,15 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('modalidades/{id}', 'ModalidadController@update');
     $router->delete('modalidades/{id}', 'ModalidadController@delete');
     $router->post('modalidades/bulk-upsert', 'ModalidadController@bulkUpsert');
+
+    // Rutas para la gestión de grupos
+    $router->get('grupos', 'GrupoController@indexAdmin');
+    $router->post('grupos', 'GrupoController@store');
+    $router->get('grupos/{id}', 'GrupoController@show');
+    $router->put('grupos/{id}', 'GrupoController@update');
+    $router->delete('grupos/{id}', 'GrupoController@destroy');
+    $router->post('grupos/asignar-plan', 'GrupoController@asignarPlan');
+    $router->delete('grupos/{id_grupo}/quitar-plan', 'GrupoController@quitarPlan');
 });
 
 // Rutas para Coordinador
@@ -200,6 +209,15 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->post('materias/asignar-docente', 'MateriaController@asignarDocente');
 
     // listar las carreras asignadas al coordinador autenticado
+
+    // Rutas para la gestión de grupos (para Coordinador)
+    $router->get('coordinador-grupos', 'GrupoController@index');
+    $router->post('coordinador-grupos', 'GrupoController@store');
+    $router->get('coordinador-grupos/{id}', 'GrupoController@show');
+    $router->put('coordinador-grupos/{id}', 'GrupoController@update');
+    $router->delete('coordinador-grupos/{id}', 'GrupoController@destroy');
+    $router->post('coordinador-grupos/asignar-plan', 'GrupoController@asignarPlan');
+    $router->delete('coordinador-grupos/{id_grupo}/quitar-plan', 'GrupoController@quitarPlan');
 });
 
 // Rutas para Alumno
@@ -210,6 +228,9 @@ $router->group(['middleware' => ['auth.jwt', 'role:alumno']], function () use ($
     $router->get('mi-horario', 'HorarioController@getMiHorario');
 });
 
+// Rutas para Docente
+$router->group(['middleware' => ['auth.jwt', 'role:docente']], function () use ($router) {
+    $router->get('perfil/docente', 'UsuarioController@getMiPerfilDocente');
+});
+
 //Soy un comentario
-
-

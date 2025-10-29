@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Utils\RespuestaAPI;
-
+use Illuminate\Validation\ValidationException;
 
 class PlanEstudioController extends Controller
 {
@@ -23,87 +23,104 @@ class PlanEstudioController extends Controller
             return RespuestaAPI::error('No se encontró un plan de estudio para la carrera especificada', 404);
         }
 
-        return RespuestaAPI::exito('Éxito', $planEstudio);
+        $grouped = [];
+        foreach ($planEstudio as $item) {
+            $key = $item->id_carrera . '-' . $item->id_modalidad;
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'id_carrera' => $item->id_carrera,
+                    'id_modalidad' => $item->id_modalidad,
+                    'materias' => [],
+                ];
+            }
+            $grouped[$key]['materias'][] = [
+                'id_materia' => $item->id_materia,
+                'id_cat_nivel' => $item->id_cat_nivel,
+            ];
+        }
+
+        return RespuestaAPI::exito('Éxito', array_values($grouped));
     }
 
     public function indexAll()
     {
         $planEstudio = DB::table('vw_admin_plan_estudio')->get();
-        return RespuestaAPI::exito('Éxito', $planEstudio);
+
+        $grouped = [];
+        foreach ($planEstudio as $item) {
+            $key = $item->id_carrera . '-' . $item->id_modalidad;
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'id_carrera' => $item->id_carrera,
+                    'id_modalidad' => $item->id_modalidad,
+                    'materias' => [],
+                ];
+            }
+            $grouped[$key]['materias'][] = [
+                'id_materia' => $item->id_materia,
+                'id_cat_nivel' => $item->id_cat_nivel,
+            ];
+        }
+
+        return RespuestaAPI::exito('Éxito', array_values($grouped));
     }
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'id_carrera' => 'required|integer',
-            'id_cat_nivel' => 'required|integer',
-            'id_modalidad' => 'required|integer',
-            'ids_materias_csv' => 'required|string',
-        ]);
-
         try {
-            $resultado = DB::select(
-                'CALL sp_plan_estudio_insertar(?, ?, ?, ?)',
-                [
-                    $request->id_carrera,
-                    $request->id_cat_nivel,
-                    $request->id_modalidad,
-                    $request->ids_materias_csv,
-                ]
-            );
-            return RespuestaAPI::exito('Éxito', $resultado, 201);
+            $this->validate($request, [
+                'id_carrera' => 'required|integer',
+                'id_modalidad' => 'required|integer',
+                'materias' => 'required|array',
+                'materias.*.id_materia' => 'required|integer',
+                'materias.*.id_cat_nivel' => 'required|integer',
+            ]);
+
+            $json_data = json_encode($request->all());
+
+            $resultado = DB::select('CALL sp_plan_estudio_crear(?)', [$json_data]);
+
+            return RespuestaAPI::exito('Plan de estudio creado con éxito', $resultado, 201);
+        } catch (ValidationException $e) {
+            return RespuestaAPI::error('Datos de entrada no válidos', 422, $e->errors());
         } catch (\Exception $e) {
-            return RespuestaAPI::error('Error al insertar el plan de estudio: ' . $e->getMessage(), 500);
+            return RespuestaAPI::error('Error al crear el plan de estudio: ' . $e->getMessage(), 500);
         }
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id_plan_estudio)
     {
-        $this->validate($request, [
-            'id_carrera' => 'required|integer',
-            'id_cat_nivel' => 'required|integer',
-            'id_modalidad' => 'required|integer',
-            'ids_materias_csv' => 'required|string',
-        ]);
-
         try {
+            $this->validate($request, [
+                'id_cat_nivel' => 'required|integer',
+                'ids_materias_csv' => 'required|string',
+            ]);
+
             $resultado = DB::select(
-                'CALL sp_plan_estudio_actualizar(?, ?, ?, ?)',
+                'CALL sp_plan_estudio_actualizar(?, ?, ?)',
                 [
-                    $request->id_carrera,
+                    $id_plan_estudio,
                     $request->id_cat_nivel,
-                    $request->id_modalidad,
                     $request->ids_materias_csv,
                 ]
             );
-            return RespuestaAPI::exito('Éxito', $resultado);
+
+            return RespuestaAPI::exito('Plan de estudio actualizado con éxito', $resultado);
+        } catch (ValidationException $e) {
+            return RespuestaAPI::error('Datos de entrada no válidos', 422, $e->errors());
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al actualizar el plan de estudio: ' . $e->getMessage(), 500);
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy($id_plan_estudio)
     {
-        $this->validate($request, [
-            'id_carrera' => 'required|integer',
-            'id_materia' => 'required|integer',
-            'id_cat_nivel' => 'required|integer',
-            'id_modalidad' => 'required|integer',
-        ]);
-
         try {
-            DB::statement(
-                'CALL sp_plan_estudio_eliminar(?, ?, ?, ?)',
-                [
-                    $request->id_carrera,
-                    $request->id_materia,
-                    $request->id_cat_nivel,
-                    $request->id_modalidad,
-                ]
-            );
-            return RespuestaAPI::exito('Materia eliminada del plan de estudio con éxito');
+            $resultado = DB::select('CALL sp_plan_estudio_eliminar(?)', [$id_plan_estudio]);
+            
+            return RespuestaAPI::exito('Plan de estudio eliminado con éxito', $resultado);
         } catch (\Exception $e) {
-            return RespuestaAPI::error('Error al eliminar la materia del plan de estudio: ' . $e->getMessage(), 500);
+            return RespuestaAPI::error('Error al eliminar el plan de estudio: ' . $e->getMessage(), 500);
         }
     }
 }

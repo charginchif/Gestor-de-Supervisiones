@@ -491,4 +491,25 @@ class UsuarioController extends Controller
             return RespuestaAPI::error('Error al eliminar el docente: ' . $e->getMessage(), 500);
         }
     }
+
+    public function getMiPerfilDocente()
+    {
+        try {
+            $idUsuario = Auth::id();
+            if (!$idUsuario) {
+                return RespuestaAPI::error('Usuario no autenticado.', 401);
+            }
+
+            // Asumiendo que la tabla 'docente' tiene una columna 'usuario_id' que la relaciona con 'usuario'
+            $docente = Docente::where('usuario_id', $idUsuario)->first();
+
+            if (!$docente) {
+                return RespuestaAPI::error('Perfil de docente no encontrado para el usuario autenticado.', 404);
+            }
+
+            return RespuestaAPI::exito('Perfil de docente encontrado', $docente);
+        } catch (\Exception $e) {
+            return RespuestaAPI::error('Error al obtener el perfil del docente: ' . $e->getMessage(), 500);
+        }
+    }
 }
