@@ -1,45 +1,58 @@
-# API Documentation
+# Syed API
 
-This document provides instructions for connecting to the API. The API is used to manage users, students, teachers, and coordinators.
+This is the official API for the Syed project, a comprehensive system for managing academic information including students, teachers, coordinators, careers, and more. This API is built with the Lumen framework, a lightweight version of Laravel.
 
-## Base URL
+## 🚀 Installation
 
-The base URL for all API endpoints is your application's public directory. For local development, it is typically `http://localhost/your-project/public/`. For the production environment, it might be something like:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/syed-api.git
+    cd syed-api
+    ```
 
+2.  **Install dependencies:**
+    ```bash
+    composer install
+    ```
+
+3.  **Environment Configuration:**
+    - Copy the `.env.example` file to `.env`:
+      ```bash
+      cp .env.example .env
+      ```
+    - Generate an application key:
+      ```bash
+      php artisan key:generate
+      ```
+    - Configure your database and other environment variables in the `.env` file.
+
+4.  **Run Migrations and Seeders:**
+    ```bash
+    php artisan migrate --seed
+    ```
+
+5.  **Run the development server:**
+    ```bash
+    php -S localhost:8000 -t public
+    ```
+
+## 🧪 Running Tests
+
+To run the test suite, use the following command:
+
+```bash
+vendor/bin/phpunit
 ```
-https://syed-api.joannesystem.com/public/
-```
 
-## Authentication
+## 🔑 Authentication
 
-To access the protected endpoints, you need to obtain an authentication token by making a `POST` request to the `/login` endpoint.
+To access protected endpoints, you need to obtain an authentication token by making a `POST` request to the `/login` endpoint.
 
-### Login
-
-* **Endpoint:** `POST /login`
-* **Description:** Authenticates a user and returns an access token.
-* **Request Body:**
-    * `correo` (string, required): The user's email.
-    * `contrasena` (string, required): The user's password.
-* **Example Response:**
-
-```json
-{
-    "status": "éxito",
-    "mensaje": "Inicio de sesión exitoso",
-    "data": {
-        "access_token": "your-jwt-token",
-        "token_type": "Bearer",
-        "user": {
-            "id": 1,
-            "name": "Admin User",
-            "email": "admin@example.com",
-            "id_role": 1,
-            "rol": "Administrador"
-        }
-    }
-}
-```
+- **Endpoint:** `POST /login`
+- **Description:** Authenticates a user and returns an access token.
+- **Request Body:**
+  - `correo` (string, required): The user's email.
+  - `contrasena` (string, required): The user's password.
 
 Once you have the `access_token`, you must include it in the `Authorization` header for all subsequent requests to protected endpoints:
 
@@ -47,176 +60,153 @@ Once you have the `access_token`, you must include it in the `Authorization` hea
 Authorization: Bearer your-jwt-token
 ```
 
----
+## 📖 API Endpoints
 
-## Endpoints for Administrator
+The API provides different sets of endpoints based on user roles: Administrator, Coordinator, Student, and Teacher.
+
+### Administrator Endpoints
 
 These endpoints are protected and require an authentication token with the `administrador` role.
 
-### User Management
+| Method | Endpoint                               | Description                                  |
+| :----- | :------------------------------------- | :------------------------------------------- |
+| GET    | `/usuario`                             | Get a list of all users.                     |
+| POST   | `/usuario`                             | Create a new user.                           |
+| GET    | `/usuario/{id}`                        | Get a specific user by ID.                   |
+| PUT    | `/usuario/{id}`                        | Update a user's information.                 |
+| DELETE | `/usuario/{id}`                        | Delete a user.                               |
+| GET    | `/planteles`                           | Get a list of all campuses.                  |
+| POST   | `/planteles`                           | Create a new campus.                         |
+| GET    | `/planteles/{id}`                      | Get a specific campus by ID.                 |
+| PUT    | `/planteles/{id}`                      | Update a campus's information.               |
+| DELETE | `/planteles/{id}`                      | Delete a campus.                             |
+| GET    | `/alumnos`                             | Get a list of all students.                  |
+| POST   | `/alumnos`                             | Create a new student.                        |
+| GET    | `/alumnos/{id}`                        | Get a specific student by ID.                |
+| PUT    | `/alumnos/{id}`                        | Update a student's information.              |
+| GET    | `/docentes`                            | Get a list of all teachers.                  |
+| POST   | `/docentes`                            | Create a new teacher.                        |
+| GET    | `/docentes/{id}`                       | Get a specific teacher by ID.                |
+| PUT    | `/docentes/{id}`                       | Update a teacher's information.              |
+| GET    | `/coordinadores`                       | Get a list of all coordinators.              |
+| POST   | `/coordinadores`                       | Create a new coordinator.                    |
+| GET    | `/coordinadores/{id}`                  | Get a specific coordinator by ID.            |
+| PUT    | `/coordinadores/{id}`                  | Update a coordinator's information.          |
+| GET    | `/carreras`                            | Get a list of all careers.                   |
+| POST   | `/carreras`                            | Create a new career.                         |
+| GET    | `/carreras/{id}`                       | Get a specific career by ID.                 |
+| PUT    | `/carreras/{id}`                       | Update a career's information.               |
+| DELETE | `/carreras/{id}`                       | Delete a career.                             |
+| GET    | `/carrera-modalidad`                   | Get career-modality assignments.             |
+| POST   | `/carrera-modalidad`                   | Create a career-modality assignment.         |
+| DELETE | `/carrera-modalidad`                   | Delete a career-modality assignment.         |
+| GET    | `/materias`                            | Get a list of all subjects.                  |
+| POST   | `/materias`                            | Create a new subject.                        |
+| GET    | `/materias/{id}`                       | Get a specific subject by ID.                |
+| PUT    | `/materias/{id}`                       | Update a subject's information.              |
+| DELETE | `/materias/{id}`                       | Delete a subject.                            |
+| GET    | `/carrerasPorCoordinador/{id}`         | Get careers assigned to a coordinator.       |
+| GET    | `/carrerasPorCoordinador`              | Get all career assignments.                  |
+| POST   | `/asignarCarreraCoordinador`           | Assign a career to a coordinator.            |
+| PUT    | `/asignarCarreraCoordinador`           | Update a career assignment.                  |
+| DELETE | `/asignarCarreraCoordinador`           | Delete a career assignment.                  |
+| POST   | `/asignarCarreraPlantel`               | Assign a career to a campus.                 |
+| DELETE | `/eliminarCarreraPlantel`              | Delete a career assignment from a campus.    |
+| GET    | `/carrerasPorPlantel`                  | Get all careers for all campuses.            |
+| GET    | `/carrerasPorPlantel/{id}`             | Get all careers for a specific campus.       |
+| POST   | `/plantel-turno`                       | Assign a shift to a campus.                  |
+| DELETE | `/plantel-turno/{id}`                  | Delete a shift assignment from a campus.     |
+| PUT    | `/plantel-turno/{id}`                  | Update a shift assignment for a campus.      |
+| GET    | `/supervision/contable`                | Get accounting supervision criteria.         |
+| POST   | `/supervision/contable`                | Create an accounting supervision criterion.  |
+| GET    | `/supervision/contable/buscar`         | Search for accounting supervision criteria.  |
+| GET    | `/supervision/contable/{id}`           | Get an accounting supervision criterion.     |
+| PUT    | `/supervision/contable/{id}`           | Update an accounting supervision criterion.  |
+| DELETE | `/supervision/contable/{id}`           | Delete an accounting supervision criterion.  |
+| GET    | `/supervision/no-contable`             | Get non-accounting supervision criteria.     |
+| POST   | `/supervision/no-contable`             | Create a non-accounting supervision criterion.|
+| GET    | `/supervision/no-contable/{id}`        | Get a non-accounting supervision criterion.  |
+| PUT    | `/supervision/no-contable/{id}`        | Update a non-accounting supervision criterion.|
+| DELETE | `/supervision/no-contable/{id}`        | Delete a non-accounting supervision criterion.|
+| GET    | `/supervision/rubros`                  | Get all supervision rubros.                  |
+| GET    | `/supervision/rubros/contable`         | Get accounting supervision rubros.           |
+| POST   | `/supervision/rubros/contable`         | Create an accounting supervision rubro.      |
+| GET    | `/supervision/rubros/contable/{id}`    | Get an accounting supervision rubro.         |
+| PUT    | `/supervision/rubros/contable/{id}`    | Update an accounting supervision rubro.      |
+| DELETE | `/supervision/rubros/contable/{id}`    | Delete an accounting supervision rubro.      |
+| GET    | `/supervision/rubros/no-contable`      | Get non-accounting supervision rubros.       |
+| POST   | `/supervision/rubros/no-contable`      | Create a non-accounting supervision rubro.   |
+| GET    | `/supervision/rubros/no-contable/{id}` | Get a non-accounting supervision rubro.      |
+| PUT    | `/supervision/rubros/no-contable/{id}` | Update a non-accounting supervision rubro.   |
+| DELETE | `/supervision/rubros/no-contable/{id}` | Delete a non-accounting supervision rubro.   |
+| GET    | `/plan-estudio`                        | Get all curricula.                           |
+| GET    | `/plan-estudio/{id_carrera}`           | Get the curriculum for a specific career.    |
+| POST   | `/plan-estudio`                        | Create a new curriculum.                     |
+| PUT    | `/plan-estudio`                        | Update a curriculum.                         |
+| DELETE | `/plan-estudio`                        | Delete a curriculum.                         |
+| GET    | `/evaluacion-docente/rubros`           | Get all evaluation rubrics.                  |
+| POST   | `/evaluacion-docente/rubros`           | Create a new evaluation rubric.              |
+| GET    | `/evaluacion-docente/rubros/{id}`      | Get a specific evaluation rubric by ID.      |
+| PUT    | `/evaluacion-docente/rubros/{id}`      | Update an evaluation rubric.                 |
+| DELETE | `/evaluacion-docente/rubros/{id}`      | Delete an evaluation rubric.                 |
+| GET    | `/evaluacion-docente/criterios`        | Get all evaluation criteria.                 |
+| POST   | `/evaluacion-docente/criterios`        | Create a new evaluation criterion.           |
+| GET    | `/evaluacion-docente/criterios/{id}`   | Get a specific evaluation criterion by ID.   |
+| PUT    | `/evaluacion-docente/criterios/{id}`   | Update an evaluation criterion.              |
+| DELETE | `/evaluacion-docente/criterios/{id}`   | Delete an evaluation criterion.              |
+| GET    | `/modalidades`                         | Get all modalities.                          |
+| POST   | `/modalidades`                         | Create a new modality.                       |
+| GET    | `/modalidades/{id}`                    | Get a specific modality by ID.               |
+| PUT    | `/modalidades/{id}`                    | Update a modality.                           |
+| DELETE | `/modalidades/{id}`                    | Delete a modality.                           |
+| POST   | `/modalidades/bulk-upsert`             | Bulk upsert modalities.                      |
+| GET    | `/grupos`                              | Get all groups.                              |
+| POST   | `/grupos`                              | Create a new group.                          |
+| GET    | `/grupos/{id}`                         | Get a specific group by ID.                  |
+| PUT    | `/grupos/{id}`                         | Update a group.                              |
+| DELETE | `/grupos/{id}`                         | Delete a group.                              |
+| POST   | `/grupos/asignar-plan`                 | Assign a plan to a group.                    |
+| DELETE | `/grupos/{id_grupo}/quitar-plan`       | Remove a plan from a group.                  |
 
-*   **`GET /usuario`**: Get a list of all users.
-*   **`POST /usuario`**: Create a new user.
-*   **`GET /usuario/{id}`**: Get a specific user by ID.
-*   **`PUT /usuario/{id}`**: Update a user's information.
-*   **`DELETE /usuario/{id}`**: Delete a user.
-
-### Campus Management
-
-*   **`GET /planteles`**: Get a list of all campuses.
-*   **`POST /planteles`**: Create a new campus.
-*   **`GET /planteles/{id}`**: Get a specific campus by ID.
-*   **`PUT /planteles/{id}`**: Update a campus's information.
-*   **`DELETE /planteles/{id}`**: Delete a campus.
-
-### Student Management
-
-*   **`GET /alumnos`**: Get a list of all students.
-*   **`POST /alumnos`**: Create a new student.
-*   **`GET /alumnos/{id}`**: Get a specific student by ID.
-*   **`PUT /alumnos/{id}`**: Update a student's information.
-
-### Teacher Management
-
-*   **`GET /docentes`**: Get a list of all teachers.
-*   **`POST /docentes`**: Create a new teacher.
-*   **`GET /docentes/{id}`**: Get a specific teacher by ID.
-*   **`PUT /docentes/{id}`**: Update a teacher's information.
-
-### Coordinator Management
-
-*   **`GET /coordinadores`**: Get a list of all coordinators.
-*   **`POST /coordinadores`**: Create a new coordinator.
-*   **`GET /coordinadores/{id}`**: Get a specific coordinator by ID.
-*   **`PUT /coordinadores/{id}`**: Update a coordinator's information.
-
-### Career Management
-
-*   **`GET /carreras`**: Get a list of all careers.
-*   **`POST /carreras`**: Create a new career.
-*   **`GET /carreras/{id}`**: Get a specific career by ID.
-*   **`PUT /carreras/{id}`**: Update a career's information.
-*   **`DELETE /carreras/{id}`**: Delete a career.
-
-### Subject Management
-
-*   **`GET /materias`**: Get a list of all subjects.
-*   **`POST /materias`**: Create a new subject.
-*   **`GET /materias/{id}`**: Get a specific subject by ID.
-*   **`PUT /materias/{id}`**: Update a subject's information.
-*   **`DELETE /materias/{id}`**: Delete a subject.
-
-### Coordinator Career Assignment
-
-*   **`GET /carrerasPorCoordinador/{id}`**: Get careers assigned to a coordinator.
-*   **`GET /carrerasPorCoordinador`**: Get all career assignments.
-*   **`POST /asignarCarreraCoordinador`**: Assign a career to a coordinator.
-*   **`PUT /asignarCarreraCoordinador`**: Update a career assignment.
-*   **`DELETE /asignarCarreraCoordinador`**: Delete a career assignment.
-
-### Campus Career Assignment
-
-*   **`POST /asignarCarreraPlantel`**: Assign a career to a campus.
-*   **`DELETE /eliminarCarreraPlantel`**: Delete a career assignment from a campus.
-*   **`GET /carrerasPorPlantel`**: Get all careers for all campuses.
-*   **`GET /carrerasPorPlantel/{id}`**: Get all careers for a specific campus.
-
-### Campus Shift Assignment
-
-*   **`POST /plantel-turno`**: Assign a shift to a campus.
-*   **`DELETE /plantel-turno/{id}`**: Delete a shift assignment from a campus.
-*   **`PUT /plantel-turno/{id}`**: Update a shift assignment for a campus.
-
-### Supervision Management
-
-All supervision endpoints are prefixed with `/supervision`.
-
-#### Accounting Criteria
-*   **`GET /supervision/contable`**: Get a list of all accounting supervision criteria.
-*   **`POST /supervision/contable`**: Create a new accounting supervision criterion.
-*   **`GET /supervision/contable/buscar`**: Search for accounting supervision criteria by `id_rubro` and/or `nombre` of the rubro.
-*   **`GET /supervision/contable/{id}`**: Get a specific accounting supervision criterion by ID.
-*   **`PUT /supervision/contable/{id}`**: Update an accounting supervision criterion.
-*   **`DELETE /supervision/contable/{id}`**: Delete an accounting supervision criterion.
-
-#### Non-Accounting Criteria
-*   **`GET /supervision/no-contable`**: Get a list of all non-accounting supervision criteria.
-*   **`POST /supervision/no-contable`**: Create a new non-accounting supervision criterion.
-*   **`GET /supervision/no-contable/{id}`**: Get a specific non-accounting supervision criterion by ID.
-*   **`PUT /supervision/no-contable/{id}`**: Update a non-accounting supervision criterion.
-*   **`DELETE /supervision/no-contable/{id}`**: Delete a non-accounting supervision criterion.
-
-#### Supervision Rubros
-*   **`GET /supervision/rubros`**: Get a list of all supervision rubros (both accounting and non-accounting).
-*   **`GET /supervision/rubros/contable`**: Get a list of all accounting supervision rubros.
-*   **`POST /supervision/rubros/contable`**: Create a new accounting supervision rubro.
-*   **`GET /supervision/rubros/contable/{id}`**: Get a specific accounting supervision rubro by ID.
-*   **`PUT /supervision/rubros/contable/{id}`**: Update an accounting supervision rubro.
-*   **`DELETE /supervision/rubros/contable/{id}`**: Delete an accounting supervision rubro.
-*   **`GET /supervision/rubros/no-contable`**: Get a list of all non-accounting supervision rubros.
-*   **`POST /supervision/rubros/no-contable`**: Create a new non-accounting supervision rubro.
-*   **`GET /supervision/rubros/no-contable/{id}`**: Get a specific non-accounting supervision rubro by ID.
-*   **`PUT /supervision/rubros/no-contable/{id}`**: Update a non-accounting supervision rubro.
-*   **`DELETE /supervision/rubros/no-contable/{id}`**: Delete a non-accounting supervision rubro.
-
-### Curriculum Management
-
-*   **`GET /plan-estudio`**: Get all curricula.
-*   **`GET /plan-estudio/{id_carrera}`**: Get the curriculum for a specific career.
-*   **`POST /plan-estudio`**: Create a new curriculum.
-*   **`PUT /plan-estudio`**: Update a curriculum.
-*   **`DELETE /plan-estudio`**: Delete a curriculum.
-
-### Teacher Evaluation Management
-
-All teacher evaluation endpoints are prefixed with `/evaluacion-docente`.
-
-#### Evaluation Rubros
-*   **`GET /evaluacion-docente/rubros`**: Get a list of all evaluation rubrics.
-*   **`POST /evaluacion-docente/rubros`**: Create a new evaluation rubric.
-*   **`GET /evaluacion-docente/rubros/{id}`**: Get a specific evaluation rubric by ID.
-*   **`PUT /evaluacion-docente/rubros/{id}`**: Update an evaluation rubric.
-*   **`DELETE /evaluacion-docente/rubros/{id}`**: Delete an evaluation rubric.
-
-#### Evaluation Criteria
-*   **`GET /evaluacion-docente/criterios`**: Get a list of all evaluation criteria.
-*   **`POST /evaluacion-docente/criterios`**: Create a new evaluation criterion.
-*   **`GET /evaluacion-docente/criterios/{id}`**: Get a specific evaluation criterion by ID.
-*   **`PUT /evaluacion-docente/criterios/{id}`**: Update an evaluation criterion.
-*   **`DELETE /evaluacion-docente/criterios/{id}`**: Delete an evaluation criterion.
-
----
-
-## Endpoints for Coordinator
+### Coordinator Endpoints
 
 These endpoints are protected and require an authentication token with the `coordinador` role.
 
-### Student Management
+| Method | Endpoint                      | Description                                  |
+| :----- | :---------------------------- | :------------------------------------------- |
+| GET    | `/coordinador-alumnos`        | Get a list of all students.                  |
+| POST   | `/coordinador-alumnos`        | Create a new student.                        |
+| GET    | `/coordinador-alumnos/{id}`   | Get a specific student by ID.                |
+| PUT    | `/coordinador-alumnos/{id}`   | Update a student's information.              |
+| GET    | `/coordinador-docentes`       | Get a list of all teachers.                  |
+| POST   | `/coordinador-docentes`       | Create a new teacher.                        |
+| GET    | `/coordinador-docentes/{id}`  | Get a specific teacher by ID.                |
+| PUT    | `/coordinador-docentes/{id}`  | Update a teacher's information.              |
+| GET    | `/coordinador-planteles`      | Get campuses associated with the coordinator.|
+| POST   | `/materias/asignar-docente`   | Assign a teacher to a subject.               |
+| GET    | `/coordinador-grupos`         | Get all groups.                              |
+| POST   | `/coordinador-grupos`         | Create a new group.                          |
+| GET    | `/coordinador-grupos/{id}`    | Get a specific group by ID.                  |
+| PUT    | `/coordinador-grupos/{id}`    | Update a group.                              |
+| DELETE | `/coordinador-grupos/{id}`    | Delete a group.                              |
+| POST   | `/coordinador-grupos/asignar-plan` | Assign a plan to a group.               |
+| DELETE | `/coordinador-grupos/{id_grupo}/quitar-plan` | Remove a plan from a group.   |
 
-*   **`GET /coordinador-alumnos`**: Get a list of all students.
-*   **`POST /coordinador-alumnos`**: Create a new student.
-*   **`GET /coordinador-alumnos/{id}`**: Get a specific student by ID.
-*   **`PUT /coordinador-alumnos/{id}`**: Update a student's information.
-
-### Teacher Management
-
-*   **`GET /coordinador-docentes`**: Get a list of all teachers.
-*   **`POST /coordinador-docentes`**: Create a new teacher.
-*   **`GET /coordinador-docentes/{id}`**: Get a specific teacher by ID.
-*   **`PUT /coordinador-docentes/{id}`**: Update a teacher's information.
-
-### Campus Management
-
-*   **`GET /coordinador-planteles`**: Get a list of all campuses associated with the coordinator.
-
----
-
-## Endpoints for Student
+### Student Endpoints
 
 These endpoints are protected and require an authentication token with the `alumno` role.
 
-### Teacher Management
+| Method | Endpoint            | Description                      |
+| :----- | :------------------ | :------------------------------- |
+| GET    | `/mis-docentes`     | Get a list of the student's teachers. |
+| POST   | `/evaluar-docente`  | Evaluate a teacher.              |
+| POST   | `/inscribir-grupo`  | Enroll in a group.               |
+| GET    | `/mi-horario`       | Get the student's schedule.      |
 
-*   **`GET /mis-docentes`**: Get a list of the student's teachers.
-*   **`POST /evaluar-docente`**: Evaluate a teacher.
-*   **`POST /inscribir-grupo`**: Enroll in a group.
+### Teacher Endpoints
+
+These endpoints are protected and require an authentication token with the `docente` role.
+
+| Method | Endpoint         | Description                  |
+| :----- | :--------------- | :--------------------------- |
+| GET    | `/perfil/docente`| Get the teacher's profile.   |
