@@ -148,8 +148,8 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
     $router->post('plan-estudio', 'PlanEstudioController@store');
     $router->put('plan-estudio', 'PlanEstudioController@update');
-    $router->delete('plan-estudio/{id_plan_estudio}', 'PlanEstudioController@destroy');
     $router->delete('plan-estudio/materia', 'PlanEstudioController@destroyMateria');
+    $router->delete('plan-estudio/{id_plan_estudio}', 'PlanEstudioController@destroy');
 
     // Rutas para la gestión de Evaluación Docente
     $router->group(['prefix' => 'evaluacion-docente'], function () use ($router) {
