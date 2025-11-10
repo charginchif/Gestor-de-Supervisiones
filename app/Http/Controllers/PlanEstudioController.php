@@ -20,7 +20,7 @@ class PlanEstudioController extends Controller
         $planEstudio = DB::table('vw_admin_plan_estudio')->where('id_carrera', $id_carrera)->get();
 
         if ($planEstudio->isEmpty()) {
-            return RespuestaAPI::error('No se encontró un plan de estudio para la carrera especificada', 404);
+            return RespuestaAPI::error('No se encontró un plan de estudio para la carrera especificada', 204);
         }
 
         $grouped = [];
