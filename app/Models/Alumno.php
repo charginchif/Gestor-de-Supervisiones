@@ -38,11 +38,7 @@ class Alumno extends Model
         return $this->belongsTo(Carrera::class, 'id_carrera', 'id_carrera');
     }
 
-    // --- Accessors / Helpers ---
-    public function getNombreCompletoAttribute()
-    {
-        return trim("{$this->nombre} {$this->apellido_paterno} {$this->apellido_materno}");
-    }
+
 
     public static function crearAlumno(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, string $p_matricula, int $p_id_carrera)
     {

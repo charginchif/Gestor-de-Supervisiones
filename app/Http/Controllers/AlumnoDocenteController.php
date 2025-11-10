@@ -93,14 +93,16 @@ class AlumnoDocenteController extends Controller
         }
     }
     /**
-     * Inscribe a un alumno en un grupo.
+     * Inscribe a un alumno en un grupo usando un código de inscripción.
      */
     public function inscribirGrupo(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_grupo' => 'bail|required|integer',
+            'codigo_inscripcion' => 'bail|required|string|max:50',
         ], [
-            'id_grupo.required' => 'El ID del grupo es obligatorio.',
+            'codigo_inscripcion.required' => 'El código de inscripción es obligatorio.',
+            'codigo_inscripcion.string'   => 'El código de inscripción debe ser texto.',
+            'codigo_inscripcion.max'      => 'El código de inscripción no debe exceder los 50 caracteres.',
         ]);
 
         if ($validator->fails()) {
@@ -108,7 +110,7 @@ class AlumnoDocenteController extends Controller
         }
 
         try {
-            $idGrupo = $request->input('id_grupo');
+            $codigoInscripcion = $request->input('codigo_inscripcion');
             $idUsuario = Auth::id();
 
             // Busca el alumno correspondiente al usuario autenticado
@@ -121,26 +123,18 @@ class AlumnoDocenteController extends Controller
             $idAlumno = $alumno->id_alumno;
 
             // Llamar al procedimiento almacenado para inscribir al alumno.
-            $resultadoInscripcion = DB::select('CALL sp_inscripcion_grupo_alumno(?, ?)', [
-                $idGrupo,
-                $idAlumno
+            $resultadoInscripcion = DB::select('CALL sp_inscripcion_grupo_codigo_alumno(?, ?)', [
+                $idAlumno,
+                $codigoInscripcion
             ]);
 
             // El procedimiento devuelve un array con un objeto de resultado, lo extraemos.
             $datosResultado = $resultadoInscripcion[0] ?? null;
 
-            // Determinar el mensaje de éxito basado en el resultado del SP.
-            $mensaje = 'Inscripción al grupo procesada.';
-            if ($datosResultado && $datosResultado->resultado === 'YA_INSCRITO') {
-                $mensaje = 'El alumno ya se encontraba inscrito en este grupo.';
-            } elseif ($datosResultado && $datosResultado->resultado === 'INSCRIPCION_CREADA') {
-                $mensaje = 'Inscripción al grupo exitosa.';
-            }
-
-            return RespuestaAPI::exito($mensaje, $datosResultado);
+            return RespuestaAPI::exito('Inscripción al grupo exitosa.', $datosResultado);
 
         } catch (QueryException $e) {
-            // Capturar errores específicos de la base de datos (ej. SIGNAL SQLSTATE)
+            // Capturar errores específicos de la base de datos (ej. SIGNAL SQLSTATE '45000')
             $errorMessage = $e->errorInfo[2] ?? 'Error en la base de datos al inscribir al grupo.';
             return RespuestaAPI::error($errorMessage, 400);
         } catch (\Exception $e) {

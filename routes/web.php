@@ -43,7 +43,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->delete('planteles/{id}', 'PlantelController@destroy');
 
     // Rutas para la gestión de alumnos
-    $router->get('alumnos', 'UsuarioController@indexAlumnos');
+    $router->get('alumnos', 'UsuarioController@indexAlumnos');  
     $router->post('alumnos', 'UsuarioController@storeAlumno');
     $router->get('alumnos/{id}', 'UsuarioController@showAlumno');
     $router->put('alumnos/{id}', 'UsuarioController@updateAlumno');
