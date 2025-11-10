@@ -316,6 +316,7 @@ class UsuarioController extends Controller
             'apellido_paterno' => 'sometimes|string|max:100|regex:/^[\pL\s\-]+$/u',
             'apellido_materno' => 'sometimes|string|max:100|regex:/^[\pL\s\-]+$/u',
             'correo'           => 'sometimes|email|unique:usuario,correo,' . $alumno->id_usuario,
+            'contrasena'       => 'sometimes|string|min:8',
             'matricula'        => 'sometimes|string|max:15|unique:alumno,matricula,' . $id,
             'id_carrera'       => 'sometimes|integer|exists:carrera,id_carrera',
         ]);
@@ -325,15 +326,19 @@ class UsuarioController extends Controller
         }
 
         try {
+            $contrasenaHash = $request->has('contrasena') && $request->input('contrasena')
+                ? Hash::make($request->input('contrasena'))
+                : null;
+
             DB::statement(
                 'CALL sp_actualizar_alumno(?, ?, ?, ?, ?, ?, ?, ?)',
                 [
                     $id,
-                    $alumno->id_usuario,
                     $request->input('nombre', $alumno->nombre),
                     $request->input('apellido_paterno', $alumno->apellido_paterno),
                     $request->input('apellido_materno', $alumno->apellido_materno),
                     $request->input('correo', $alumno->correo),
+                    $contrasenaHash,
                     $request->input('matricula', $alumno->matricula),
                     $request->input('id_carrera', $alumno->id_carrera),
                 ]
