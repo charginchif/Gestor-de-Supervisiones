@@ -63,7 +63,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     // Rutas para la gestión de carreras
     $router->get('carreras', 'CarreraController@index');
     $router->post('carreras', 'CarreraController@store');
-    $router->get('carreras/{id}', 'CarreraController@show');
+    $router->get('carreras/{id}', 'CarreraController@show');    
     $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
 
@@ -219,6 +219,56 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->delete('coordinador-grupos/{id}', 'GrupoController@destroy');
     $router->post('coordinador-grupos/asignar-plan', 'GrupoController@asignarPlan');
     $router->delete('coordinador-grupos/{id_grupo}/quitar-plan', 'GrupoController@quitarPlan');
+
+    // Rutas para la gestión de carreras (para Coordinador)
+    $router->get('coordinador-carreras', 'CarreraController@index');
+    $router->post('coordinador-carreras', 'CarreraController@store');
+    $router->get('coordinador-carreras/{id}', 'CarreraController@show');
+    $router->put('coordinador-carreras/{id}', 'CarreraController@update');
+    $router->delete('coordinador-carreras/{id}', 'CarreraController@destroy');
+
+    // Rutas para la gestión de Criterios de Supervisión (para Coordinador)
+    $router->group(['prefix' => 'coordinador-supervision'], function () use ($router) {
+        // Criterios Contables
+        $router->group(['prefix' => 'contable'], function () use ($router) {
+            $router->get('/', 'SupervisionController@indexContable');
+            $router->post('/', 'SupervisionController@storeContable');
+            $router->get('buscar', 'SupervisionController@buscarContable');
+            $router->get('{id}', 'SupervisionController@showContable');
+            $router->put('{id}', 'SupervisionController@updateContable');
+            $router->delete('{id}', 'SupervisionController@destroyContable');
+        });
+
+        // Criterios No Contables
+        $router->group(['prefix' => 'no-contable'], function () use ($router) {
+            $router->get('/', 'SupervisionController@indexNoContable');
+            $router->post('/', 'SupervisionController@storeNoContable');
+            $router->get('{id}', 'SupervisionController@showNoContable');
+            $router->put('{id}', 'SupervisionController@updateNoContable');
+            $router->delete('{id}', 'SupervisionController@destroyNoContable');
+        });
+    });
+
+    // Rutas para la gestión de Evaluación Docente (para Coordinador)
+    $router->group(['prefix' => 'coordinador-evaluacion-docente'], function () use ($router) {
+        // Rubros de Evaluación
+        $router->group(['prefix' => 'rubros'], function () use ($router) {
+            $router->get('/', 'RubroController@index');
+            $router->post('/', 'RubroController@store');
+            $router->get('{id}', 'RubroController@show');
+            $router->put('{id}', 'RubroController@update');
+            $router->delete('{id}', 'RubroController@destroy');
+        });
+
+        // Criterios de Evaluación
+        $router->group(['prefix' => 'criterios'], function () use ($router) {
+            $router->get('/', 'CriterioEvaluacionController@index');
+            $router->post('/', 'CriterioEvaluacionController@store');
+            $router->get('{id}', 'CriterioEvaluacionController@show');
+            $router->put('{id}', 'CriterioEvaluacionController@update');
+            $router->delete('{id}', 'CriterioEvaluacionController@destroy');
+        });
+    });
 });
 
 // Rutas para Alumno
