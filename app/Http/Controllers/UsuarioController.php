@@ -292,6 +292,10 @@ class UsuarioController extends Controller
      */
     public function updateAlumno(Request $request, $id)
     {
+        if (empty($request->all())) {
+            return RespuestaAPI::error('No se proporcionaron datos para actualizar.', 400);
+        }
+
         $user = Auth::user();
         $rol = strtolower($user->rol);
 
