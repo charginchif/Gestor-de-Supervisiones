@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PlanEstudio extends Model
 {
     protected $table = 'plan_estudio';
+    protected $primaryKey = 'id_plan_estudio';
     public $timestamps = false;
 
     protected $fillable = [

@@ -147,7 +147,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');
     $router->post('plan-estudio', 'PlanEstudioController@store');
-    $router->put('plan-estudio', 'PlanEstudioController@update');
+    $router->put('plan-estudio/{id_plan_estudio}', 'PlanEstudioController@update');
     $router->delete('plan-estudio/materia', 'PlanEstudioController@destroyMateria');
     $router->delete('plan-estudio/{id_plan_estudio}', 'PlanEstudioController@destroy');
 

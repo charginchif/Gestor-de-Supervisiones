@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Grupo;
 use App\Models\VwCoordGrupo;
 use App\Models\VwGrupoAlumnos;
+use App\Models\PlanEstudio;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Utils\GeneradorCodigos;
+
 
 class GrupoController extends Controller
 {
     public function indexAdmin()
     {
-        $grupos = VwGrupoAlumnos::select('id_grupo', 'grupo', 'id_nivel', 'id_modalidad', 'id_carrera')
-            ->groupBy('id_grupo', 'grupo', 'id_nivel', 'id_modalidad', 'id_carrera')
+        $grupos = VwGrupoAlumnos::select('*')
             ->get();
         return RespuestaAPI::exito('Lista de grupos', $grupos);
     }
@@ -23,8 +25,8 @@ class GrupoController extends Controller
     public function index(Request $request)
     {
         // This method will not work as expected because the coordinator information is not available in the new view.
-        $grupos = VwGrupoAlumnos::select('id_grupo', 'grupo', 'id_nivel', 'id_modalidad', 'id_carrera')
-            ->groupBy('id_grupo', 'grupo', 'id_nivel', 'id_modalidad', 'id_carrera')
+        $grupos = VwGrupoAlumnos::select('id_grupo', 'grupo', 'id_modalidad', 'id_carrera')
+            ->groupBy('id_grupo', 'grupo', 'id_modalidad', 'id_carrera')
             ->get();
         return RespuestaAPI::exito('Lista de grupos', $grupos);
     }
@@ -44,9 +46,9 @@ class GrupoController extends Controller
             'acronimo' => 'required|string|max:15',
             'id_ciclo' => 'required|integer',
             'id_turno' => 'required|integer',
-            'id_modalidad' => 'sometimes|integer', // Opcional, se puede derivar del plan
             'id_nivel' => 'required|integer',
             'id_plan_estudio' => 'required|integer',
+            'id_plantel' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -54,20 +56,30 @@ class GrupoController extends Controller
         }
 
         try {
+        $codigoGenerado = GeneradorCodigos::generateRandomCode();
+        $request->input('codigo', $codigoGenerado);
+
             DB::statement(
-                'CALL sp_grupo_insertar(?, ?, ?, ?, ?, ?)',
+                'CALL sp_grupo_insertar(?, ?, ?, ?, ?, ?, ?)',
                 [
                     $request->acronimo,
                     $request->id_ciclo,
                     $request->id_turno,
-                    $request->input('id_modalidad'), // Usar input() para que sea null si no existe
                     $request->id_nivel,
                     $request->id_plan_estudio,
+                    $request->id_plantel,
+                    $codigoGenerado,
                 ]
             );
             return RespuestaAPI::exito('Grupo creado exitosamente', null, 201);
         } catch (\Exception $e) {
-            return RespuestaAPI::error('Error al crear el grupo: ' . $e->getMessage(), 500);
+            // Extract the core error message from the exception
+            $errorMessage = $e->getMessage();
+            if (str_contains($errorMessage, 'SQLSTATE[45000]')) {
+                preg_match('/1644 (.*)/', $errorMessage, $matches);
+                $errorMessage = $matches[1] ?? 'Error en la operación.';
+            }
+            return RespuestaAPI::error('Error al crear el grupo: ' . $errorMessage, 500);
         }
     }
 

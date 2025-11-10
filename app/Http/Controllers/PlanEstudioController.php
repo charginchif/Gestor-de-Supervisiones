@@ -92,16 +92,26 @@ class PlanEstudioController extends Controller
     {
         try {
             $this->validate($request, [
-                'id_cat_nivel' => 'required|integer',
-                'ids_materias_csv' => 'required|string',
+                'id_carrera' => 'integer|nullable',
+                'id_modalidad' => 'integer|nullable',
+                'id_materia' => 'integer|nullable',
+                'id_cat_nivel' => 'integer|required_with:id_materia',
             ]);
 
+            // Check if at least one field is present
+            if (!$request->hasAny(['id_carrera', 'id_modalidad', 'id_materia'])) {
+                // Using a custom message, but this will be caught by the ValidationException handler
+                throw ValidationException::withMessages(['fields' => 'Debe proporcionar al menos un campo para actualizar (id_carrera, id_modalidad, id_materia).']);
+            }
+
             $resultado = DB::select(
-                'CALL sp_plan_estudio_actualizar(?, ?, ?)',
+                'CALL sp_plan_estudio_actualizar(?, ?, ?, ?, ?)',
                 [
                     $id_plan_estudio,
-                    $request->id_cat_nivel,
-                    $request->ids_materias_csv,
+                    $request->input('id_carrera'),
+                    $request->input('id_modalidad'),
+                    $request->input('id_materia'),
+                    $request->input('id_cat_nivel'),
                 ]
             );
 
