@@ -173,36 +173,46 @@ These endpoints are protected and require an authentication token with the `admi
 
 These endpoints are protected and require an authentication token with the `coordinador` role.
 
-| Method | Endpoint                      | Description                                  |
-| :----- | :---------------------------- | :------------------------------------------- |
-| GET    | `/coordinador-alumnos`        | Get a list of all students.                  |
-| POST   | `/coordinador-alumnos`        | Create a new student.                        |
-| GET    | `/coordinador-alumnos/{id}`   | Get a specific student by ID.                |
-| PUT    | `/coordinador-alumnos/{id}`   | Update a student's information.              |
-| GET    | `/coordinador-docentes`       | Get a list of all teachers.                  |
-| POST   | `/coordinador-docentes`       | Create a new teacher.                        |
-| GET    | `/coordinador-docentes/{id}`  | Get a specific teacher by ID.                |
-| PUT    | `/coordinador-docentes/{id}`  | Update a teacher's information.              |
-| GET    | `/coordinador-planteles`      | Get campuses associated with the coordinator.|
-| POST   | `/materias/asignar-docente`   | Assign a teacher to a subject.               |
-| GET    | `/coordinador-grupos`         | Get all groups.                              |
-| POST   | `/coordinador-grupos`         | Create a new group.                          |
-| GET    | `/coordinador-grupos/{id}`    | Get a specific group by ID.                  |
-| PUT    | `/coordinador-grupos/{id}`    | Update a group.                              |
-| DELETE | `/coordinador-grupos/{id}`    | Delete a group.                              |
-| POST   | `/coordinador-grupos/asignar-plan` | Assign a plan to a group.               |
-| DELETE | `/coordinador-grupos/{id_grupo}/quitar-plan` | Remove a plan from a group.   |
+| Method | Endpoint                                   | Description                                      |
+| :----- | :----------------------------------------- | :----------------------------------------------- |
+| GET    | `/coordinador-alumnos`                     | Get a list of all students.                      |
+| POST   | `/coordinador-alumnos`                     | Create a new student.                            |
+| GET    | `/coordinador-alumnos/{id}`                | Get a specific student by ID.                    |
+| PUT    | `/coordinador-alumnos/{id}`                | Update a student's information.                  |
+| GET    | `/coordinador-docentes`                    | Get a list of all teachers.                      |
+| POST   | `/coordinador-docentes`                    | Create a new teacher.                            |
+| GET    | `/coordinador-docentes/{id}`               | Get a specific teacher by ID.                    |
+| PUT    | `/coordinador-docentes/{id}`               | Update a teacher's information.                  |
+| GET    | `/coordinador-planteles`                   | Get campuses associated with the coordinator.    |
+| POST   | `/materias/asignar-docente`                | Assign a teacher to a subject.                   |
+| GET    | `/coordinador-grupos`                      | Get all groups.                                  |
+| POST   | `/coordinador-grupos`                      | Create a new group.                              |
+| GET    | `/coordinador-grupos/{id}`                 | Get a specific group by ID.                      |
+| PUT    | `/coordinador-grupos/{id}`                 | Update a group.                                  |
+| DELETE | `/coordinador-grupos/{id}`                 | Delete a group.                                  |
+| POST   | `/coordinador-grupos/asignar-plan`         | Assign a plan to a group.                        |
+| DELETE | `/coordinador-grupos/{id_grupo}/quitar-plan` | Remove a plan from a group.                      |
+| GET    | `/solicitud-inscripcion`                   | Get all pending enrollment requests.             |
+| POST   | `/solicitud-inscripcion/{id}/aprobar`      | Approve an enrollment request.                   |
+| DELETE | `/solicitud-inscripcion/{id}/rechazar`     | Reject an enrollment request.                    |
+| GET    | `/solicitud-inscripcion/buscar`            | Search for enrollment requests.                  |
+| GET    | `/solicitud-inscripcion/todas`             | Get all enrollment requests (approved, rejected, pending). |
+| GET    | `/solicitud-inscripcion/aprobadas`         | Get all approved enrollment requests.            |
+| GET    | `/solicitud-inscripcion/rechazadas`        | Get all rejected enrollment requests.            |
 
 ### Student Endpoints
 
 These endpoints are protected and require an authentication token with the `alumno` role.
 
-| Method | Endpoint            | Description                      |
-| :----- | :------------------ | :------------------------------- |
-| GET    | `/mis-docentes`     | Get a list of the student's teachers. |
-| POST   | `/evaluar-docente`  | Evaluate a teacher.              |
-| POST   | `/inscribir-grupo`  | Enroll in a group.               |
-| GET    | `/mi-horario`       | Get the student's schedule.      |
+| Method | Endpoint                               | Description                                  |
+| :----- | :------------------------------------- | :------------------------------------------- |
+| GET    | `/mis-docentes`                        | Get a list of the student's teachers.        |
+| POST   | `/evaluar-docente`                     | Evaluate a teacher.                          |
+| POST   | `/inscribir-grupo`                     | Enroll in a group.                           |
+| GET    | `/mi-horario`                          | Get the student's schedule.                  |
+| POST   | `/solicitud-inscripcion`               | Send an enrollment request to a group.       |
+| GET    | `/mis-solicitudes`                     | Get the student's enrollment requests.       |
+| DELETE | `/solicitud-inscripcion/{id}/cancelar` | Cancel an enrollment request.                |
 
 ### Teacher Endpoints
 

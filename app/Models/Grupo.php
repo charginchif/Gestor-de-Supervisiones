@@ -17,5 +17,6 @@ class Grupo extends Model
         'id_modalidad',
         'id_nivel',
         'id_carrera',
+        'codigo_inscripcion',
     ];
 }
