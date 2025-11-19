@@ -94,14 +94,14 @@ class PlanEstudioController extends Controller
             $this->validate($request, [
                 'id_carrera' => 'integer|nullable',
                 'id_modalidad' => 'integer|nullable',
-                'id_materia' => 'integer|nullable',
-                'id_cat_nivel' => 'integer|required_with:id_materia',
+                'id_materia' => 'integer|nullable|required_with:id_cat_nivel',
+                'id_cat_nivel' => 'integer|nullable|required_with:id_materia',
             ]);
 
             // Check if at least one field is present
-            if (!$request->hasAny(['id_carrera', 'id_modalidad', 'id_materia'])) {
+            if (!$request->hasAny(['id_carrera', 'id_modalidad', 'id_materia', 'id_cat_nivel'])) {
                 // Using a custom message, but this will be caught by the ValidationException handler
-                throw ValidationException::withMessages(['fields' => 'Debe proporcionar al menos un campo para actualizar (id_carrera, id_modalidad, id_materia).']);
+                throw ValidationException::withMessages(['fields' => 'Debe proporcionar al menos un campo para actualizar (id_carrera, id_modalidad, o id_materia y id_cat_nivel).']);
             }
 
             $resultado = DB::select(

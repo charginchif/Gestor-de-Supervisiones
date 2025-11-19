@@ -195,6 +195,12 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->post('horarios', 'HorarioController@store');
     $router->put('horarios/{id}', 'HorarioController@update');
     $router->delete('horarios/{id}', 'HorarioController@destroy');
+
+    // Resultados
+    $router->group(['prefix' => 'resultados'], function () use ($router) {
+        $router->get('supervision', 'ResultadosController@getResultadosSupervision');
+        $router->get('evaluacion', 'ResultadosController@getResultadosEvaluacion');
+    });
 });
 
 
@@ -296,6 +302,12 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->get('solicitud-inscripcion/todas', 'HistorialSolicitudesController@getAll');
     $router->get('solicitud-inscripcion/aprobadas', 'HistorialSolicitudesController@getApproved');
     $router->get('solicitud-inscripcion/rechazadas', 'HistorialSolicitudesController@getRejected');
+
+    // Resultados
+    $router->group(['prefix' => 'resultados'], function () use ($router) {
+        $router->get('supervision', 'ResultadosController@getResultadosSupervision');
+        $router->get('evaluacion', 'ResultadosController@getResultadosEvaluacion');
+    });
 });
 
 

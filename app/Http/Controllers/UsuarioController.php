@@ -374,10 +374,33 @@ class UsuarioController extends Controller
      */
     public function showDocente($id)
     {
+        $user = Auth::user();
+        $rol = strtolower($user->rol);
+
         $docente = Docente::find($id);
 
         if (!$docente) {
             return RespuestaAPI::error('Docente no encontrado', 404);
+        }
+
+        if ($rol === 'coordinador') {
+            $carrerasCoordinador = $this->getCarrerasDelCoordinador($user->id);
+
+            // Obtener las carreras asociadas al docente a través de los grupos que tiene asignados.
+            // Esta es una suposición de la estructura de la base de datos. 
+            // Se asume que la tabla 'horarios' o una similar vincula docentes a grupos.
+            $carrerasDocente = DB::table('horarios as h')
+                ->join('grupo as g', 'h.id_grupo', '=', 'g.id_grupo')
+                ->where('h.id_docente', $id)
+                ->pluck('g.id_carrera')
+                ->unique()
+                ->toArray();
+
+            $hasAccess = !empty(array_intersect($carrerasCoordinador, $carrerasDocente));
+
+            if (!$hasAccess) {
+                return RespuestaAPI::error('No tienes permiso para ver este docente.', 403);
+            }
         }
 
         return RespuestaAPI::exito('Docente encontrado', $docente);
@@ -463,10 +486,9 @@ class UsuarioController extends Controller
 
         try {
             DB::statement(
-                'CALL sp_actualizar_docente(?, ?, ?, ?, ?, ?, ?)',
+                'CALL sp_actualizar_docente(?, ?, ?, ?, ?, ?)',
                 [
                     $id,
-                    $docente->id_usuario,
                     $request->input('nombre', $docente->nombre),
                     $request->input('apellido_paterno', $docente->apellido_paterno),
                     $request->input('apellido_materno', $docente->apellido_materno),
