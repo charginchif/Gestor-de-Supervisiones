@@ -82,7 +82,16 @@ class PlanEstudioController extends Controller
 
             return RespuestaAPI::exito('Plan de estudio creado con éxito', $resultado, 201);
         } catch (ValidationException $e) {
-            return RespuestaAPI::error('Datos de entrada no válidos', 422, $e->errors());
+            $example = [
+                'id_carrera' => 1,
+                'id_modalidad' => 2,
+                'materias' => [
+                    ['id_materia' => 101, 'id_cat_nivel' => 1],
+                    ['id_materia' => 102, 'id_cat_nivel' => 2],
+                ]
+            ];
+            $customMessage = 'La estructura de los datos es incorrecta. Asegúrese de que la petición siga el formato de ejemplo.';
+            return RespuestaAPI::error($customMessage, 422, ['ejemplo' => $example, 'detalles' => $e->errors()]);
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al crear el plan de estudio: ' . $e->getMessage(), 500);
         }
