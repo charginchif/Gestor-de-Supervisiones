@@ -116,7 +116,7 @@ class PlantelController extends Controller
         $claims = $request->attributes->get('jwt_claims');
         $userId = $claims['sub']; // Assuming 'sub' contains the user ID
 
-        $coordinador = Coordinador::where('id_usuario', $userId)->first();
+        $coordinador = Coordinador::where('usuario_id', $userId)->first();
 
         if (!$coordinador) {
             return RespuestaAPI::error('Coordinador no encontrado para el usuario autenticado', RespuestaAPI::HTTP_NO_AUTORIZADO);

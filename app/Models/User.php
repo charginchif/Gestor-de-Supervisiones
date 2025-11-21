@@ -39,7 +39,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function coordinador()
     {
-        return $this->hasOne(Coordinador::class, 'id_usuario', 'id');
+        return $this->hasOne(Coordinador::class, 'usuario_id', 'id');
     }
 
     

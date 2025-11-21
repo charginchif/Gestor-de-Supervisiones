@@ -24,8 +24,24 @@ class Plantel extends Model
      */
     public static function getPlantelesByCoordinador(int $coordinadorId)
     {
-        return DB::table('vw_admin_planteles')
-                 ->where('id_coordinador', $coordinadorId)
-                 ->get();
+        $carreraIds = DB::table('vw_coord_carreras')
+            ->where('id_coordinador', $coordinadorId)
+            ->pluck('id_carrera');
+
+        if ($carreraIds->isEmpty()) {
+            return collect(); // Devuelve una colección vacía si el coordinador no tiene carreras asignadas.
+        }
+
+        $plantelIds = DB::table('vw_admin_plantel_carrera')
+            ->whereIn('id_carrera', $carreraIds)
+            ->pluck('id_plantel')
+            ->unique();
+
+        if ($plantelIds->isEmpty()) {
+            return collect(); // Devuelve una colección vacía si las carreras no están asociadas a ningún plantel.
+        }
+
+        // Usamos el modelo actual (Plantel) para obtener los detalles de los planteles.
+        return self::whereIn('id_plantel', $plantelIds)->get();
     }
 }
