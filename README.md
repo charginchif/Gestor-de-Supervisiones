@@ -118,40 +118,40 @@ These endpoints are protected and require an authentication token with the `admi
 | DELETE | `/plantel-turno/{id}`                  | Delete a shift assignment from a campus.     |
 | PUT    | `/plantel-turno/{id}`                  | Update a shift assignment for a campus.      |
 | GET    | `/supervision/contable`                | Get accounting supervision criteria.         |
-| POST   | `/supervision/contable`                | Create an accounting supervision criterion.  |
+| POST   | `/supervision/contable/insertar`           | Create an accounting supervision criterion.  |
 | GET    | `/supervision/contable/buscar`         | Search for accounting supervision criteria.  |
 | GET    | `/supervision/contable/{id}`           | Get an accounting supervision criterion.     |
 | PUT    | `/supervision/contable/{id}`           | Update an accounting supervision criterion.  |
 | DELETE | `/supervision/contable/{id}`           | Delete an accounting supervision criterion.  |
 | GET    | `/supervision/no-contable`             | Get non-accounting supervision criteria.     |
-| POST   | `/supervision/no-contable`             | Create a non-accounting supervision criterion.|
+| POST   | `/supervision/no-contable/insertar`             | Create a non-accounting supervision criterion.|
 | GET    | `/supervision/no-contable/{id}`        | Get a non-accounting supervision criterion.  |
 | PUT    | `/supervision/no-contable/{id}`        | Update a non-accounting supervision criterion.|
 | DELETE | `/supervision/no-contable/{id}`        | Delete a non-accounting supervision criterion.|
 | GET    | `/supervision/rubros`                  | Get all supervision rubros.                  |
 | GET    | `/supervision/rubros/contable`         | Get accounting supervision rubros.           |
-| POST   | `/supervision/rubros/contable`         | Create an accounting supervision rubro.      |
+| POST   | `/supervision/rubros/contable/insertar`         | Create an accounting supervision rubro.      |
 | GET    | `/supervision/rubros/contable/{id}`    | Get an accounting supervision rubro.         |
 | PUT    | `/supervision/rubros/contable/{id}`    | Update an accounting supervision rubro.      |
 | DELETE | `/supervision/rubros/contable/{id}`    | Delete an accounting supervision rubro.      |
 | GET    | `/supervision/rubros/no-contable`      | Get non-accounting supervision rubros.       |
-| POST   | `/supervision/rubros/no-contable`      | Create a non-accounting supervision rubro.   |
+| POST   | `/supervision/rubros/no-contable/insertar`      | Create a non-accounting supervision rubro.   |
 | GET    | `/supervision/rubros/no-contable/{id}` | Get a non-accounting supervision rubro.      |
 | PUT    | `/supervision/rubros/no-contable/{id}` | Update a non-accounting supervision rubro.   |
 | DELETE | `/supervision/rubros/no-contable/{id}` | Delete a non-accounting supervision rubro.   |
 | GET    | `/plan-estudio`                        | Get all curricula.                           |
 | GET    | `/plan-estudio/{id_carrera}`           | Get the curriculum for a specific career.    |
 | POST   | `/plan-estudio`                        | Create a new curriculum.                     |
-| PUT    | `/plan-estudio`                        | Update a curriculum.                         |
-| DELETE | `/plan-estudio`                        | Delete a curriculum.                         |
+| PUT    | `/plan-estudio/{id_plan_estudio}`      | Update a curriculum.                         |
 | DELETE | `/plan-estudio/materia`                | Delete a subject from a curriculum.          |
+| DELETE | `/plan-estudio/{id_plan_estudio}`      | Delete a curriculum.                         |
 | GET    | `/evaluacion-docente/rubros`           | Get all evaluation rubrics.                  |
-| POST   | `/evaluacion-docente/rubros`           | Create a new evaluation rubric.              |
+| POST   | `/evaluacion-docente/rubros/insertar`           | Create a new evaluation rubric.              |
 | GET    | `/evaluacion-docente/rubros/{id}`      | Get a specific evaluation rubric by ID.      |
 | PUT    | `/evaluacion-docente/rubros/{id}`      | Update an evaluation rubric.                 |
 | DELETE | `/evaluacion-docente/rubros/{id}`      | Delete an evaluation rubric.                 |
 | GET    | `/evaluacion-docente/criterios`        | Get all evaluation criteria.                 |
-| POST   | `/evaluacion-docente/criterios`        | Create a new evaluation criterion.           |
+| POST   | `/evaluacion-docente/criterios/insertar`        | Create a new evaluation criterion.           |
 | GET    | `/evaluacion-docente/criterios/{id}`   | Get a specific evaluation criterion by ID.   |
 | PUT    | `/evaluacion-docente/criterios/{id}`   | Update an evaluation criterion.              |
 | DELETE | `/evaluacion-docente/criterios/{id}`   | Delete an evaluation criterion.              |
@@ -168,6 +168,12 @@ These endpoints are protected and require an authentication token with the `admi
 | DELETE | `/grupos/{id}`                         | Delete a group.                              |
 | POST   | `/grupos/asignar-plan`                 | Assign a plan to a group.                    |
 | DELETE | `/grupos/{id_grupo}/quitar-plan`       | Remove a plan from a group.                  |
+| GET    | `/horarios`                            | Get all schedules.                           |
+| POST   | `/horarios`                            | Create a new schedule.                       |
+| PUT    | `/horarios/{id}`                       | Update a schedule.                           |
+| DELETE | `/horarios/{id}`                       | Delete a schedule.                           |
+| GET    | /resultados/admin-supervision        | Get supervision results.                     |
+| GET    | /resultados/admin-evaluacion         | Get evaluation results.                      |
 
 ### Coordinator Endpoints
 
@@ -192,13 +198,45 @@ These endpoints are protected and require an authentication token with the `coor
 | DELETE | `/coordinador-grupos/{id}`                 | Delete a group.                                  |
 | POST   | `/coordinador-grupos/asignar-plan`         | Assign a plan to a group.                        |
 | DELETE | `/coordinador-grupos/{id_grupo}/quitar-plan` | Remove a plan from a group.                      |
-| GET    | `/solicitud-inscripcion`                   | Get all pending enrollment requests.             |
-| POST   | `/solicitud-inscripcion/{id}/aprobar`      | Approve an enrollment request.                   |
-| DELETE | `/solicitud-inscripcion/{id}/rechazar`     | Reject an enrollment request.                    |
-| GET    | `/solicitud-inscripcion/buscar`            | Search for enrollment requests.                  |
-| GET    | `/solicitud-inscripcion/todas`             | Get all enrollment requests (approved, rejected, pending). |
-| GET    | `/solicitud-inscripcion/aprobadas`         | Get all approved enrollment requests.            |
-| GET    | `/solicitud-inscripcion/rechazadas`        | Get all rejected enrollment requests.            |
+| GET    | `/coordinador-carreras`                    | Get a list of all careers.                       |
+| POST   | `/coordinador-carreras`                    | Create a new career.                             |
+| GET    | `/coordinador-carreras/{id}`               | Get a specific career by ID.                     |
+| PUT    | `/coordinador-carreras/{id}`               | Update a career's information.                   |
+| DELETE | `/coordinador-carreras/{id}`               | Delete a career.                                 |
+| GET    | `/coordinador-agenda-supervision`                      | Get supervision schedule.                        |
+| POST   | `/coordinador-agenda-supervision/insertar`                      | Create a supervision schedule event.             |
+| PUT    | `/coordinador-agenda-supervision/{id}`                 | Update a supervision schedule event.             |
+| DELETE | `/coordinador-agenda-supervision/{id}`                 | Delete a supervision schedule event.             |
+| GET    | `/coordinador-supervision/contable`        | Get accounting supervision criteria.             |
+| POST   | `/coordinador-supervision/contable/insertar`        | Create an accounting supervision criterion.      |
+| GET    | `/coordinador-supervision/contable/buscar` | Search for accounting supervision criteria.      |
+| GET    | `/coordinador-supervision/contable/{id}`   | Get an accounting supervision criterion.         |
+| PUT    | `/coordinador-supervision/contable/{id}`   | Update an accounting supervision criterion.      |
+| DELETE | `/coordinador-supervision/contable/{id}`   | Delete an accounting supervision criterion.      |
+| GET    | `/coordinador-supervision/no-contable`     | Get non-accounting supervision criteria.         |
+| POST   | `/coordinador-supervision/no-contable/insertar`     | Create a non-accounting supervision criterion.   |
+| GET    | `/coordinador-supervision/no-contable/{id}`| Get a non-accounting supervision criterion.      |
+| PUT    | `/coordinador-supervision/no-contable/{id}`| Update a non-accounting supervision criterion.   |
+| DELETE | `/coordinador-supervision/no-contable/{id}`| Delete a non-accounting supervision criterion.   |
+| GET    | `/coordinador-evaluacion-docente/rubros`   | Get all evaluation rubrics.                      |
+| POST   | `/coordinador-evaluacion-docente/rubros/insertar`   | Create a new evaluation rubric.                  |
+| GET    | `/coordinador-evaluacion-docente/rubros/{id}`| Get a specific evaluation rubric by ID.          |
+| PUT    | `/coordinador-evaluacion-docente/rubros/{id}`| Update an evaluation rubric.                     |
+| DELETE | `/coordinador-evaluacion-docente/rubros/{id}`| Delete an evaluation rubric.                     |
+| GET    | `/coordinador-evaluacion-docente/criterios`| Get all evaluation criteria.                     |
+| POST   | `/coordinador-evaluacion-docente/criterios/insertar`| Create a new evaluation criterion.               |
+| GET    | `/coordinador-evaluacion-docente/criterios/{id}`| Get a specific evaluation criterion by ID.       |
+| PUT    | `/coordinador-evaluacion-docente/criterios/{id}`| Update an evaluation criterion.                  |
+| DELETE | `/coordinador-evaluacion-docente/criterios/{id}`| Delete an evaluation criterion.                  |
+| GET    | `/coordinador-solicitud-inscripcion`                   | Get all pending enrollment requests.             |
+| POST   | `/coordinador-solicitud-inscripcion/{id}/aprobar`      | Approve an enrollment request.                   |
+| DELETE | `/coordinador-solicitud-inscripcion/{id}/rechazar`     | Reject an enrollment request.                    |
+| GET    | `/coordinador-solicitud-inscripcion/buscar`            | Search for enrollment requests.                  |
+| GET    | `/coordinador-solicitud-inscripcion/todas`             | Get all enrollment requests (approved, rejected, pending). |
+| GET    | `/coordinador-solicitud-inscripcion/aprobadas`         | Get all approved enrollment requests.            |
+| GET    | `/coordinador-solicitud-inscripcion/rechazadas`        | Get all rejected enrollment requests.            |
+| GET    | `/resultados/coordinador-supervision`      | Get supervision results.                         |
+| GET    | `/resultados/coordinador-evaluacion`                   | Get evaluation results.                          |
 
 ### Student Endpoints
 

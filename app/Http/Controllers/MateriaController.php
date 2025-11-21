@@ -13,7 +13,27 @@ class MateriaController extends Controller
     public function index()
     {
         try {
-            $materias = DB::select('SELECT * FROM vw_admin_materias');
+            $user = Auth::user();
+            $rol = strtolower($user->rol);
+            $materias = [];
+
+            if ($rol === 'coordinador') {
+                $carrerasCoordinador = $this->getCarrerasDelCoordinador($user->id);
+
+                if (!empty($carrerasCoordinador)) {
+                    // Using a subquery to get materias from plan_estudio
+                    $materias = DB::table('vw_admin_materias as vm')
+                                ->whereIn('vm.id_materia', function($query) use ($carrerasCoordinador) {
+                                    $query->select('id_materia')
+                                          ->from('plan_estudio')
+                                          ->whereIn('id_carrera', $carrerasCoordinador);
+                                })
+                                ->get();
+                }
+            } else {
+                $materias = DB::select('SELECT * FROM vw_admin_materias');
+            }
+            
             return RespuestaAPI::exito('Listado de materias', $materias);
         } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener las materias: ' . $e->getMessage(), 500);

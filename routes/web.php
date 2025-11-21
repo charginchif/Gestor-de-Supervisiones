@@ -104,7 +104,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
         // Criterios Contables
         $router->group(['prefix' => 'contable'], function () use ($router) {
             $router->get('/', 'SupervisionController@indexContable');
-            $router->post('/', 'SupervisionController@storeContable');
+            $router->post('insertar', 'SupervisionController@storeContable');
             $router->get('buscar', 'SupervisionController@buscarContable');
             $router->get('{id}', 'SupervisionController@showContable');
             $router->put('{id}', 'SupervisionController@updateContable');
@@ -114,7 +114,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
         // Criterios No Contables
         $router->group(['prefix' => 'no-contable'], function () use ($router) {
             $router->get('/', 'SupervisionController@indexNoContable');
-            $router->post('/', 'SupervisionController@storeNoContable');
+            $router->post('insertar', 'SupervisionController@storeNoContable');
             $router->get('{id}', 'SupervisionController@showNoContable');
             $router->put('{id}', 'SupervisionController@updateNoContable');
             $router->delete('{id}', 'SupervisionController@destroyNoContable');
@@ -127,7 +127,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
             // Rubros Contables
             $router->group(['prefix' => 'contable'], function () use ($router) {
                 $router->get('/', 'RubroController@indexContable');
-                $router->post('/', 'RubroController@storeContable');
+                $router->post('insertar', 'RubroController@storeContable');
                 $router->get('{id}', 'RubroController@showContable');
                 $router->put('{id}', 'RubroController@updateContable');
                 $router->delete('{id}', 'RubroController@destroyContable');
@@ -136,7 +136,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
             // Rubros No Contables
             $router->group(['prefix' => 'no-contable'], function () use ($router) {
                 $router->get('/', 'RubroController@indexNoContable');
-                $router->post('/', 'RubroController@storeNoContable');
+                $router->post('insertar', 'RubroController@storeNoContable');
                 $router->get('{id}', 'RubroController@showNoContable');
                 $router->put('{id}', 'RubroController@updateNoContable');
                 $router->delete('{id}', 'RubroController@destroyNoContable');
@@ -157,7 +157,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
         // Rubros de Evaluación
         $router->group(['prefix' => 'rubros'], function () use ($router) {
             $router->get('/', 'RubroController@index');
-            $router->post('/', 'RubroController@store');
+            $router->post('insertar', 'RubroController@store');
             $router->get('{id}', 'RubroController@show');
             $router->put('{id}', 'RubroController@update');
             $router->delete('{id}', 'RubroController@destroy');
@@ -166,7 +166,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
         // Criterios de Evaluación
         $router->group(['prefix' => 'criterios'], function () use ($router) {
             $router->get('/', 'CriterioEvaluacionController@index');
-            $router->post('/', 'CriterioEvaluacionController@store');
+            $router->post('insertar', 'CriterioEvaluacionController@store');
             $router->get('{id}', 'CriterioEvaluacionController@show');
             $router->put('{id}', 'CriterioEvaluacionController@update');
             $router->delete('{id}', 'CriterioEvaluacionController@destroy');
@@ -198,8 +198,8 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
 
     // Resultados
     $router->group(['prefix' => 'resultados'], function () use ($router) {
-        $router->get('supervision', 'ResultadosController@getResultadosSupervision');
-        $router->get('evaluacion', 'ResultadosController@getResultadosEvaluacion');
+        $router->get('admin-supervision', 'ResultadosController@getResultadosSupervision');
+        $router->get('admin-evaluacion', 'ResultadosController@getResultadosEvaluacion');
     });
 });
 
@@ -225,6 +225,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->get('coordinador-planteles', 'PlantelController@indexCoordinadorPlanteles');
 
     // Asignar docente a materia
+    $router->get('coordinador-materias', 'MateriaController@index');
     $router->post('materias/asignar-docente', 'MateriaController@asignarDocente');
 
     // Gestión de grupos
@@ -244,9 +245,9 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->delete('coordinador-carreras/{id}', 'CarreraController@destroy');
 
     // Gestión de agenda de supervisión
-    $router->group(['prefix' => 'agenda-supervision'], function () use ($router) {
+    $router->group(['prefix' => 'coordinador-agenda-supervision'], function () use ($router) {
         $router->get('/', 'AgendaSupervisionController@index');
-        $router->post('/', 'AgendaSupervisionController@store');
+        $router->post('insertar', 'AgendaSupervisionController@store');
         $router->put('/{id}', 'AgendaSupervisionController@update');
         $router->delete('/{id}', 'AgendaSupervisionController@destroy');
     });
@@ -256,7 +257,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
         // Criterios Contables
         $router->group(['prefix' => 'contable'], function () use ($router) {
             $router->get('/', 'SupervisionController@indexContable');
-            $router->post('/', 'SupervisionController@storeContable');
+            $router->post('insertar', 'SupervisionController@storeContable');
             $router->get('buscar', 'SupervisionController@buscarContable');
             $router->get('{id}', 'SupervisionController@showContable');
             $router->put('{id}', 'SupervisionController@updateContable');
@@ -266,7 +267,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
         // Criterios No Contables
         $router->group(['prefix' => 'no-contable'], function () use ($router) {
             $router->get('/', 'SupervisionController@indexNoContable');
-            $router->post('/', 'SupervisionController@storeNoContable');
+            $router->post('insertar', 'SupervisionController@storeNoContable');
             $router->get('{id}', 'SupervisionController@showNoContable');
             $router->put('{id}', 'SupervisionController@updateNoContable');
             $router->delete('{id}', 'SupervisionController@destroyNoContable');
@@ -278,7 +279,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
         // Rubros de Evaluación
         $router->group(['prefix' => 'rubros'], function () use ($router) {
             $router->get('/', 'RubroController@index');
-            $router->post('/', 'RubroController@store');
+            $router->post('insertar', 'RubroController@store');
             $router->get('{id}', 'RubroController@show');
             $router->put('{id}', 'RubroController@update');
             $router->delete('{id}', 'RubroController@destroy');
@@ -287,7 +288,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
         // Criterios de Evaluación
         $router->group(['prefix' => 'criterios'], function () use ($router) {
             $router->get('/', 'CriterioEvaluacionController@index');
-            $router->post('/', 'CriterioEvaluacionController@store');
+            $router->post('insertar', 'CriterioEvaluacionController@store');
             $router->get('{id}', 'CriterioEvaluacionController@show');
             $router->put('{id}', 'CriterioEvaluacionController@update');
             $router->delete('{id}', 'CriterioEvaluacionController@destroy');
@@ -295,18 +296,18 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     });
 
     // Gestión de solicitudes de inscripción
-    $router->get('solicitud-inscripcion', 'SolicitudInscripcionController@index');
-    $router->post('solicitud-inscripcion/{id}/aprobar', 'SolicitudInscripcionController@approve');
-    $router->delete('solicitud-inscripcion/{id}/rechazar', 'SolicitudInscripcionController@reject');
-    $router->get('solicitud-inscripcion/buscar', 'HistorialSolicitudesController@search');
-    $router->get('solicitud-inscripcion/todas', 'HistorialSolicitudesController@getAll');
-    $router->get('solicitud-inscripcion/aprobadas', 'HistorialSolicitudesController@getApproved');
-    $router->get('solicitud-inscripcion/rechazadas', 'HistorialSolicitudesController@getRejected');
+    $router->get('coordinador-solicitud-inscripcion', 'SolicitudInscripcionController@index');
+    $router->post('coordinador-solicitud-inscripcion/{id}/aprobar', 'SolicitudInscripcionController@approve');
+    $router->delete('coordinador-solicitud-inscripcion/{id}/rechazar', 'SolicitudInscripcionController@reject');
+    $router->get('coordinador-solicitud-inscripcion/buscar', 'HistorialSolicitudesController@search');
+    $router->get('coordinador-solicitud-inscripcion/todas', 'HistorialSolicitudesController@getAll');
+    $router->get('coordinador-solicitud-inscripcion/aprobadas', 'HistorialSolicitudesController@getApproved');
+    $router->get('coordinador-solicitud-inscripcion/rechazadas', 'HistorialSolicitudesController@getRejected');
 
     // Resultados
     $router->group(['prefix' => 'resultados'], function () use ($router) {
-        $router->get('supervision', 'ResultadosController@getResultadosSupervision');
-        $router->get('evaluacion', 'ResultadosController@getResultadosEvaluacion');
+        $router->get('coordinador-supervision', 'ResultadosController@getResultadosSupervision');
+        $router->get('coordinador-evaluacion', 'ResultadosController@getResultadosEvaluacion');
     });
 });
 
