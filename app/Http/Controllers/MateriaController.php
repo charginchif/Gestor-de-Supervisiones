@@ -10,6 +10,25 @@ use Illuminate\Support\Facades\Auth;
 class MateriaController extends Controller
 {
 
+    /**
+     * @OA\Get(
+     *     path="/materias",
+     *     summary="Listar todas las materias",
+     *     tags={"Materias"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de materias",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Materia")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las materias"
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -40,6 +59,33 @@ class MateriaController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/materias/{id}",
+     *     summary="Obtener una materia por su ID",
+     *     tags={"Materias"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la materia",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Materia encontrada",
+     *         @OA\JsonContent(ref="#/components/schemas/Materia")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Materia no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener la materia"
+     *     )
+     * )
+     */
     public function show($id)
     {
         try {
@@ -53,6 +99,32 @@ class MateriaController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/materias",
+     *     summary="Crear una nueva materia",
+     *     tags={"Materias"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Cálculo Diferencial")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Materia creada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear la materia"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -74,6 +146,39 @@ class MateriaController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/materias/{id}",
+     *     summary="Actualizar una materia existente",
+     *     tags={"Materias"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la materia",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Cálculo Integral")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Materia actualizada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar la materia"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -96,6 +201,32 @@ class MateriaController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/materias/{id}",
+     *     summary="Eliminar una materia",
+     *     tags={"Materias"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la materia",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Materia eliminada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar la materia (e.g., dependencias)"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la materia"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {
@@ -122,6 +253,37 @@ class MateriaController extends Controller
                  ->pluck('id_carrera')->toArray();
     }
 
+    /**
+     * @OA\Post(
+     *     path="/materias/asignar-docente",
+     *     summary="Asignar un docente a una materia",
+     *     tags={"Materias"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_materia", "id_docente"},
+     *             @OA\Property(property="id_materia", type="integer", example=1),
+     *             @OA\Property(property="id_docente", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Docente asignado a la materia exitosamente"
+     *     ),
+     *      @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para asignar docentes a esta materia"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al asignar el docente a la materia"
+     *     )
+     * )
+     */
     public function asignarDocente(Request $request)
     {
         $this->validate($request, [

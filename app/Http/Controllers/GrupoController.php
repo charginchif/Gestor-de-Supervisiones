@@ -15,6 +15,21 @@ use App\Utils\GeneradorCodigos;
 
 class GrupoController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/grupos/admin",
+     *     summary="Listar todos los grupos (Admin)",
+     *     tags={"Grupos"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de grupos",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/VwGrupoAlumnos")
+     *         )
+     *     )
+     * )
+     */
     public function indexAdmin()
     {
         $grupos = VwGrupoAlumnos::select('*')
@@ -22,6 +37,21 @@ class GrupoController extends Controller
         return RespuestaAPI::exito('Lista de grupos', $grupos);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/grupos",
+     *     summary="Listar todos los grupos",
+     *     tags={"Grupos"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de grupos",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/VwGrupoAlumnos")
+     *         )
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         // This method will not work as expected because the coordinator information is not available in the new view.
@@ -31,6 +61,29 @@ class GrupoController extends Controller
         return RespuestaAPI::exito('Lista de grupos', $grupos);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/grupos/{id}",
+     *     summary="Mostrar un grupo",
+     *     tags={"Grupos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del grupo",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Grupo encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/Grupo")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Grupo no encontrado"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $grupo = Grupo::find($id);
@@ -40,6 +93,37 @@ class GrupoController extends Controller
         return RespuestaAPI::exito('Grupo encontrado', $grupo);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/grupos",
+     *     summary="Crear un nuevo grupo",
+     *     tags={"Grupos"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"acronimo", "id_ciclo", "id_turno", "id_nivel", "id_plan_estudio", "id_plantel"},
+     *             @OA\Property(property="acronimo", type="string", maxLength=15, example="G-01"),
+     *             @OA\Property(property="id_ciclo", type="integer", example=1),
+     *             @OA\Property(property="id_turno", type="integer", example=1),
+     *             @OA\Property(property="id_nivel", type="integer", example=1),
+     *             @OA\Property(property="id_plan_estudio", type="integer", example=1),
+     *             @OA\Property(property="id_plantel", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Grupo creado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el grupo"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -83,6 +167,43 @@ class GrupoController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/grupos/{id}",
+     *     summary="Actualizar un grupo existente",
+     *     tags={"Grupos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del grupo",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="acronimo", type="string", maxLength=15, example="G-01-UPD"),
+     *             @OA\Property(property="id_ciclo", type="integer", example=1),
+     *             @OA\Property(property="id_turno", type="integer", example=1),
+     *             @OA\Property(property="id_modalidad", type="integer", example=1),
+     *             @OA\Property(property="id_nivel", type="integer", example=1),
+     *             @OA\Property(property="id_plan_estudio", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Grupo actualizado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/Grupo")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el grupo"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         // La validación de existencia del grupo la hace el propio SP.
@@ -120,6 +241,32 @@ class GrupoController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/grupos/{id}",
+     *     summary="Eliminar un grupo",
+     *     tags={"Grupos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del grupo",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Grupo eliminado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Grupo no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el grupo"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         $grupo = Grupo::find($id);
@@ -135,6 +282,33 @@ class GrupoController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/grupos/asignar-plan",
+     *     summary="Asignar un plan de estudio a un grupo",
+     *     tags={"Grupos"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_grupo", "id_plan_estudio"},
+     *             @OA\Property(property="id_grupo", type="integer", example=1),
+     *             @OA\Property(property="id_plan_estudio", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plan de estudio asignado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al asignar el plan de estudio"
+     *     )
+     * )
+     */
     public function asignarPlan(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -160,6 +334,28 @@ class GrupoController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/grupos/{id_grupo}/quitar-plan",
+     *     summary="Quitar un plan de estudio de un grupo",
+     *     tags={"Grupos"},
+     *     @OA\Parameter(
+     *         name="id_grupo",
+     *         in="path",
+     *         required=true,
+     *         description="ID del grupo",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plan de estudio quitado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al quitar el plan de estudio"
+     *     )
+     * )
+     */
     public function quitarPlan($id_grupo)
     {
         try {

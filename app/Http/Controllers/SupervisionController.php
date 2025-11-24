@@ -18,7 +18,28 @@ use Illuminate\Support\Facades\Validator;
 class SupervisionController extends Controller
 {
     /**
-     * Devuelve una lista de todos los rubros contables y no contables.
+     * @OA\Get(
+     *     path="/supervision/rubros",
+     *     summary="Listar todos los rubros contables y no contables",
+     *     tags={"Supervisión"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterios de supervisión contables y no contables obtenidos con éxito",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="contables",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/CriterioSupervisionContableModelo")
+     *             ),
+     *             @OA\Property(
+     *                 property="no_contables",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/CriterioSupervisionNoContableModelo")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function listarRubrosContablesNoContables(Request $request)
     {
@@ -35,7 +56,36 @@ class SupervisionController extends Controller
     // --- Criterios Contables ---
 
     /**
-     * Devuelve todos los criterios de supervisión contables, agrupados por rubro.
+     * @OA\Get(
+     *     path="/supervision/contable",
+     *     summary="Listar todos los criterios de supervisión contables",
+     *     tags={"Supervisión"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterios de supervisión contables obtenidos con éxito",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="rubros",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id_rubro", type="integer", example=1),
+     *                     @OA\Property(property="nombre", type="string", example="Rubro Contable 1"),
+     *                     @OA\Property(
+     *                         property="criterios",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id_criterio", type="integer", example=1),
+     *                             @OA\Property(property="criterio", type="string", example="Criterio 1 del rubro 1")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function indexContable()
     {
@@ -63,7 +113,27 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Muestra un criterio de supervisión contable específico.
+     * @OA\Get(
+     *     path="/supervision/contable/{id}",
+     *     summary="Mostrar un criterio de supervisión contable específico",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de supervisión contable",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio de supervisión contable obtenido con éxito",
+     *         @OA\JsonContent(ref="#/components/schemas/CriterioSupervisionContableModelo")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Criterio de supervisión contable no encontrado"
+     *     )
+     * )
      */
     public function showContable($id)
     {
@@ -76,7 +146,34 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Almacena un nuevo criterio de supervisión contable.
+     * @OA\Post(
+     *     path="/supervision/contable/insertar",
+     *     summary="Almacenar un nuevo criterio de supervisión contable",
+     *     tags={"Supervisión"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"p_descripcion", "p_id_rubro"},
+     *             @OA\Property(property="p_descripcion", type="string", example="Descripción del criterio"),
+     *             @OA\Property(property="p_id_rubro", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio contable creado con éxito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Criterio contable creado con éxito")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el criterio contable"
+     *     )
+     * )
      */
     public function storeContable(Request $request)
     {
@@ -104,7 +201,41 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Actualiza un criterio de supervisión contable existente.
+     * @OA\Put(
+     *     path="/supervision/contable/{id}",
+     *     summary="Actualizar un criterio de supervisión contable existente",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de supervisión contable",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"p_descripcion", "p_id_rubro"},
+     *             @OA\Property(property="p_descripcion", type="string", example="Descripción actualizada"),
+     *             @OA\Property(property="p_id_rubro", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio contable actualizado con éxito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Criterio contable actualizado con éxito")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el criterio contable"
+     *     )
+     * )
      */
     public function updateContable(Request $request, $id)
     {
@@ -133,7 +264,29 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Elimina un criterio de supervisión contable.
+     * @OA\Delete(
+     *     path="/supervision/contable/{id}",
+     *     summary="Eliminar un criterio de supervisión contable",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de supervisión contable",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio contable eliminado con éxito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Criterio contable eliminado con éxito")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el criterio contable"
+     *     )
+     * )
      */
     public function destroyContable($id)
     {
@@ -149,7 +302,52 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Busca criterios de supervisión contables por id_rubro y/o nombre del rubro.
+     * @OA\Get(
+     *     path="/supervision/contable/buscar",
+     *     summary="Buscar criterios de supervisión contables",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id_rubro",
+     *         in="query",
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="nombre",
+     *         in="query",
+     *         description="Nombre del rubro",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterios de supervisión contables filtrados obtenidos con éxito",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="rubros",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id_rubro", type="integer", example=1),
+     *                     @OA\Property(property="nombre", type="string", example="Rubro Contable 1"),
+     *                     @OA\Property(
+     *                         property="criterios",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id_criterio", type="integer", example=1),
+     *                             @OA\Property(property="criterio", type="string", example="Criterio 1 del rubro 1")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Debe proporcionar al menos un parámetro de búsqueda (id_rubro o nombre)."
+     *     )
+     * )
      */
     public function buscarContable(Request $request)
     {
@@ -198,7 +396,36 @@ class SupervisionController extends Controller
     // --- Criterios No Contables ---
 
     /**
-     * Devuelve todos los criterios de supervisión no contables, agrupados por rubro.
+     * @OA\Get(
+     *     path="/supervision/no-contable",
+     *     summary="Listar todos los criterios de supervisión no contables",
+     *     tags={"Supervisión"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterios de supervisión no contables obtenidos con éxito",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="rubros",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id_nc_rubro", type="integer", example=1),
+     *                     @OA\Property(property="nombre", type="string", example="Rubro No Contable 1"),
+     *                     @OA\Property(
+     *                         property="criterios",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id_nc_criterio", type="integer", example=1),
+     *                             @OA\Property(property="criterio", type="string", example="Criterio 1 del rubro 1")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function indexNoContable()
     {
@@ -226,7 +453,27 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Muestra un criterio de supervisión no contable específico.
+     * @OA\Get(
+     *     path="/supervision/no-contable/{id}",
+     *     summary="Mostrar un criterio de supervisión no contable específico",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de supervisión no contable",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio de supervisión no contable obtenido con éxito",
+     *         @OA\JsonContent(ref="#/components/schemas/CriterioSupervisionNoContableModelo")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Criterio de supervisión no contable no encontrado"
+     *     )
+     * )
      */
     public function showNoContable($id)
     {
@@ -239,7 +486,34 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Almacena un nuevo criterio de supervisión no contable.
+     * @OA\Post(
+     *     path="/supervision/no-contable/insertar",
+     *     summary="Almacenar un nuevo criterio de supervisión no contable",
+     *     tags={"Supervisión"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"p_descripcion", "p_id_nc_rubro"},
+     *             @OA\Property(property="p_descripcion", type="string", example="Descripción del criterio no contable"),
+     *             @OA\Property(property="p_id_nc_rubro", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio no contable creado con éxito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Criterio no contable creado con éxito")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el criterio no contable"
+     *     )
+     * )
      */
     public function storeNoContable(Request $request)
     {
@@ -267,7 +541,41 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Actualiza un criterio de supervisión no contable existente.
+     * @OA\Put(
+     *     path="/supervision/no-contable/{id}",
+     *     summary="Actualizar un criterio de supervisión no contable existente",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de supervisión no contable",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"p_descripcion", "p_id_nc_rubro"},
+     *             @OA\Property(property="p_descripcion", type="string", example="Descripción actualizada"),
+     *             @OA\Property(property="p_id_nc_rubro", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio no contable actualizado con éxito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Criterio no contable actualizado con éxito")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el criterio no contable"
+     *     )
+     * )
      */
     public function updateNoContable(Request $request, $id)
     {
@@ -296,7 +604,29 @@ class SupervisionController extends Controller
     }
 
     /**
-     * Elimina un criterio de supervisión no contable.
+     * @OA\Delete(
+     *     path="/supervision/no-contable/{id}",
+     *     summary="Eliminar un criterio de supervisión no contable",
+     *     tags={"Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de supervisión no contable",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio no contable eliminado con éxito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Criterio no contable eliminado con éxito")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el criterio no contable"
+     *     )
+     * )
      */
     public function destroyNoContable($id)
     {

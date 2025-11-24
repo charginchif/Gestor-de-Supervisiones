@@ -9,6 +9,21 @@ use App\Utils\RespuestaAPI;
 
 class HistorialSolicitudesController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/historial-solicitudes",
+     *     summary="Obtener todas las solicitudes de inscripción de los grupos del coordinador",
+     *     tags={"Historial de Solicitudes"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Todas las solicitudes obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/SolicitudInscripcion")
+     *         )
+     *     )
+     * )
+     */
     public function getAll()
     {
         $coordinador = Auth::user();
@@ -21,6 +36,21 @@ class HistorialSolicitudesController extends Controller
         return RespuestaAPI::success($solicitudes, 'Todas las solicitudes obtenidas correctamente');
     }
 
+    /**
+     * @OA\Get(
+     *     path="/historial-solicitudes/aprobadas",
+     *     summary="Obtener las solicitudes de inscripción aprobadas de los grupos del coordinador",
+     *     tags={"Historial de Solicitudes"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Solicitudes aprobadas obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/SolicitudInscripcion")
+     *         )
+     *     )
+     * )
+     */
     public function getApproved()
     {
         $coordinador = Auth::user();
@@ -34,6 +64,21 @@ class HistorialSolicitudesController extends Controller
         return RespuestaAPI::success($solicitudes, 'Solicitudes aprobadas obtenidas correctamente');
     }
 
+    /**
+     * @OA\Get(
+     *     path="/historial-solicitudes/rechazadas",
+     *     summary="Obtener las solicitudes de inscripción rechazadas de los grupos del coordinador",
+     *     tags={"Historial de Solicitudes"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Solicitudes rechazadas obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/SolicitudInscripcion")
+     *         )
+     *     )
+     * )
+     */
     public function getRejected()
     {
         $coordinador = Auth::user();

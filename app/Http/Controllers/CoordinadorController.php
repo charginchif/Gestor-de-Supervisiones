@@ -7,11 +7,24 @@ use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\CriterioSupervision;
 
 class CoordinadorController extends UsuarioController
 {
     /**
-     * Muestra una lista de todos los coordinadores.
+     * @OA\Get(
+     *     path="/coordinadores",
+     *     summary="Listar todos los coordinadores",
+     *     tags={"Coordinadores"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de coordinadores",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Coordinador")
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -20,7 +33,27 @@ class CoordinadorController extends UsuarioController
     }
 
     /**
-     * Muestra un coordinador específico.
+     * @OA\Get(
+     *     path="/coordinadores/{id}",
+     *     summary="Obtener un coordinador por su ID",
+     *     tags={"Coordinadores"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del coordinador",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Coordinador encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/Coordinador")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Coordinador no encontrado"
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -34,7 +67,34 @@ class CoordinadorController extends UsuarioController
     }
 
     /**
-     * Crea un nuevo coordinador.
+     * @OA\Post(
+     *     path="/coordinadores",
+     *     summary="Crear uno o más coordinadores",
+     *     description="Crea un nuevo coordinador. Puede recibir un único objeto de coordinador o un arreglo de objetos.",
+     *      tags={"Coordinadores"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 required={"nombre", "apellido_paterno", "apellido_materno", "correo", "contrasena"},
+     *                 @OA\Property(property="nombre", type="string", maxLength=100),
+     *                 @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *                 @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *                 @OA\Property(property="correo", type="string", format="email"),
+     *                 @OA\Property(property="contrasena", type="string", format="password", minLength=8)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Coordinador(es) creado(s) exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos o algunos coordinadores no pudieron ser creados."
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -42,7 +102,42 @@ class CoordinadorController extends UsuarioController
     }
 
     /**
-     * Actualiza la información de un coordinador.
+     * @OA\Put(
+     *     path="/coordinadores/{id}",
+     *     summary="Actualizar la información de un coordinador",
+     *     tags={"Coordinadores"},
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del coordinador a actualizar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *             @OA\Property(property="correo", type="string", format="email")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Coordinador actualizado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Coordinador no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el coordinador."
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -84,7 +179,30 @@ class CoordinadorController extends UsuarioController
     }
 
     /**
-     * Elimina un coordinador.
+     * @OA\Delete(
+     *     path="/coordinadores/{id}",
+     *     summary="Eliminar un coordinador",
+     *      tags={"Coordinadores"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del coordinador a eliminar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Coordinador eliminado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Coordinador no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el coordinador."
+     *     )
+     * )
      */
     public function destroy($id)
     {
@@ -101,21 +219,4 @@ class CoordinadorController extends UsuarioController
         }
     }
 
-    /**
-     * Muestra una lista de todos los criterios de supervisión contables.
-     */
-    public function criteriosContables()
-    {
-        $criterios = CriterioSupervision::where('contable', 1)->get();
-        return RespuestaAPI::exito('Criterios de supervisión contables obtenidos con éxito', $criterios);
-    }
-
-    /**
-     * Muestra una lista de todos los criterios de supervisión no contables.
-     */
-    public function criteriosNoContables()
-    {
-        $criterios = CriterioSupervision::where('contable', 0)->get();
-        return RespuestaAPI::exito('Criterios de supervisión no contables obtenidos con éxito', $criterios);
-    }
 }

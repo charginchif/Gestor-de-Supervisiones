@@ -8,7 +8,23 @@ use Illuminate\Support\Facades\DB;
 class ResultadosController extends Controller
 {
     /**
-     * Devuelve los resultados de la supervisión por rubro.
+     * @OA\Get(
+     *     path="/resultados/supervision",
+     *     summary="Obtener los resultados de la supervisión por rubro",
+     *     tags={"Resultados"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resultados de la supervisión",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/VwSupervisionRubroPorcentaje")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los resultados de la supervisión"
+     *     )
+     * )
      */
     public function getResultadosSupervision()
     {
@@ -21,7 +37,23 @@ class ResultadosController extends Controller
     }
 
     /**
-     * Devuelve los resultados de la evaluación docente.
+     * @OA\Get(
+     *     path="/resultados/evaluacion-docente",
+     *     summary="Obtener los resultados de la evaluación docente",
+     *     tags={"Resultados"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resultados de la evaluación docente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/VwEvalDocentePorcentajeTotal")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los resultados de la evaluación docente"
+     *     )
+     * )
      */
     public function getResultadosEvaluacion()
     {

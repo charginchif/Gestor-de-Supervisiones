@@ -10,6 +10,25 @@ class CarreraController extends Controller
 {
     //------------------- Métodos para la gestión de Carreras -------------------//
 
+    /**
+     * @OA\Get(
+     *     path="/carreras",
+     *     summary="Listar todas las carreras",
+     *     tags={"Carreras"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de carreras",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Carrera")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las carreras"
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -20,6 +39,33 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/carreras/{id}",
+     *     summary="Obtener una carrera por su ID",
+     *     tags={"Carreras"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la carrera",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Carrera encontrada",
+     *         @OA\JsonContent(ref="#/components/schemas/Carrera")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Carrera no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener la carrera"
+     *     )
+     * )
+     */
     public function show($id)
     {
         try {
@@ -33,6 +79,32 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/carreras",
+     *     summary="Crear una nueva carrera",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Ingeniería en Sistemas")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Carrera creada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o la carrera ya existe"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear la carrera"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -57,6 +129,39 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/carreras/{id}",
+     *     summary="Actualizar una carrera existente",
+     *     tags={"Carreras"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la carrera",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Ingeniería en Software")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Carrera actualizada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o la carrera ya existe"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar la carrera"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -82,6 +187,32 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/carreras/{id}",
+     *     summary="Eliminar una carrera",
+     *     tags={"Carreras"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la carrera",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Carrera eliminada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar la carrera (e.g., dependencias)"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la carrera"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {
@@ -96,6 +227,33 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/asignarCarreraCoordinador",
+     *     summary="Asignar una carrera a un coordinador",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_coordinador", "id_carrera"},
+     *             @OA\Property(property="id_coordinador", type="integer", example=1),
+     *             @OA\Property(property="id_carrera", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Carrera asignada a coordinador exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o la asignación ya existe"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al asignar la carrera"
+     *     )
+     * )
+     */
     public function asignarCarreraCoordinador(Request $request)
     {
         $this->validate($request, [
@@ -121,6 +279,35 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/asignarCarreraCoordinador",
+     *     summary="Actualizar la asignación de una carrera a un coordinador",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_coordinador", "id_carrera"},
+     *             @OA\Property(property="id_coordinador", type="integer", example=1),
+     *             @OA\Property(property="id_carrera", type="integer", example=1),
+     *             @OA\Property(property="nuevo_id_coordinador", type="integer", example=2),
+     *             @OA\Property(property="nuevo_id_carrera", type="integer", example=2)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Asignación actualizada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o la asignación ya existe"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar la asignación"
+     *     )
+     * )
+     */
     public function actualizarCarreraCoordinador(Request $request)
     {
         $this->validate($request, [
@@ -153,6 +340,33 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/asignarCarreraCoordinador",
+     *     summary="Eliminar la asignación de una carrera a un coordinador",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_coordinador", "id_carrera"},
+     *             @OA\Property(property="id_coordinador", type="integer", example=1),
+     *             @OA\Property(property="id_carrera", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Asignación eliminada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar la asignación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la asignación"
+     *     )
+     * )
+     */
     public function eliminarCarreraCoordinador(Request $request)
     {
         $this->validate($request, [
@@ -175,6 +389,21 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/asignarCarreraCoordinador",
+     *     summary="Obtener todas las asignaciones de carreras a coordinadores",
+     *     tags={"Carreras"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de todas las asignaciones de carreras a coordinadores"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las asignaciones"
+     *     )
+     * )
+     */
     public function getAllAsignaciones()
     {
         try {
@@ -185,6 +414,28 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/carrerasPorCoordinador/{id}",
+     *     summary="Obtener las carreras por coordinador",
+     *     tags={"Carreras"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del coordinador",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de carreras del coordinador"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las materias de las carreras"
+     *     )
+     * )
+     */
     public function getCarrerasPorCoordinador($id)
     {
         try {
@@ -197,6 +448,33 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/asignarCarreraPlantel",
+     *     summary="Asignar una carrera a un plantel",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_plantel", "id_carrera"},
+     *             @OA\Property(property="id_plantel", type="integer", example=1),
+     *             @OA\Property(property="id_carrera", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Carrera asignada a plantel exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o la asignación ya existe"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al asignar la carrera al plantel"
+     *     )
+     * )
+     */
     public function asignarCarreraPlantel(Request $request)
     {
         $this->validate($request, [
@@ -222,6 +500,33 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/eliminarCarreraPlantel",
+     *     summary="Eliminar la asignación de una carrera a un plantel",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_plantel", "id_carrera"},
+     *             @OA\Property(property="id_plantel", type="integer", example=1),
+     *             @OA\Property(property="id_carrera", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Asignación de carrera a plantel eliminada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar la asignación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la asignación"
+     *     )
+     * )
+     */
     public function eliminarCarreraPlantel(Request $request)
     {
         $this->validate($request, [
@@ -244,6 +549,28 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/carrerasPorPlantel/{id}",
+     *     summary="Obtener las carreras por plantel",
+     *     tags={"Carreras"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del plantel",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de carreras del plantel"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las carreras del plantel"
+     *     )
+     * )
+     */
     public function getCarrerasPorPlantel($id)
     {
         try {
@@ -257,6 +584,21 @@ class CarreraController extends Controller
 
     //------------------- Métodos para la gestión de asignación de Carreras a Planteles -------------------
 
+    /**
+     * @OA\Get(
+     *     path="/carrerasPorPlantel",
+     *     summary="Obtener todas las asignaciones de carreras a planteles",
+     *     tags={"Carreras"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de todas las asignaciones de carreras a planteles"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las asignaciones"
+     *     )
+     * )
+     */
     public function getAllCarrerasPorPlantel()
     {
         try {
@@ -269,6 +611,39 @@ class CarreraController extends Controller
 
     //------------------- Métodos para la gestión de Turnos de Planteles -------------------
 
+    /**
+     * @OA\Post(
+     *     path="/plantel-turno",
+     *     summary="Asignar un turno a un plantel",
+     *     tags={"Planteles"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_plantel", "id_dia", "id_turno", "hora_inicio", "hora_fin", "hora_descanso", "duracion_bloques", "duracion_descanso"},
+     *             @OA\Property(property="id_plantel", type="integer", example=1),
+     *             @OA\Property(property="id_dia", type="integer", example=1),
+     *             @OA\Property(property="id_turno", type="integer", example=1),
+     *             @OA\Property(property="hora_inicio", type="string", format="time", example="08:00:00"),
+     *             @OA\Property(property="hora_fin", type="string", format="time", example="14:00:00"),
+     *             @OA\Property(property="hora_descanso", type="string", format="time", example="11:00:00"),
+     *             @OA\Property(property="duracion_bloques", type="integer", example=50),
+     *             @OA\Property(property="duracion_descanso", type="integer", example=10)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Turno asignado a plantel exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación o la asignación ya existe"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al asignar el turno al plantel"
+     *     )
+     * )
+     */
     public function asignarTurnoPlantel(Request $request)
     {
         $this->validate($request, [
@@ -309,6 +684,32 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/plantel-turno/{id}",
+     *     summary="Eliminar un turno de un plantel",
+     *     tags={"Planteles"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del turno del plantel",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Turno de plantel eliminado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar el turno del plantel"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el turno del plantel"
+     *     )
+     * )
+     */
     public function eliminarTurnoPlantel($id)
     {
         try {
@@ -325,6 +726,21 @@ class CarreraController extends Controller
 
     // --- Métodos para la gestión de Carrera-Modalidad ---
 
+    /**
+     * @OA\Get(
+     *     path="/carrera-modalidad",
+     *     summary="Listar carreras y sus modalidades",
+     *     tags={"Carreras"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de carreras y sus modalidades"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los datos"
+     *     )
+     * )
+     */
     public function indexCarreraModalidad()
     {
         try {
@@ -335,6 +751,37 @@ class CarreraController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/carrera-modalidad",
+     *     summary="Asignar una modalidad a una carrera",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_carrera", "id_modalidad"},
+     *             @OA\Property(property="id_carrera", type="integer", example=1),
+     *             @OA\Property(property="id_modalidad", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Modalidad asignada a la carrera exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *      @OA\Response(
+     *         response=409,
+     *         description="Esta modalidad ya está asignada a esta carrera"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al asignar la modalidad"
+     *     )
+     * )
+     */
     public function storeCarreraModalidad(Request $request)
     {
         $this->validate($request, [
@@ -363,7 +810,33 @@ class CarreraController extends Controller
             return RespuestaAPI::error('Error al asignar la modalidad: ' . $e->getMessage(), 500);
         }
     }
-
+    /**
+     * @OA\Delete(
+     *     path="/carrera-modalidad",
+     *     summary="Eliminar la asignación de una modalidad a una carrera",
+     *     tags={"Carreras"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_carrera", "id_modalidad"},
+     *             @OA\Property(property="id_carrera", type="integer", example=1),
+     *             @OA\Property(property="id_modalidad", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Asignación de modalidad eliminada exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontró la asignación para eliminar o ya fue eliminada"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la asignación"
+     *     )
+     * )
+     */
     public function destroyCarreraModalidad(Request $request)
     {
         $this->validate($request, [

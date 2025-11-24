@@ -5,48 +5,49 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Materia
+ * Class RubroEvaluacionDocente
  *
  * @package App\Models
  *
- * This model represents a Materia (Course/Subject) in the system.
+ * This model represents a Rubro (Category/Heading) for teacher evaluation in the system.
  */
 /**
  * @OA\Schema(
- *     schema="Materia",
- *     title="Materia",
- *     description="Modelo de Materia",
+ *     title="RubroEvaluacionDocente",
+ *     description="Modelo de Rubro de Evaluación Docente",
+ *     @OA\Xml(
+ *         name="RubroEvaluacionDocente"
+ *     ),
  *     properties={
  *         @OA\Property(
- *             property="id_materia",
+ *             property="id",
+ *             title="ID",
+ *             description="Identificador único del rubro",
  *             type="integer",
- *             description="ID de la materia",
+ *             example=1,
  *             readOnly="true"
  *         ),
  *         @OA\Property(
  *             property="nombre",
+ *             title="Nombre",
+ *             description="Nombre del rubro",
  *             type="string",
- *             description="Nombre de la materia",
+ *             example="Dominio de la materia",
  *             maxLength=255
  *         )
  *     }
  * )
  */
-class Materia extends Model
+class RubroEvaluacionDocente extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'materia';
+    protected $table = 'cat_rubro_alumno_docente';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_materia';
+    protected $primaryKey = 'id';
 
     /**
      * Indicates if the model should be timestamped.

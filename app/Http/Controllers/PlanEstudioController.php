@@ -9,6 +9,43 @@ use Illuminate\Validation\ValidationException;
 
 class PlanEstudioController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/planes-estudio/carrera/{id_carrera}",
+     *     summary="Obtener el plan de estudio de una carrera",
+     *     tags={"Planes de Estudio"},
+     *     @OA\Parameter(
+     *         name="id_carrera",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la carrera",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plan de estudio obtenido con éxito",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id_carrera", type="integer"),
+     *                 @OA\Property(property="id_modalidad", type="integer"),
+     *                 @OA\Property(property="materias", type="array", @OA\Items(
+     *                     @OA\Property(property="id_materia", type="integer"),
+     *                     @OA\Property(property="id_cat_nivel", type="integer")
+     *                 ))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="No se encontró un plan de estudio para la carrera especificada"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="La carrera no existe"
+     *     )
+     * )
+     */
     public function index($id_carrera)
     {
         // Primero, verificar si la carrera existe
@@ -42,6 +79,28 @@ class PlanEstudioController extends Controller
         return RespuestaAPI::exito('Éxito', array_values($grouped));
     }
 
+    /**
+     * @OA\Get(
+     *     path="/planes-estudio",
+     *     summary="Obtener todos los planes de estudio",
+     *     tags={"Planes de Estudio"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Planes de estudio obtenidos con éxito",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id_carrera", type="integer"),
+     *                 @OA\Property(property="id_modalidad", type="integer"),
+     *                 @OA\Property(property="materias", type="array", @OA\Items(
+     *                     @OA\Property(property="id_materia", type="integer"),
+     *                     @OA\Property(property="id_cat_nivel", type="integer")
+     *                 ))
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function indexAll()
     {
         $planEstudio = DB::table('vw_admin_plan_estudio')->get();
@@ -65,6 +124,38 @@ class PlanEstudioController extends Controller
         return RespuestaAPI::exito('Éxito', array_values($grouped));
     }
 
+    /**
+     * @OA\Post(
+     *     path="/planes-estudio",
+     *     summary="Crear un nuevo plan de estudio",
+     *     tags={"Planes de Estudio"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_carrera", "id_modalidad", "materias"},
+     *             @OA\Property(property="id_carrera", type="integer", example=1),
+     *             @OA\Property(property="id_modalidad", type="integer", example=1),
+     *             @OA\Property(property="materias", type="array", @OA\Items(
+     *                 required={"id_materia", "id_cat_nivel"},
+     *                 @OA\Property(property="id_materia", type="integer", example=1),
+     *                 @OA\Property(property="id_cat_nivel", type="integer", example=1)
+     *             ))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Plan de estudio creado con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el plan de estudio"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -97,6 +188,40 @@ class PlanEstudioController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/planes-estudio/{id_plan_estudio}",
+     *     summary="Actualizar un plan de estudio existente",
+     *     tags={"Planes de Estudio"},
+     *     @OA\Parameter(
+     *         name="id_plan_estudio",
+     *         in="path",
+     *         required=true,
+     *         description="ID del plan de estudio",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id_carrera", type="integer", example=1),
+     *             @OA\Property(property="id_modalidad", type="integer", example=1),
+     *             @OA\Property(property="id_materia", type="integer", example=1),
+     *             @OA\Property(property="id_cat_nivel", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plan de estudio actualizado con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el plan de estudio"
+     *     )
+     * )
+     */
     public function update(Request $request, $id_plan_estudio)
     {
         try {
@@ -132,6 +257,28 @@ class PlanEstudioController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/planes-estudio/{id_plan_estudio}",
+     *     summary="Eliminar un plan de estudio",
+     *     tags={"Planes de Estudio"},
+     *     @OA\Parameter(
+     *         name="id_plan_estudio",
+     *         in="path",
+     *         required=true,
+     *         description="ID del plan de estudio",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plan de estudio eliminado con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el plan de estudio"
+     *     )
+     * )
+     */
     public function destroy($id_plan_estudio)
     {
         try {
@@ -143,6 +290,34 @@ class PlanEstudioController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/planes-estudio/materia",
+     *     summary="Eliminar una materia de un plan de estudio",
+     *     tags={"Planes de Estudio"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_plan_estudio", "id_cat_nivel", "id_materia"},
+     *             @OA\Property(property="id_plan_estudio", type="integer", example=1),
+     *             @OA\Property(property="id_cat_nivel", type="integer", example=1),
+     *             @OA\Property(property="id_materia", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Materia eliminada del plan de estudio con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la materia del plan de estudio"
+     *     )
+     * )
+     */
     public function destroyMateria(Request $request)
     {
         try {

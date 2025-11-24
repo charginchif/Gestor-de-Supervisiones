@@ -13,6 +13,21 @@ use App\Utils\RespuestaAPI;
 
 class SolicitudInscripcionController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/solicitudes-inscripcion",
+     *     summary="Obtener las solicitudes de inscripción pendientes de los grupos del coordinador",
+     *     tags={"Solicitudes de Inscripción"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Solicitudes obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/SolicitudInscripcion")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $coordinador = Auth::user();
@@ -26,6 +41,29 @@ class SolicitudInscripcionController extends Controller
         return RespuestaAPI::success($solicitudes, 'Solicitudes obtenidas correctamente');
     }
 
+    /**
+     * @OA\Post(
+     *     path="/solicitudes-inscripcion",
+     *     summary="Crear una nueva solicitud de inscripción",
+     *     tags={"Solicitudes de Inscripción"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_grupo"},
+     *             @OA\Property(property="id_grupo", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Solicitud de inscripción creada correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/SolicitudInscripcion")
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Ya existe una solicitud de inscripción pendiente para este grupo o el alumno ya está inscrito"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -63,6 +101,33 @@ class SolicitudInscripcionController extends Controller
         return RespuestaAPI::success($solicitud, 'Solicitud de inscripción creada correctamente.', 201);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/solicitudes-inscripcion/{id}/aprobar",
+     *     summary="Aprobar una solicitud de inscripción",
+     *     tags={"Solicitudes de Inscripción"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la solicitud de inscripción",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Inscripción aprobada y realizada correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/InscripcionGrupo")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Solicitud no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="La solicitud ya ha sido gestionada o el alumno ya está inscrito"
+     *     )
+     * )
+     */
     public function approve($id)
     {
         $solicitud = SolicitudInscripcion::findOrFail($id);
@@ -90,6 +155,32 @@ class SolicitudInscripcionController extends Controller
         return RespuestaAPI::success($inscripcion, 'Inscripción aprobada y realizada correctamente.');
     }
 
+    /**
+     * @OA\Post(
+     *     path="/solicitudes-inscripcion/{id}/rechazar",
+     *     summary="Rechazar una solicitud de inscripción",
+     *     tags={"Solicitudes de Inscripción"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la solicitud de inscripción",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Solicitud de inscripción rechazada"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Solicitud no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="La solicitud ya ha sido gestionada"
+     *     )
+     * )
+     */
     public function reject($id)
     {
         $solicitud = SolicitudInscripcion::findOrFail($id);
@@ -103,6 +194,21 @@ class SolicitudInscripcionController extends Controller
         return RespuestaAPI::success(null, 'Solicitud de inscripción rechazada.');
     }
 
+    /**
+     * @OA\Get(
+     *     path="/mis-solicitudes",
+     *     summary="Obtener mis solicitudes de inscripción (alumno)",
+     *     tags={"Solicitudes de Inscripción"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mis solicitudes de inscripción obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/SolicitudInscripcion")
+     *         )
+     *     )
+     * )
+     */
     public function getMisSolicitudes()
     {
         $alumno = Auth::user();
@@ -114,6 +220,36 @@ class SolicitudInscripcionController extends Controller
         return RespuestaAPI::success($solicitudes, 'Mis solicitudes de inscripción obtenidas correctamente.');
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/solicitudes-inscripcion/{id}/cancelar",
+     *     summary="Cancelar una solicitud de inscripción (alumno)",
+     *     tags={"Solicitudes de Inscripción"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la solicitud de inscripción",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Solicitud de inscripción cancelada correctamente"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para cancelar esta solicitud"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Solicitud no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="No puedes cancelar una solicitud que ya ha sido procesada"
+     *     )
+     * )
+     */
     public function cancel($id)
     {
         $alumno = Auth::user();

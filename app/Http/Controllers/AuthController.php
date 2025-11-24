@@ -17,6 +17,48 @@ class AuthController extends Controller
         $this->jwt = $jwt;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     summary="Iniciar sesión",
+     *     tags={"Autenticación"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"correo","contrasena"},
+     *             @OA\Property(property="correo", type="string", format="email", example="admin@example.com"),
+     *             @OA\Property(property="contrasena", type="string", format="password", example="password"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Inicio de sesión exitoso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string", example="Bearer"),
+     *             @OA\Property(property="user", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="nombre", type="string"),
+     *                 @OA\Property(property="apellido_paterno", type="string"),
+     *                 @OA\Property(property="apellido_materno", type="string"),
+     *                 @OA\Property(property="correo", type="string"),
+     *                 @OA\Property(property="id_rol", type="integer"),
+     *                 @OA\Property(property="fecha_registro", type="string", format="date-time"),
+     *                 @OA\Property(property="ultimo_acceso", type="string", format="date-time"),
+     *                 @OA\Property(property="rol", type="object")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Credenciales inválidas"
+     *     ),
+     *      @OA\Response(
+     *         response=422,
+     *         description="Datos de entrada no válidos"
+     *     )
+     * )
+     */
     public function iniciarSesion(Request $request)
     {
         $validator = Validator::make($request->all(), [

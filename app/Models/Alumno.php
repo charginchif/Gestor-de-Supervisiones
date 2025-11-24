@@ -4,6 +4,96 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @OA\Schema(
+ *     title="Alumno",
+ *     description="Modelo de Alumno",
+ *     @OA\Xml(
+ *         name="Alumno"
+ *     ),
+ *     properties={
+ *         @OA\Property(
+ *             property="id_alumno",
+ *             title="ID del Alumno",
+ *             description="Identificador único del alumno",
+ *             type="integer",
+ *             example=1,
+ *             readOnly="true"
+ *         ),
+ *          @OA\Property(
+ *             property="matricula",
+ *             title="Matrícula",
+ *             description="Matrícula del alumno",
+ *             type="string",
+ *             example="202012345"
+ *         ),
+ *          @OA\Property(
+ *             property="id_usuario",
+ *             title="ID de Usuario",
+ *             description="Identificador único del usuario asociado",
+ *             type="integer",
+ *             example=1
+ *         ),
+ *          @OA\Property(
+ *             property="nombre",
+ *             title="Nombre",
+ *             description="Nombre del alumno",
+ *             type="string",
+ *             example="Juan"
+ *         ),
+ *           @OA\Property(
+ *             property="apellido_paterno",
+ *             title="Apellido Paterno",
+ *             description="Apellido paterno del alumno",
+ *             type="string",
+ *             example="Pérez"
+ *         ),
+ *           @OA\Property(
+ *             property="apellido_materno",
+ *             title="Apellido Materno",
+ *             description="Apellido materno del alumno",
+ *             type="string",
+ *             example="García"
+ *         ),
+ *           @OA\Property(
+ *             property="correo",
+ *             title="Correo Electrónico",
+ *             description="Correo electrónico del alumno",
+ *             type="string",
+ *             format="email",
+ *             example="juan.perez@example.com"
+ *         ),
+ *           @OA\Property(
+ *             property="fecha_registro",
+ *             title="Fecha de Registro",
+ *             description="Fecha de registro del alumno",
+ *             type="string",
+ *             format="date-time"
+ *         ),
+ *           @OA\Property(
+ *             property="ultimo_acceso",
+ *             title="Último Acceso",
+ *             description="Fecha del último acceso del alumno",
+ *             type="string",
+ *             format="date-time"
+ *         ),
+ *           @OA\Property(
+ *             property="id_carrera",
+ *             title="ID de Carrera",
+ *             description="Identificador único de la carrera del alumno",
+ *             type="integer",
+ *             example=1
+ *         ),
+ *           @OA\Property(
+ *             property="id_rol",
+ *             title="ID de Rol",
+ *             description="Identificador único del rol del usuario",
+ *             type="integer",
+ *             example=1
+ *         )
+ *     }
+ * )
+ */
 class Alumno extends Model 
 {
     // Nombre de la vista

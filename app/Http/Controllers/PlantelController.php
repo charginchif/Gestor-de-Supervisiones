@@ -16,12 +16,50 @@ class PlantelController extends Controller
     //     $this->middleware('role:administrador', ['only' => ['store', 'update', 'destroy']]);
     // }
 
+    /**
+     * @OA\Get(
+     *     path="/planteles",
+     *     summary="Listar todos los planteles",
+     *     tags={"Planteles"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de planteles",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Plantel")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $planteles = Plantel::all();
         return RespuestaAPI::exito('Listado de planteles', $planteles);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/planteles/{id}",
+     *     summary="Obtener un plantel por su ID",
+     *     tags={"Planteles"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del plantel",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plantel encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/Plantel")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Plantel no encontrado"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $plantel = Plantel::find($id);
@@ -31,6 +69,34 @@ class PlantelController extends Controller
         return RespuestaAPI::exito('Plantel encontrado', $plantel);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/planteles",
+     *     summary="Crear un nuevo plantel",
+     *     tags={"Planteles"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre","ubicacion"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Plantel Central"),
+     *             @OA\Property(property="ubicacion", type="string", maxLength=150, example="Avenida Siempre Viva 123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Plantel creado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/Plantel")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el plantel"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -57,6 +123,45 @@ class PlantelController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/planteles/{id}",
+     *     summary="Actualizar un plantel existente",
+     *     tags={"Planteles"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del plantel",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre","ubicacion"},
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Plantel Norte"),
+     *             @OA\Property(property="ubicacion", type="string", maxLength=255, example="Calle Falsa 123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plantel actualizado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/Plantel")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Plantel no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el plantel"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -83,6 +188,36 @@ class PlantelController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/planteles/{id}",
+     *     summary="Eliminar un plantel",
+     *     tags={"Planteles"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del plantel",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plantel eliminado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar el plantel (e.g., dependencias)"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Plantel no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el plantel"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {
@@ -106,10 +241,23 @@ class PlantelController extends Controller
     }
 
     /**
-     * Muestra los planteles asociados al coordinador autenticado.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     *     path="/coordinador/planteles",
+     *     summary="Listar los planteles de un coordinador",
+     *     tags={"Planteles"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de planteles del coordinador",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Plantel")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado"
+     *     )
+     * )
      */
     public function indexCoordinadorPlanteles(Request $request)
     {

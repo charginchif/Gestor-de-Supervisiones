@@ -10,14 +10,51 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
 
+/**
+ * Class User
+ *
+ * @package App\Models
+ *
+ * This model represents a User in the system. It implements AuthenticatableContract and AuthorizableContract
+ * for authentication and authorization functionalities, and uses HasFactory for model factories.
+ * It primarily interacts with the 'vw_usuarios' view.
+ *
+ * @property int $id
+ * @property string $nombre
+ * @property string $apellido_paterno
+ * @property string $apellido_materno
+ * @property string $correo
+ * @property string $contrasena
+ * @property int $id_rol
+ * @property string $rol
+ * @property string $fecha_registro
+ * @property string $ultimo_acceso
+ */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory;
 
     protected $table = 'vw_usuarios';
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
     public $timestamps = false;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'nombre',
         'apellido_paterno',
@@ -30,26 +67,37 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'ultimo_acceso'
     ];
 
-
-    
-        public function rol()
+    /**
+     * Get the role associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function rol()
     {
         return $this->belongsTo(CatRol::class, 'id_rol', 'id');
     }
 
+    /**
+     * Get the coordinator record associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function coordinador()
     {
         return $this->hasOne(Coordinador::class, 'usuario_id', 'id');
     }
 
-    
-
-
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = ['contrasena'];
 
-  
     /**
-     * Lumen/Eloquent usa por defecto 'password'. Indicamos que es 'contrasena'.
+     * Get the password for the user.
+     *
+     * @return string
      */
     public function getAuthPassword()
     {
@@ -57,15 +105,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Crea un nuevo usuario utilizando el procedimiento almacenado sp_usuario_crear.
+     * Creates a new user using the stored procedure `sp_usuario_crear`.
      *
-     * @param string $p_nombre
-     * @param string $p_apellido_paterno
-     * @param string $p_apellido_materno
-     * @param string $p_correo
-     * @param string $p_contrasena_hash
-     * @param string $p_rol
-     * @return bool
+     * @param string $p_nombre The first name of the user.
+     * @param string $p_apellido_paterno The paternal last name of the user.
+     * @param string $p_apellido_materno The maternal last name of the user.
+     * @param string $p_correo The email address of the user.
+     * @param string $p_contrasena_hash The hashed password for the user.
+     * @param string $p_rol The role of the user.
+     * @return bool True if the stored procedure executed successfully, false otherwise.
      */
     public static function crearUsuario(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, string $p_rol)
     {

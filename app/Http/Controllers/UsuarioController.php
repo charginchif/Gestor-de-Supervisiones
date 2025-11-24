@@ -16,12 +16,50 @@ use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/usuarios",
+     *     summary="Lista de todos los usuarios",
+     *     tags={"Usuarios"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Una lista de usuarios.",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="Apps/Models/User")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $usuarios = User::all();
         return RespuestaAPI::exito('Lista de usuarios', $usuarios);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/usuarios/{id}",
+     *     summary="Mostrar un usuario",
+     *     tags={"Usuarios"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del usuario",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuario encontrado.",
+     *         @OA\JsonContent(ref="Apps/Models/User")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado."
+     *     )
+     * )
+     */
     public function show($id)
     {
         $usuario = User::find($id);
@@ -31,6 +69,40 @@ class UsuarioController extends Controller
         return RespuestaAPI::exito('Usuario encontrado', $usuario);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/usuarios",
+     *     summary="Crear un nuevo usuario",
+     *     tags={"Usuarios"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre", "apellido_paterno", "apellido_materno", "correo", "contrasena", "rol"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *             @OA\Property(property="correo", type="string", format="email"),
+     *             @OA\Property(property="contrasena", type="string", format="password", minLength=8),
+     *             @OA\Property(property="rol", type="integer", description="ID del rol")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuario creado exitosamente.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuario creado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *      @OA\Response(
+     *         response=500,
+     *         description="Error al crear el usuario."
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -63,59 +135,42 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Crea un nuevo coordinador.
+     * @OA\Put(
+     *     path="/usuarios/{id}",
+     *     summary="Actualizar un usuario existente",
+     *     tags={"Usuarios"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del usuario a actualizar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *             @OA\Property(property="correo", type="string", format="email"),
+     *             @OA\Property(property="contrasena", type="string", format="password", minLength=8),
+     *             @OA\Property(property="id_rol", type="integer", description="ID del rol")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuario actualizado exitosamente.",
+     *         @OA\JsonContent(ref="Apps/Models/User")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     )
+     * )
      */
-    public function storeCoordinador(Request $request)
-    {
-        $usersData = $request->all();
-        $results = [];
-        $errors = [];
-
-        if (!is_array(reset($usersData))) {
-            $usersData = [$usersData];
-        }
-
-        foreach ($usersData as $userData) {
-            $validator = Validator::make($userData, [
-                'nombre'           => 'required|string|max:100',
-                'apellido_paterno' => 'required|string|max:100',
-                'apellido_materno' => 'required|string|max:100',
-                'correo'           => 'required|email|unique:usuario,correo',
-                'contrasena'       => 'required|string|min:8',
-            ]);
-
-            if ($validator->fails()) {
-                $errors[] = [
-                    'correo' => $userData['correo'] ?? 'N/A',
-                    'errors' => $validator->errors()
-                ];
-                continue;
-            }
-
-            try {
-                $result = Coordinador::crearCoordinador(
-                    $userData['nombre'],
-                    $userData['apellido_paterno'],
-                    $userData['apellido_materno'],
-                    $userData['correo'],
-                    Hash::make($userData['contrasena'])
-                );
-                $results[] = $result;
-            } catch (\Exception $e) {
-                $errors[] = [
-                    'correo' => $userData['correo'],
-                    'error' => $e->getMessage()
-                ];
-            }
-        }
-
-        if (!empty($errors)) {
-            return RespuestaAPI::error('Algunos coordinadores no pudieron ser creados', 422, ['errors' => $errors, 'created' => $results]);
-        }
-
-        return RespuestaAPI::exito('Coordinadores creados exitosamente', $results, 201);
-    }
-
     public function update(Request $request, $id)
     {
     
@@ -147,6 +202,35 @@ class UsuarioController extends Controller
         return RespuestaAPI::exito('Usuario actualizado exitosamente', $usuario);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/usuarios/{id}",
+     *     summary="Eliminar un usuario",
+     *     tags={"Usuarios"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del usuario a eliminar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuario eliminado exitosamente.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuario eliminado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuario no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el usuario."
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         $usuario = User::find($id);
@@ -183,6 +267,30 @@ class UsuarioController extends Controller
                  ->pluck('id_carrera')->toArray();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/alumnos",
+     *     summary="Listar alumnos",
+     *     description="Muestra una lista de alumnos. El resultado depende del rol del usuario (administrador o coordinador).",
+     *     tags={"Alumnos"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de alumnos.",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Alumno")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Usuario no autenticado."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para ver esta lista."
+     *     )
+     * )
+     */
     public function indexAlumnos()
     {
         try {
@@ -217,7 +325,30 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Muestra un alumno específico.
+     * @OA\Get(
+     *     path="/alumnos/{id}",
+     *     summary="Mostrar un alumno específico",
+     *     tags={"Alumnos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del alumno",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Alumno encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para ver este alumno."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Alumno no encontrado."
+     *     )
+     * )
      */
     public function showAlumno($id)
     {
@@ -241,7 +372,40 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Crea un nuevo alumno.
+     * @OA\Post(
+     *     path="/alumnos",
+     *     summary="Crear un nuevo alumno",
+     *     tags={"Alumnos"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"matricula", "nombre", "apellido_paterno", "apellido_materno", "correo", "contrasena", "id_carrera"},
+     *             @OA\Property(property="matricula", type="string", maxLength=15),
+     *             @OA\Property(property="nombre", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *             @OA\Property(property="correo", type="string", format="email"),
+     *             @OA\Property(property="contrasena", type="string", format="password", minLength=8),
+     *             @OA\Property(property="id_carrera", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Alumno creado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para registrar alumnos en esta carrera."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el alumno."
+     *     )
+     * )
      */
     public function storeAlumno(Request $request)
     {
@@ -288,7 +452,53 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Actualiza la información de un alumno.
+     * @OA\Put(
+     *     path="/alumnos/{id}",
+     *     summary="Actualizar la información de un alumno",
+     *     tags={"Alumnos"},
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del alumno a actualizar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="matricula", type="string", maxLength=15),
+     *             @OA\Property(property="nombre", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *             @OA\Property(property="correo", type="string", format="email"),
+     *             @OA\Property(property="contrasena", type="string", format="password", minLength=8),
+     *             @OA\Property(property="id_carrera", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Alumno actualizado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="No se proporcionaron datos para actualizar."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para modificar este alumno."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Alumno no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el alumno."
+     *     )
+     * )
      */
     public function updateAlumno(Request $request, $id)
     {
@@ -361,7 +571,16 @@ class UsuarioController extends Controller
      * Métodos para la Gestión de Docentes
      * ===================================================================
      
-     * Muestra una lista de todos los docentes.
+    /**
+     * @OA\Get(
+     *     path="/docentes",
+     *     summary="Listar todos los docentes",
+     *     tags={"Docentes"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Una lista de todos los docentes."
+     *     )
+     * )
      */
     public function indexDocentes()
     {
@@ -370,7 +589,30 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Muestra un docente específico.
+     * @OA\Get(
+     *     path="/docentes/{id}",
+     *     summary="Mostrar un docente específico",
+     *     tags={"Docentes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del docente",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Docente encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para ver este docente."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Docente no encontrado."
+     *     )
+     * )
      */
     public function showDocente($id)
     {
@@ -407,7 +649,35 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Crea un nuevo docente.
+     * @OA\Post(
+     *     path="/docentes",
+     *     summary="Crear uno o más docentes",
+     *     description="Crea un nuevo docente. Puede recibir un único objeto de docente o un arreglo de objetos.",
+     *     tags={"Docentes"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 required={"nombre", "apellido_paterno", "apellido_materno", "correo", "contrasena"},
+     *                 @OA\Property(property="nombre", type="string", maxLength=100),
+     *                 @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *                 @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *                 @OA\Property(property="correo", type="string", format="email"),
+     *                 @OA\Property(property="contrasena", type="string", format="password", minLength=8),
+     *                 @OA\Property(property="grado_academico", type="string", maxLength=80, nullable=true)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Docente(s) creado(s) exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos o algunos docentes no pudieron ser creados."
+     *     )
+     * )
      */
     public function storeDocente(Request $request)
     {
@@ -463,7 +733,43 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Actualiza la información de un docente.
+     * @OA\Put(
+     *     path="/docentes/{id}",
+     *     summary="Actualizar la información de un docente",
+     *     tags={"Docentes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del docente a actualizar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_paterno", type="string", maxLength=100),
+     *             @OA\Property(property="apellido_materno", type="string", maxLength=100),
+     *             @OA\Property(property="correo", type="string", format="email"),
+     *             @OA\Property(property="grado_academico", type="string", maxLength=80, nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Docente actualizado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Docente no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el docente."
+     *     )
+     * )
      */
     public function updateDocente(Request $request, $id)
     {
@@ -506,7 +812,30 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Elimina un docente.
+     * @OA\Delete(
+     *     path="/docentes/{id}",
+     *     summary="Eliminar un docente",
+     *     tags={"Docentes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del docente a eliminar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Docente eliminado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Docente no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el docente."
+     *     )
+     * )
      */
     public function destroyDocente($id)
     {
@@ -523,6 +852,29 @@ class UsuarioController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/docentes/mi-perfil",
+     *     summary="Obtener el perfil del docente autenticado",
+     *     tags={"Docentes"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Perfil de docente encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Usuario no autenticado."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Perfil de docente no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener el perfil del docente."
+     *     )
+     * )
+     */
     public function getMiPerfilDocente()
     {
         try {

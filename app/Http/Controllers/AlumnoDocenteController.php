@@ -13,7 +13,27 @@ use Illuminate\Database\QueryException;
 class AlumnoDocenteController extends Controller
 {
     /**
-     * Muestra la lista de docentes para el alumno autenticado.
+     * @OA\Get(
+     *     path="/mis-docentes",
+     *     summary="Listar mis docentes (alumno)",
+     *     tags={"Alumno"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Docentes del alumno obtenidos con éxito.",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/VwAlumnoDocente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Ocurrió un error al obtener los docentes."
+     *     )
+     * )
      */
     public function index()
     {
@@ -38,7 +58,36 @@ class AlumnoDocenteController extends Controller
     }
 
     /**
-     * Almacena la evaluación de un docente realizada por un alumno.
+     * @OA\Post(
+     *     path="/evaluar-docente",
+     *     summary="Evaluar a un docente",
+     *     tags={"Alumno"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_grupo", "id_docente", "evaluacion"},
+     *             @OA\Property(property="id_grupo", type="integer", example=1),
+     *             @OA\Property(property="id_docente", type="integer", example=1),
+     *             @OA\Property(property="evaluacion", type="object", example={"pregunta1": 5, "pregunta2": 4})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Evaluación guardada correctamente."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error en la base de datos."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Ocurrió un error al procesar la evaluación."
+     *     )
+     * )
      */
     public function evaluar(Request $request)
     {
@@ -93,7 +142,38 @@ class AlumnoDocenteController extends Controller
         }
     }
     /**
-     * Inscribe a un alumno en un grupo usando un código de inscripción.
+     * @OA\Post(
+     *     path="/inscribir-grupo",
+     *     summary="Inscribir a un alumno en un grupo con código",
+     *     tags={"Alumno"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"codigo_inscripcion"},
+     *             @OA\Property(property="codigo_inscripcion", type="string", example="CODIGO123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Inscripción al grupo exitosa."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error en la base de datos al inscribir al grupo."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No se encontró el alumno correspondiente al usuario autenticado."
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Datos inválidos."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Ocurrió un error al inscribir al grupo."
+     *     )
+     * )
      */
     public function inscribirGrupo(Request $request)
     {

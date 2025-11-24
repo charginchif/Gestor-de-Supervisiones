@@ -18,7 +18,23 @@ class RubroController extends Controller
     // --- Rubros de Evaluación Docente ---
 
     /**
-     * Devuelve todos los rubros de evaluación docente.
+     * @OA\Get(
+     *     path="/rubros/evaluacion-docente",
+     *     summary="Listar todos los rubros de evaluación docente",
+     *     tags={"Rubros"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de rubros",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/RubroEvaluacionDocente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los rubros"
+     *     )
+     * )
      */
     public function index()
     {
@@ -31,7 +47,31 @@ class RubroController extends Controller
     }
 
     /**
-     * Muestra un rubro de evaluación docente específico.
+     * @OA\Get(
+     *     path="/rubros/evaluacion-docente/{id}",
+     *     summary="Mostrar un rubro de evaluación docente específico",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroEvaluacionDocente")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener el rubro"
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -47,7 +87,35 @@ class RubroController extends Controller
     }
 
     /**
-     * Almacena un nuevo rubro de evaluación docente.
+     * @OA\Post(
+     *     path="/rubros/evaluacion-docente",
+     *     summary="Crear un nuevo rubro de evaluación docente",
+     *     tags={"Rubros"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Claridad en la comunicación")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Rubro creado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroEvaluacionDocente")
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Ya existe un rubro con este nombre"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el rubro"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -75,7 +143,44 @@ class RubroController extends Controller
     }
 
     /**
-     * Actualiza un rubro de evaluación docente existente.
+     * @OA\Put(
+     *     path="/rubros/evaluacion-docente/{id}",
+     *     summary="Actualizar un rubro de evaluación docente existente",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Claridad y precisión en la comunicación")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro actualizado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroEvaluacionDocente")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="No hay datos para actualizar"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el rubro"
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -120,7 +225,30 @@ class RubroController extends Controller
     }
 
     /**
-     * Elimina un rubro de evaluación docente.
+     * @OA\Delete(
+     *     path="/rubros/evaluacion-docente/{id}",
+     *     summary="Eliminar un rubro de evaluación docente",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro eliminado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el rubro"
+     *     )
+     * )
      */
     public function destroy($id)
     {
@@ -142,7 +270,23 @@ class RubroController extends Controller
     // --- Rubros de Supervisión Contable ---
 
     /**
-     * Devuelve todos los rubros de supervisión contable.
+     * @OA\Get(
+     *     path="/rubros/supervision-contable",
+     *     summary="Listar todos los rubros de supervisión contable",
+     *     tags={"Rubros"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de rubros contables",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/RubroSupervisionContable")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los rubros contables"
+     *     )
+     * )
      */
     public function indexContable()
     {
@@ -155,7 +299,31 @@ class RubroController extends Controller
     }
 
     /**
-     * Muestra un rubro de supervisión contable específico.
+     * @OA\Get(
+     *     path="/rubros/supervision-contable/{id}",
+     *     summary="Mostrar un rubro de supervisión contable específico",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro contable encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroSupervisionContable")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro contable no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener el rubro contable"
+     *     )
+     * )
      */
     public function showContable($id)
     {
@@ -171,7 +339,35 @@ class RubroController extends Controller
     }
 
     /**
-     * Almacena un nuevo rubro de supervisión contable.
+     * @OA\Post(
+     *     path="/rubros/supervision-contable",
+     *     summary="Crear un nuevo rubro de supervisión contable",
+     *     tags={"Rubros"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Auditoría Interna")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Rubro contable creado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroSupervisionContable")
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Ya existe un rubro con este nombre"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el rubro contable"
+     *     )
+     * )
      */
     public function storeContable(Request $request)
     {
@@ -199,7 +395,44 @@ class RubroController extends Controller
     }
 
     /**
-     * Actualiza un rubro de supervisión contable existente.
+     * @OA\Put(
+     *     path="/rubros/supervision-contable/{id}",
+     *     summary="Actualizar un rubro de supervisión contable existente",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Auditoría Externa")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro contable actualizado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroSupervisionContable")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="No hay datos para actualizar"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro contable no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el rubro contable"
+     *     )
+     * )
      */
     public function updateContable(Request $request, $id)
     {
@@ -244,7 +477,30 @@ class RubroController extends Controller
     }
 
     /**
-     * Elimina un rubro de supervisión contable.
+     * @OA\Delete(
+     *     path="/rubros/supervision-contable/{id}",
+     *     summary="Eliminar un rubro de supervisión contable",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro contable eliminado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro contable no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el rubro contable"
+     *     )
+     * )
      */
     public function destroyContable($id)
     {
@@ -266,7 +522,23 @@ class RubroController extends Controller
     // --- Rubros de Supervisión No Contable ---
 
     /**
-     * Devuelve todos los rubros de supervisión no contable.
+     * @OA\Get(
+     *     path="/rubros/supervision-no-contable",
+     *     summary="Listar todos los rubros de supervisión no contable",
+     *     tags={"Rubros"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de rubros no contables",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/RubroSupervisionNoContable")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los rubros no contables"
+     *     )
+     * )
      */
     public function indexNoContable()
     {
@@ -279,7 +551,31 @@ class RubroController extends Controller
     }
 
     /**
-     * Muestra un rubro de supervisión no contable específico.
+     * @OA\Get(
+     *     path="/rubros/supervision-no-contable/{id}",
+     *     summary="Mostrar un rubro de supervisión no contable específico",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro no contable encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroSupervisionNoContable")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro no contable no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener el rubro no contable"
+     *     )
+     * )
      */
     public function showNoContable($id)
     {
@@ -295,7 +591,35 @@ class RubroController extends Controller
     }
 
     /**
-     * Almacena un nuevo rubro de supervisión no contable.
+     * @OA\Post(
+     *     path="/rubros/supervision-no-contable",
+     *     summary="Crear un nuevo rubro de supervisión no contable",
+     *     tags={"Rubros"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Calidad del servicio")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Rubro no contable creado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroSupervisionNoContable")
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Ya existe un rubro con este nombre"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el rubro no contable"
+     *     )
+     * )
      */
     public function storeNoContable(Request $request)
     {
@@ -323,7 +647,44 @@ class RubroController extends Controller
     }
 
     /**
-     * Actualiza un rubro de supervisión no contable existente.
+     * @OA\Put(
+     *     path="/rubros/supervision-no-contable/{id}",
+     *     summary="Actualizar un rubro de supervisión no contable existente",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre", type="string", maxLength=255, example="Calidad del servicio al cliente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro no contable actualizado exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/RubroSupervisionNoContable")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="No hay datos para actualizar"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro no contable no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el rubro no contable"
+     *     )
+     * )
      */
     public function updateNoContable(Request $request, $id)
     {
@@ -368,7 +729,30 @@ class RubroController extends Controller
     }
 
     /**
-     * Elimina un rubro de supervisión no contable.
+     * @OA\Delete(
+     *     path="/rubros/supervision-no-contable/{id}",
+     *     summary="Eliminar un rubro de supervisión no contable",
+     *     tags={"Rubros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del rubro",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rubro no contable eliminado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rubro no contable no encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el rubro no contable"
+     *     )
+     * )
      */
     public function destroyNoContable($id)
     {

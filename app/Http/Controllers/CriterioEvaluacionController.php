@@ -15,7 +15,23 @@ use Illuminate\Support\Facades\DB;
 class CriterioEvaluacionController extends Controller
 {
     /**
-     * Devuelve todos los criterios de evaluación docente.
+     * @OA\Get(
+     *     path="/criterios-evaluacion",
+     *     summary="Listar todos los criterios de evaluación docente",
+     *     tags={"Criterios de Evaluación"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de criterios de evaluación",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/CriterioEvaluacion")
+     *         )
+     *     ),
+     *      @OA\Response(
+     *         response=500,
+     *         description="Error al obtener los criterios"
+     *     )
+     * )
      */
     public function index()
     {
@@ -28,7 +44,31 @@ class CriterioEvaluacionController extends Controller
     }
 
     /**
-     * Muestra un criterio de evaluación docente específico.
+     * @OA\Get(
+     *     path="/criterios-evaluacion/{id}",
+     *     summary="Mostrar un criterio de evaluación docente específico",
+     *     tags={"Criterios de Evaluación"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de evaluación",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio de evaluación encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/CriterioEvaluacion")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Criterio de evaluación no encontrado"
+     *     ),
+     *      @OA\Response(
+     *         response=500,
+     *         description="Error al obtener el criterio"
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -44,7 +84,31 @@ class CriterioEvaluacionController extends Controller
     }
 
     /**
-     * Almacena un nuevo criterio de evaluación docente.
+     * @OA\Post(
+     *     path="/criterios-evaluacion",
+     *     summary="Crear un nuevo criterio de evaluación docente",
+     *     tags={"Criterios de Evaluación"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_rubro", "descripcion"},
+     *             @OA\Property(property="id_rubro", type="integer", example=1),
+     *             @OA\Property(property="descripcion", type="string", example="El docente demuestra dominio del tema")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Criterio de evaluación creado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear el criterio de evaluación"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -69,7 +133,38 @@ class CriterioEvaluacionController extends Controller
     }
 
     /**
-     * Actualiza un criterio de evaluación docente existente.
+     * @OA\Put(
+     *     path="/criterios-evaluacion/{id}",
+     *     summary="Actualizar un criterio de evaluación docente existente",
+     *     tags={"Criterios de Evaluación"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de evaluación",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"id_rubro", "descripcion"},
+     *             @OA\Property(property="id_rubro", type="integer", example=1),
+     *             @OA\Property(property="descripcion", type="string", example="El docente demuestra un excelente dominio del tema")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio de evaluación actualizado exitosamente"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar el criterio de evaluación"
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -95,7 +190,30 @@ class CriterioEvaluacionController extends Controller
     }
 
     /**
-     * Elimina un criterio de evaluación docente.
+     * @OA\Delete(
+     *     path="/criterios-evaluacion/{id}",
+     *     summary="Eliminar un criterio de evaluación docente",
+     *     tags={"Criterios de Evaluación"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del criterio de evaluación",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criterio de evaluación eliminado exitosamente"
+     *     ),
+     *      @OA\Response(
+     *         response=400,
+     *         description="Error al eliminar el criterio de evaluación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el criterio de evaluación"
+     *     )
+     * )
      */
     public function destroy($id)
     {

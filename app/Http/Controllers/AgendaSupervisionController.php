@@ -8,6 +8,25 @@ use Illuminate\Support\Facades\DB;
 
 class AgendaSupervisionController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/agendas-supervision",
+     *     summary="Obtener todas las agendas de supervisión",
+     *     tags={"Agendas de Supervisión"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Agendas de supervisión obtenidas con éxito",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/VwCoordAgendaSupervision")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las agendas de supervisión"
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -18,6 +37,31 @@ class AgendaSupervisionController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/agendas-supervision",
+     *     summary="Crear una nueva agenda de supervisión",
+     *     tags={"Agendas de Supervisión"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"fecha", "id_coordinador", "id_horario", "estado"},
+     *             @OA\Property(property="fecha", type="string", format="date", example="2024-01-01"),
+     *             @OA\Property(property="id_coordinador", type="integer", example=1),
+     *             @OA\Property(property="id_horario", type="integer", example=1),
+     *             @OA\Property(property="estado", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Agenda de supervisión creada con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear la agenda de supervisión"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -41,6 +85,36 @@ class AgendaSupervisionController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/agendas-supervision/{id}",
+     *     summary="Actualizar una agenda de supervisión existente",
+     *     tags={"Agendas de Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la agenda de supervisión",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="fecha", type="string", format="date", example="2024-01-02"),
+     *             @OA\Property(property="id_coordinador", type="integer", example=1),
+     *             @OA\Property(property="id_horario", type="integer", example=1),
+     *             @OA\Property(property="estado", type="integer", example=2)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Agenda de supervisión actualizada con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar la agenda de supervisión"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -58,6 +132,28 @@ class AgendaSupervisionController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/agendas-supervision/{id}",
+     *     summary="Eliminar una agenda de supervisión",
+     *     tags={"Agendas de Supervisión"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la agenda de supervisión",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Agenda de supervisión eliminada con éxito"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la agenda de supervisión"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

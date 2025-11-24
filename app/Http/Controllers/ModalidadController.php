@@ -10,6 +10,31 @@ use Illuminate\Database\QueryException;
 
 class ModalidadController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/modalidades",
+     *     summary="Listar todas las modalidades",
+     *     tags={"Modalidades"},
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Término de búsqueda",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Modalidades obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/CatModalidad")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener las modalidades"
+     *     )
+     * )
+     */
     public function list(Request $request)
     {
         try {
@@ -29,6 +54,33 @@ class ModalidadController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/modalidades/{id}",
+     *     summary="Obtener una modalidad por su ID",
+     *     tags={"Modalidades"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la modalidad",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Modalidad obtenida correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/CatModalidad")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Modalidad no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al obtener la modalidad"
+     *     )
+     * )
+     */
     public function get($id)
     {
         try {
@@ -41,6 +93,33 @@ class ModalidadController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/modalidades",
+     *     summary="Crear una nueva modalidad",
+     *     tags={"Modalidades"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Sabatina")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Modalidad creada correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/CatModalidad")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al crear la modalidad"
+     *     )
+     * )
+     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -64,6 +143,44 @@ class ModalidadController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/modalidades/{id}",
+     *     summary="Actualizar una modalidad existente",
+     *     tags={"Modalidades"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la modalidad",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre"},
+     *             @OA\Property(property="nombre", type="string", maxLength=100, example="Sabatina Matutina")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Modalidad actualizada correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/CatModalidad")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Modalidad no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al actualizar la modalidad"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -90,6 +207,32 @@ class ModalidadController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/modalidades/{id}",
+     *     summary="Eliminar una modalidad",
+     *     tags={"Modalidades"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la modalidad",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Modalidad eliminada correctamente"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Modalidad no encontrada"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar la modalidad"
+     *     )
+     * )
+     */
     public function delete($id)
     {
         try {
@@ -103,6 +246,32 @@ class ModalidadController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/modalidades/bulk",
+     *     summary="Crear o actualizar modalidades en bloque",
+     *     tags={"Modalidades"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/CatModalidad")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operación masiva completada",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/CatModalidad")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación"
+     *     )
+     * )
+     */
     public function bulkUpsert(Request $request)
     {
         $validator = Validator::make($request->all(), [

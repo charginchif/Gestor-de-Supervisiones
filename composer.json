@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": "^8.1",
+        "darkaonline/swagger-lume": "^11.0",
         "firebase/php-jwt": "^6.11",
         "illuminate/hashing": "^10.48",
         "illuminate/support": "^10.48",

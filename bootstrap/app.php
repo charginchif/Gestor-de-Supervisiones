@@ -100,6 +100,8 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\JwtServiceProvider::class);
+$app->configure('swagger-lume');
+$app->register(\SwaggerLume\ServiceProvider::class);
 
 
 /*
