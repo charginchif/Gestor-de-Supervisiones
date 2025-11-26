@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Grupo;
 use App\Models\VwCoordGrupo;
 use App\Models\VwGrupoAlumnos;
+use App\Models\Carrera;
 use App\Models\PlanEstudio;
+use App\Models\Coordinador;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,10 +56,19 @@ class GrupoController extends Controller
      */
     public function index(Request $request)
     {
-        // This method will not work as expected because the coordinator information is not available in the new view.
-        $grupos = VwGrupoAlumnos::select('id_grupo', 'grupo', 'id_modalidad', 'id_carrera')
-            ->groupBy('id_grupo', 'grupo', 'id_modalidad', 'id_carrera')
+        $grupos = DB::table('grupo')
+            ->leftJoin('plan_estudio', 'grupo.id_plan_estudio', '=', 'plan_estudio.id_plan_estudio')
+            ->leftJoin('carrera', 'plan_estudio.id_carrera', '=', 'carrera.id_carrera')
+            ->leftJoin('cat_modalidad', 'plan_estudio.id_modalidad', '=', 'cat_modalidad.id')
+            ->select(
+                'grupo.id_grupo',
+                'grupo.acronimo as grupo',
+                'carrera.nombre as carrera',
+                'cat_modalidad.nombre as modalidad'
+            )
+            ->distinct()
             ->get();
+
         return RespuestaAPI::exito('Lista de grupos', $grupos);
     }
 

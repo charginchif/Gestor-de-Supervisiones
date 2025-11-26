@@ -21,6 +21,7 @@ class UsuarioController extends Controller
      *     path="/usuarios",
      *     summary="Lista de todos los usuarios",
      *     tags={"Usuarios"},
+     *     security={{"jwt":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Una lista de usuarios.",
@@ -42,6 +43,7 @@ class UsuarioController extends Controller
      *     path="/usuarios/{id}",
      *     summary="Mostrar un usuario",
      *     tags={"Usuarios"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -74,6 +76,7 @@ class UsuarioController extends Controller
      *     path="/usuarios",
      *     summary="Crear un nuevo usuario",
      *     tags={"Usuarios"},
+     *     security={{"jwt":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -139,6 +142,7 @@ class UsuarioController extends Controller
      *     path="/usuarios/{id}",
      *     summary="Actualizar un usuario existente",
      *     tags={"Usuarios"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -207,6 +211,7 @@ class UsuarioController extends Controller
      *     path="/usuarios/{id}",
      *     summary="Eliminar un usuario",
      *     tags={"Usuarios"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -273,6 +278,7 @@ class UsuarioController extends Controller
      *     summary="Listar alumnos",
      *     description="Muestra una lista de alumnos. El resultado depende del rol del usuario (administrador o coordinador).",
      *     tags={"Alumnos"},
+     *     security={{"jwt":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de alumnos.",
@@ -329,6 +335,7 @@ class UsuarioController extends Controller
      *     path="/alumnos/{id}",
      *     summary="Mostrar un alumno específico",
      *     tags={"Alumnos"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -376,6 +383,7 @@ class UsuarioController extends Controller
      *     path="/alumnos",
      *     summary="Crear un nuevo alumno",
      *     tags={"Alumnos"},
+     *     security={{"jwt":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -456,6 +464,7 @@ class UsuarioController extends Controller
      *     path="/alumnos/{id}",
      *     summary="Actualizar la información de un alumno",
      *     tags={"Alumnos"},
+     *     security={{"jwt":{}}},
      *      @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -576,6 +585,7 @@ class UsuarioController extends Controller
      *     path="/docentes",
      *     summary="Listar todos los docentes",
      *     tags={"Docentes"},
+     *     security={{"jwt":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Una lista de todos los docentes."
@@ -593,6 +603,7 @@ class UsuarioController extends Controller
      *     path="/docentes/{id}",
      *     summary="Mostrar un docente específico",
      *     tags={"Docentes"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -654,6 +665,7 @@ class UsuarioController extends Controller
      *     summary="Crear uno o más docentes",
      *     description="Crea un nuevo docente. Puede recibir un único objeto de docente o un arreglo de objetos.",
      *     tags={"Docentes"},
+     *     security={{"jwt":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -737,6 +749,7 @@ class UsuarioController extends Controller
      *     path="/docentes/{id}",
      *     summary="Actualizar la información de un docente",
      *     tags={"Docentes"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -816,6 +829,7 @@ class UsuarioController extends Controller
      *     path="/docentes/{id}",
      *     summary="Eliminar un docente",
      *     tags={"Docentes"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -857,6 +871,7 @@ class UsuarioController extends Controller
      *     path="/docentes/mi-perfil",
      *     summary="Obtener el perfil del docente autenticado",
      *     tags={"Docentes"},
+     *     security={{"jwt":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Perfil de docente encontrado."
@@ -883,8 +898,8 @@ class UsuarioController extends Controller
                 return RespuestaAPI::error('Usuario no autenticado.', 401);
             }
 
-            // Asumiendo que la tabla 'docente' tiene una columna 'usuario_id' que la relaciona con 'usuario'
-            $docente = Docente::where('usuario_id', $idUsuario)->first();
+            // Asumiendo que la tabla 'docente' tiene una columna 'id_usuario' que la relaciona con 'usuario'
+            $docente = Docente::where('id_usuario', $idUsuario)->first();
 
             if (!$docente) {
                 return RespuestaAPI::error('Perfil de docente no encontrado para el usuario autenticado.', 404);

@@ -10,7 +10,7 @@ class AgendaSupervisionController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/agendas-supervision",
+     *     path="/",
      *     summary="Obtener todas las agendas de supervisión",
      *     tags={"Agendas de Supervisión"},
      *     @OA\Response(
@@ -80,6 +80,22 @@ class AgendaSupervisionController extends Controller
             ]);
 
             return RespuestaAPI::exito('Agenda de supervisión creada con éxito', $result, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $missingFields = implode(', ', array_keys($e->errors()));
+            $errorMessage = 'Faltan campos requeridos o son inválidos: ' . $missingFields;
+            
+            $examplePayload = [
+                'fecha' => 'YYYY-MM-DD',
+                'id_coordinador' => 1,
+                'id_horario' => 1,
+                'estado' => 1
+            ];
+
+            return RespuestaAPI::error(
+                'Error al crear la agenda de supervisión: ' . $errorMessage,
+                422,
+                ['ejemplo_de_uso_correcto' => $examplePayload]
+            );
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al crear la agenda de supervisión: ' . $e->getMessage(), 500);
         }

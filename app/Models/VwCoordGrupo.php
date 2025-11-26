@@ -19,7 +19,7 @@ class VwCoordGrupo extends Model
      *
      * @var string
      */
-    protected $table = 'vw_coord_grupos';
+    protected $table = 'vw_coord_grupo';
 
     /**
      * The primary key associated with the table.

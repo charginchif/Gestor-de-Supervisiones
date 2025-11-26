@@ -5,14 +5,19 @@
         "description": "API for the Lumen project",
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "/syed/public"
+        }
+    ],
     "paths": {
-        "/agendas-supervision": {
+        "/": {
             "get": {
                 "tags": [
                     "Agendas de Supervisión"
                 ],
                 "summary": "Obtener todas las agendas de supervisión",
-                "operationId": "ecce29d9baaa8c45c1ea381cbdb3824e",
+                "operationId": "cf65cc0235baa76b07eb6df45e624f97",
                 "responses": {
                     "200": {
                         "description": "Agendas de supervisión obtenidas con éxito",
@@ -31,7 +36,9 @@
                         "description": "Error al obtener las agendas de supervisión"
                     }
                 }
-            },
+            }
+        },
+        "/agendas-supervision": {
             "post": {
                 "tags": [
                     "Agendas de Supervisión"

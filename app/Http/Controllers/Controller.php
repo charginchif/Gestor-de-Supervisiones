@@ -10,6 +10,12 @@ use Laravel\Lumen\Routing\Controller as BaseController;
  *      title="Lumen API",
  *      description="API for the Lumen project"
  * )
+ * @OA\SecurityScheme(
+ *      securityScheme="jwt",
+ *      type="http",
+ *      scheme="bearer",
+ *      bearerFormat="JWT",
+ * )
  */
 class Controller extends BaseController
 {
