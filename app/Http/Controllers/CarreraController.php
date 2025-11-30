@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Utils\RespuestaAPI;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 
 class CarreraController extends Controller
 {
@@ -15,6 +16,7 @@ class CarreraController extends Controller
      *     path="/carreras",
      *     summary="Listar todas las carreras",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Listado de carreras",
@@ -44,6 +46,7 @@ class CarreraController extends Controller
      *     path="/carreras/{id}",
      *     summary="Obtener una carrera por su ID",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -84,6 +87,7 @@ class CarreraController extends Controller
      *     path="/carreras",
      *     summary="Crear una nueva carrera",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -134,6 +138,7 @@ class CarreraController extends Controller
      *     path="/carreras/{id}",
      *     summary="Actualizar una carrera existente",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -192,6 +197,7 @@ class CarreraController extends Controller
      *     path="/carreras/{id}",
      *     summary="Eliminar una carrera",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -232,6 +238,7 @@ class CarreraController extends Controller
      *     path="/asignarCarreraCoordinador",
      *     summary="Asignar una carrera a un coordinador",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -284,6 +291,7 @@ class CarreraController extends Controller
      *     path="/asignarCarreraCoordinador",
      *     summary="Actualizar la asignación de una carrera a un coordinador",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -345,6 +353,7 @@ class CarreraController extends Controller
      *     path="/asignarCarreraCoordinador",
      *     summary="Eliminar la asignación de una carrera a un coordinador",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -394,6 +403,7 @@ class CarreraController extends Controller
      *     path="/asignarCarreraCoordinador",
      *     summary="Obtener todas las asignaciones de carreras a coordinadores",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Listado de todas las asignaciones de carreras a coordinadores"
@@ -419,6 +429,7 @@ class CarreraController extends Controller
      *     path="/carrerasPorCoordinador/{id}",
      *     summary="Obtener las carreras por coordinador",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -453,6 +464,7 @@ class CarreraController extends Controller
      *     path="/asignarCarreraPlantel",
      *     summary="Asignar una carrera a un plantel",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -505,6 +517,7 @@ class CarreraController extends Controller
      *     path="/eliminarCarreraPlantel",
      *     summary="Eliminar la asignación de una carrera a un plantel",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -554,6 +567,7 @@ class CarreraController extends Controller
      *     path="/carrerasPorPlantel/{id}",
      *     summary="Obtener las carreras por plantel",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -589,6 +603,7 @@ class CarreraController extends Controller
      *     path="/carrerasPorPlantel",
      *     summary="Obtener todas las asignaciones de carreras a planteles",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Listado de todas las asignaciones de carreras a planteles"
@@ -616,6 +631,7 @@ class CarreraController extends Controller
      *     path="/plantel-turno",
      *     summary="Asignar un turno a un plantel",
      *     tags={"Planteles"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -689,6 +705,7 @@ class CarreraController extends Controller
      *     path="/plantel-turno/{id}",
      *     summary="Eliminar un turno de un plantel",
      *     tags={"Planteles"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -731,6 +748,7 @@ class CarreraController extends Controller
      *     path="/carrera-modalidad",
      *     summary="Listar carreras y sus modalidades",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Listado de carreras y sus modalidades"
@@ -756,6 +774,7 @@ class CarreraController extends Controller
      *     path="/carrera-modalidad",
      *     summary="Asignar una modalidad a una carrera",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -784,7 +803,7 @@ class CarreraController extends Controller
      */
     public function storeCarreraModalidad(Request $request)
     {
-        $this->validate($request, [
+        $this.validate($request, [
             'id_carrera'   => 'required|integer',
             'id_modalidad' => 'required|integer',
         ]);
@@ -815,6 +834,7 @@ class CarreraController extends Controller
      *     path="/carrera-modalidad",
      *     summary="Eliminar la asignación de una modalidad a una carrera",
      *     tags={"Carreras"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\SolicitudInscripcion;
 use App\Models\InscripcionGrupo;
-use App\Models\VwCoordGrupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\RespuestaAPI;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -15,9 +15,10 @@ class SolicitudInscripcionController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/solicitudes-inscripcion",
+     *     path="/coordinador-solicitud-inscripcion",
      *     summary="Obtener las solicitudes de inscripción pendientes de los grupos del coordinador",
      *     tags={"Solicitudes de Inscripción"},
+     *     security={{"jwt":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Solicitudes obtenidas correctamente",
@@ -31,7 +32,7 @@ class SolicitudInscripcionController extends Controller
     public function index()
     {
         $coordinador = Auth::user();
-        $gruposCoordinador = VwCoordGrupo::where('id_coordinador', $coordinador->id)->pluck('id_grupo');
+        $gruposCoordinador = DB::table('carrera_coordinador')->join('grupo', 'carrera_coordinador.id_carrera', '=', 'grupo.id_carrera')->where('carrera_coordinador.id_coordinador', $coordinador->id)->pluck('grupo.id_grupo');
 
         $solicitudes = SolicitudInscripcion::with(['alumno', 'grupo'])
             ->whereIn('id_grupo', $gruposCoordinador)
@@ -103,9 +104,10 @@ class SolicitudInscripcionController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/solicitudes-inscripcion/{id}/aprobar",
+     *     path="/coordinador-solicitud-inscripcion/{id}/aprobar",
      *     summary="Aprobar una solicitud de inscripción",
      *     tags={"Solicitudes de Inscripción"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -156,10 +158,11 @@ class SolicitudInscripcionController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/solicitudes-inscripcion/{id}/rechazar",
+     * @OA\Delete(
+     *     path="/coordinador-solicitud-inscripcion/{id}/rechazar",
      *     summary="Rechazar una solicitud de inscripción",
      *     tags={"Solicitudes de Inscripción"},
+     *     security={{"jwt":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

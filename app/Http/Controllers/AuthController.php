@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\JwtService;
 use App\Utils\RespuestaAPI;
 
+
 class AuthController extends Controller
 {
     private JwtService $jwt;

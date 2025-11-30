@@ -68,6 +68,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->put('carreras/{id}', 'CarreraController@update');
     $router->delete('carreras/{id}', 'CarreraController@destroy');
 
+    //No Jala no existe la tabla nose porque jaja
     // Gestión de carrera-modalidad
     $router->get('carrera-modalidad', 'CarreraController@indexCarreraModalidad');
     $router->post('carrera-modalidad', 'CarreraController@storeCarreraModalidad');
@@ -83,6 +84,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     // Asignación de carreras a coordinadores
     $router->get('carrerasPorCoordinador/{id}', 'CarreraController@getCarrerasPorCoordinador');
     $router->get('carrerasPorCoordinador', 'CarreraController@getAllAsignaciones');
+    //Si lo piensas bien esta no tiene sentido pero bueno
     $router->post('asignarCarreraCoordinador', 'CarreraController@asignarCarreraCoordinador');
     $router->put('asignarCarreraCoordinador', 'CarreraController@actualizarCarreraCoordinador');
     $router->delete('asignarCarreraCoordinador', 'CarreraController@eliminarCarreraCoordinador');
@@ -144,6 +146,8 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
         });
     });
 
+    //Hasta aqui vamos bien
+    //-------------------------------------------------
     // Gestión de Plan de Estudios
     $router->get('plan-estudio', 'PlanEstudioController@indexAll');
     $router->get('plan-estudio/{id_carrera}', 'PlanEstudioController@index');

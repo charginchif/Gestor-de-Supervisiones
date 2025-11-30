@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
+use OpenApi\Annotations as OA;
 
 class AlumnoDocenteController extends Controller
 {
@@ -17,6 +18,7 @@ class AlumnoDocenteController extends Controller
      *     path="/mis-docentes",
      *     summary="Listar mis docentes (alumno)",
      *     tags={"Alumno"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Docentes del alumno obtenidos con éxito.",
@@ -62,6 +64,7 @@ class AlumnoDocenteController extends Controller
      *     path="/evaluar-docente",
      *     summary="Evaluar a un docente",
      *     tags={"Alumno"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -146,6 +149,7 @@ class AlumnoDocenteController extends Controller
      *     path="/inscribir-grupo",
      *     summary="Inscribir a un alumno en un grupo con código",
      *     tags={"Alumno"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

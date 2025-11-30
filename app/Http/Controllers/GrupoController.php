@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Utils\GeneradorCodigos;
+use OpenApi\Annotations as OA;
 
 
 class GrupoController extends Controller
@@ -22,6 +23,7 @@ class GrupoController extends Controller
      *     path="/grupos/admin",
      *     summary="Listar todos los grupos (Admin)",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de grupos",
@@ -44,6 +46,7 @@ class GrupoController extends Controller
      *     path="/grupos",
      *     summary="Listar todos los grupos",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de grupos",
@@ -77,6 +80,7 @@ class GrupoController extends Controller
      *     path="/grupos/{id}",
      *     summary="Mostrar un grupo",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -109,6 +113,7 @@ class GrupoController extends Controller
      *     path="/grupos",
      *     summary="Crear un nuevo grupo",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -183,6 +188,7 @@ class GrupoController extends Controller
      *     path="/grupos/{id}",
      *     summary="Actualizar un grupo existente",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -257,6 +263,7 @@ class GrupoController extends Controller
      *     path="/grupos/{id}",
      *     summary="Eliminar un grupo",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -298,6 +305,7 @@ class GrupoController extends Controller
      *     path="/grupos/asignar-plan",
      *     summary="Asignar un plan de estudio a un grupo",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -350,6 +358,7 @@ class GrupoController extends Controller
      *     path="/grupos/{id_grupo}/quitar-plan",
      *     summary="Quitar un plan de estudio de un grupo",
      *     tags={"Grupos"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id_grupo",
      *         in="path",

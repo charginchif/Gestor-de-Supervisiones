@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 
 class AgendaSupervisionController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/",
+     *     path="/agendas-supervision",
      *     summary="Obtener todas las agendas de supervisión",
      *     tags={"Agendas de Supervisión"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Agendas de supervisión obtenidas con éxito",
@@ -42,6 +44,7 @@ class AgendaSupervisionController extends Controller
      *     path="/agendas-supervision",
      *     summary="Crear una nueva agenda de supervisión",
      *     tags={"Agendas de Supervisión"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -106,6 +109,7 @@ class AgendaSupervisionController extends Controller
      *     path="/agendas-supervision/{id}",
      *     summary="Actualizar una agenda de supervisión existente",
      *     tags={"Agendas de Supervisión"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -153,6 +157,7 @@ class AgendaSupervisionController extends Controller
      *     path="/agendas-supervision/{id}",
      *     summary="Eliminar una agenda de supervisión",
      *     tags={"Agendas de Supervisión"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Utils\RespuestaAPI;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 
 /**
  * Controlador para gestionar los criterios de evaluación docente.
@@ -19,6 +20,7 @@ class CriterioEvaluacionController extends Controller
      *     path="/criterios-evaluacion",
      *     summary="Listar todos los criterios de evaluación docente",
      *     tags={"Criterios de Evaluación"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Listado de criterios de evaluación",
@@ -48,6 +50,7 @@ class CriterioEvaluacionController extends Controller
      *     path="/criterios-evaluacion/{id}",
      *     summary="Mostrar un criterio de evaluación docente específico",
      *     tags={"Criterios de Evaluación"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -88,6 +91,7 @@ class CriterioEvaluacionController extends Controller
      *     path="/criterios-evaluacion",
      *     summary="Crear un nuevo criterio de evaluación docente",
      *     tags={"Criterios de Evaluación"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -137,6 +141,7 @@ class CriterioEvaluacionController extends Controller
      *     path="/criterios-evaluacion/{id}",
      *     summary="Actualizar un criterio de evaluación docente existente",
      *     tags={"Criterios de Evaluación"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -194,6 +199,7 @@ class CriterioEvaluacionController extends Controller
      *     path="/criterios-evaluacion/{id}",
      *     summary="Eliminar un criterio de evaluación docente",
      *     tags={"Criterios de Evaluación"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

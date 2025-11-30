@@ -6,8 +6,11 @@ use App\Models\Coordinador;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use App\Models\CriterioSupervision;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use OpenApi\Annotations as OA;
 
 class CoordinadorController extends UsuarioController
 {
@@ -16,6 +19,7 @@ class CoordinadorController extends UsuarioController
      *     path="/coordinadores",
      *     summary="Listar todos los coordinadores",
      *     tags={"Coordinadores"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Listado de coordinadores",
@@ -37,6 +41,7 @@ class CoordinadorController extends UsuarioController
      *     path="/coordinadores/{id}",
      *     summary="Obtener un coordinador por su ID",
      *     tags={"Coordinadores"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -72,6 +77,7 @@ class CoordinadorController extends UsuarioController
      *     summary="Crear uno o más coordinadores",
      *     description="Crea un nuevo coordinador. Puede recibir un único objeto de coordinador o un arreglo de objetos.",
      *      tags={"Coordinadores"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -106,6 +112,7 @@ class CoordinadorController extends UsuarioController
      *     path="/coordinadores/{id}",
      *     summary="Actualizar la información de un coordinador",
      *     tags={"Coordinadores"},
+     *     security={{"jwt": {}}},
      *      @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -145,31 +152,51 @@ class CoordinadorController extends UsuarioController
         if (!$coordinador) {
             return RespuestaAPI::error('Coordinador no encontrado', 404);
         }
+
+        // Obtener el usuario asociado
+        $user = User::find($coordinador->usuario_id);
+        if (!$user) {
+            return RespuestaAPI::error('Usuario asociado no encontrado', 404);
+        }
         
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nombre'           => 'sometimes|string|max:100|regex:/^[\pL\s\-]+$/u',
             'apellido_paterno' => 'sometimes|string|max:100|regex:/^[\pL\s\-]+$/u',
             'apellido_materno' => 'sometimes|string|max:100|regex:/^[\pL\s\-]+$/u',
-            'correo'           => 'sometimes|email|unique:usuario,correo,' . $coordinador->id_usuario,
-        ]);
+            'contrasena'       => 'sometimes|string|min:8',
+        ];
+
+        // Only apply unique rule for 'correo' if it's present and different from the current one
+        if ($request->has('correo')) {
+            if ($request->input('correo') !== $user->correo) {
+                $rules['correo'] = 'email|unique:usuario,correo,' . $user->id;
+            } else {
+                // If correo is present but unchanged, just validate it's an email
+                $rules['correo'] = 'email';
+            }
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return RespuestaAPI::error('Datos inválidos', 422, $validator->errors());
         }
 
         try {
-            DB::statement(
-                'CALL sp_actualizar_coordinador(?, ?, ?, ?, ?, ?)',
-                [
-                    $id,
-                    $coordinador->id_usuario,
-                    $request->input('nombre', $coordinador->nombre),
-                    $request->input('apellido_paterno', $coordinador->apellido_paterno),
-                    $request->input('apellido_materno', $coordinador->apellido_materno),
-                    $request->input('correo', $coordinador->correo),
-                ]
-            );
+            $userData = [
+                'nombre'           => $request->input('nombre', $user->nombre),
+                'apellido_paterno' => $request->input('apellido_paterno', $user->apellido_paterno),
+                'apellido_materno' => $request->input('apellido_materno', $user->apellido_materno),
+                'correo'           => $request->input('correo', $user->correo),
+            ];
 
+            if ($request->has('contrasena') && !empty($request->input('contrasena'))) {
+                $userData['contrasena'] = Hash::make($request->input('contrasena'));
+            }
+
+            $user->update($userData);
+            
+            // Re-obtener el coordinador para reflejar los cambios del usuario en el objeto de respuesta
             $updatedCoordinador = Coordinador::find($id);
             return RespuestaAPI::exito('Coordinador actualizado exitosamente', $updatedCoordinador);
 
@@ -183,6 +210,7 @@ class CoordinadorController extends UsuarioController
      *     path="/coordinadores/{id}",
      *     summary="Eliminar un coordinador",
      *      tags={"Coordinadores"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

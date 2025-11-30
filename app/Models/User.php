@@ -34,7 +34,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable, HasFactory;
 
-    protected $table = 'vw_usuarios';
+    protected $table = 'usuario';
 
     /**
      * The primary key associated with the table.
@@ -115,19 +115,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @param string $p_rol The role of the user.
      * @return bool True if the stored procedure executed successfully, false otherwise.
      */
-    public static function crearUsuario(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, string $p_rol)
+    public static function crearUsuario(string $p_nombre, string $p_apellido_paterno, string $p_apellido_materno, string $p_correo, string $p_contrasena_hash, int $p_id_rol)
     {
-        return DB::statement(
-            'CALL sp_usuario_crear(?, ?, ?, ?, ?, ?)',
-            [
-                $p_nombre,
-                $p_apellido_paterno,
-                $p_apellido_materno,
-                $p_correo,
-                $p_contrasena_hash,
-                $p_rol
-            ]
-        );
+        return self::create([
+            'nombre' => $p_nombre,
+            'apellido_paterno' => $p_apellido_paterno,
+            'apellido_materno' => $p_apellido_materno,
+            'correo' => $p_correo,
+            'contrasena' => $p_contrasena_hash,
+            'id_rol' => $p_id_rol,
+            'fecha_registro' => now(),
+            'ultimo_acceso' => now()
+        ]);
     }
 
 }

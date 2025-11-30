@@ -7,6 +7,7 @@ use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 
 class HorarioController extends Controller
 {
@@ -15,6 +16,7 @@ class HorarioController extends Controller
      *     path="/mi-horario",
      *     summary="Obtener mi horario (alumno)",
      *     tags={"Horarios"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Horario obtenido con éxito",
@@ -46,6 +48,7 @@ class HorarioController extends Controller
      *     path="/horarios",
      *     summary="Obtener todos los horarios (admin)",
      *     tags={"Horarios"},
+     *     security={{"jwt": {}}},
      *     @OA\Response(
      *         response=200,
      *         description="Horarios obtenidos con éxito",
@@ -75,6 +78,7 @@ class HorarioController extends Controller
      *     path="/horarios",
      *     summary="Crear un nuevo horario",
      *     tags={"Horarios"},
+     *     security={{"jwt": {}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -123,6 +127,7 @@ class HorarioController extends Controller
      *     path="/horarios/{id}",
      *     summary="Actualizar un horario existente",
      *     tags={"Horarios"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -170,6 +175,7 @@ class HorarioController extends Controller
      *     path="/horarios/{id}",
      *     summary="Eliminar un horario",
      *     tags={"Horarios"},
+     *     security={{"jwt": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

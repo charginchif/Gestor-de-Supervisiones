@@ -116,9 +116,10 @@ return [
     */
     'security' => [
         'jwt' => [
-            'type' => 'apiKey',
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
             'description' => 'Enter token in format (Bearer {token})',
-            'name' => 'Authorization',
             'in' => 'header',
         ],
     ],
