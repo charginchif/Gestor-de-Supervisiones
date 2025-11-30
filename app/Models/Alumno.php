@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * @OA\Schema(
  *     title="Alumno",
- *     description="Modelo de Alumno",
+ *     description="Modelo de Alumno basado en la vista de perfil",
  *     @OA\Xml(
  *         name="Alumno"
  *     ),
@@ -21,13 +21,6 @@ use Illuminate\Support\Facades\DB;
  *             readOnly="true"
  *         ),
  *          @OA\Property(
- *             property="matricula",
- *             title="Matrícula",
- *             description="Matrícula del alumno",
- *             type="string",
- *             example="202012345"
- *         ),
- *          @OA\Property(
  *             property="id_usuario",
  *             title="ID de Usuario",
  *             description="Identificador único del usuario asociado",
@@ -35,25 +28,18 @@ use Illuminate\Support\Facades\DB;
  *             example=1
  *         ),
  *          @OA\Property(
- *             property="nombre",
- *             title="Nombre",
- *             description="Nombre del alumno",
+ *             property="matricula",
+ *             title="Matrícula",
+ *             description="Matrícula del alumno",
  *             type="string",
- *             example="Juan"
+ *             example="202012345"
  *         ),
- *           @OA\Property(
- *             property="apellido_paterno",
- *             title="Apellido Paterno",
- *             description="Apellido paterno del alumno",
+ *          @OA\Property(
+ *             property="nombre_completo",
+ *             title="Nombre Completo",
+ *             description="Nombre completo del alumno",
  *             type="string",
- *             example="Pérez"
- *         ),
- *           @OA\Property(
- *             property="apellido_materno",
- *             title="Apellido Materno",
- *             description="Apellido materno del alumno",
- *             type="string",
- *             example="García"
+ *             example="Juan Pérez García"
  *         ),
  *           @OA\Property(
  *             property="correo",
@@ -64,20 +50,6 @@ use Illuminate\Support\Facades\DB;
  *             example="juan.perez@example.com"
  *         ),
  *           @OA\Property(
- *             property="fecha_registro",
- *             title="Fecha de Registro",
- *             description="Fecha de registro del alumno",
- *             type="string",
- *             format="date-time"
- *         ),
- *           @OA\Property(
- *             property="ultimo_acceso",
- *             title="Último Acceso",
- *             description="Fecha del último acceso del alumno",
- *             type="string",
- *             format="date-time"
- *         ),
- *           @OA\Property(
  *             property="id_carrera",
  *             title="ID de Carrera",
  *             description="Identificador único de la carrera del alumno",
@@ -85,11 +57,11 @@ use Illuminate\Support\Facades\DB;
  *             example=1
  *         ),
  *           @OA\Property(
- *             property="id_rol",
- *             title="ID de Rol",
- *             description="Identificador único del rol del usuario",
- *             type="integer",
- *             example=1
+ *             property="carrera",
+ *             title="Carrera",
+ *             description="Nombre de la carrera del alumno",
+ *             type="string",
+ *             example="Ingeniería en Sistemas Computacionales"
  *         )
  *     }
  * )
@@ -108,13 +80,15 @@ class Alumno extends Model
     // La vista no maneja created_at / updated_at
     public $timestamps = false;
 
-    // Campos asignables si llegas a mapear lecturas masivas (no se usan para insert/update)
+    // Campos que corresponden a la vista
     protected $fillable = [
-        'id_alumno', 'matricula',
-        'id_usuario', 'nombre', 'apellido_paterno', 'apellido_materno', 'correo',
-        'fecha_registro', 'ultimo_acceso',
+        'id_alumno',
+        'id_usuario',
+        'matricula',
+        'nombre_completo',
+        'correo',
         'id_carrera',
-        'id_rol'
+        'carrera',
     ];
 
     // --- Relaciones útiles (lectura) ---

@@ -44,10 +44,11 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
     $router->delete('planteles/{id}', 'PlantelController@destroy');
 
     // Gestión de alumnos
-    $router->get('alumnos', 'UsuarioController@indexAlumnos');  
+    $router->get('alumnos', 'UsuarioController@indexAlumnos');
     $router->post('alumnos', 'UsuarioController@storeAlumno');
     $router->get('alumnos/{id}', 'UsuarioController@showAlumno');
     $router->put('alumnos/{id}', 'UsuarioController@updateAlumno');
+    $router->delete('alumnos/{id}', 'UsuarioController@destroyAlumno');
 
     // Gestión de docentes
     $router->get('docentes', 'UsuarioController@indexDocentes');
@@ -214,10 +215,12 @@ $router->group(['middleware' => ['auth.jwt', 'role:administrador']], function ()
 
 $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () use ($router) {
     // Gestión de alumnos
-    $router->get('coordinador-alumnos', 'UsuarioController@indexAlumnos');
     $router->post('coordinador-alumnos', 'UsuarioController@storeAlumno');
     $router->get('coordinador-alumnos/{id}', 'UsuarioController@showAlumno');
     $router->put('coordinador-alumnos/{id}', 'UsuarioController@updateAlumno');
+
+    //Obtener la lista de alumnos de las carreras que coordina
+    $router->get('coordinador/alumnos', 'CoordinadorController@getAlumnosCoordinados');
 
     // Gestión de docentes
     $router->get('coordinador-docentes', 'UsuarioController@indexDocentes');

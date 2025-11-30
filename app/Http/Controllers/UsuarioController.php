@@ -586,6 +586,63 @@ class UsuarioController extends Controller
     }
    
     /**
+     * @OA\Delete(
+     *     path="/alumnos/{id}",
+     *     summary="Eliminar un alumno",
+     *     tags={"Alumnos"},
+     *     security={{"jwt":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del alumno a eliminar",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Alumno eliminado exitosamente."
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="No tienes permiso para eliminar este alumno."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Alumno no encontrado."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el alumno."
+     *     )
+     * )
+     */
+    public function destroyAlumno($id)
+    {
+        $user = Auth::user();
+        $rol = strtolower($user->rol->nombre);
+
+        $alumno = Alumno::find($id);
+
+        if (!$alumno) {
+            return RespuestaAPI::error('Alumno no encontrado', 404);
+        }
+
+        if ($rol === 'coordinador') {
+            $carreraIds = $this->getCarrerasDelCoordinador($user->id);
+            if (!in_array($alumno->id_carrera, $carreraIds)) {
+                return RespuestaAPI::error('No tienes permiso para eliminar este alumno.', 403);
+            }
+        }
+
+        try {
+            DB::statement('CALL sp_eliminar_usuario(?)', [$alumno->id_usuario]);
+            return RespuestaAPI::exito('Alumno eliminado exitosamente', null, 200);
+        } catch (\Exception $e) {
+            return RespuestaAPI::error('Error al eliminar el alumno: ' . $e->getMessage(), 500);
+        }
+    }
+   
+    /**
      * ===================================================================
      * Métodos para la Gestión de Docentes
      * ===================================================================

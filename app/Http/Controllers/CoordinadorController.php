@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coordinador;
+use App\Models\Alumno;
+use App\Models\VwAlumnoPerfil;
 use App\Utils\RespuestaAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -244,6 +246,33 @@ class CoordinadorController extends UsuarioController
             return RespuestaAPI::exito('Coordinador eliminado exitosamente', null, 200);
         } catch (\Exception $e) {
             return RespuestaAPI::error('Error al eliminar el coordinador: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function getAlumnosCoordinados(Request $request)
+    {
+        try {
+            // 1. Get Authenticated Coordinator to ensure the user has the right role
+            $user = auth()->user();
+            if (!$user) {
+                return RespuestaAPI::error('Usuario no autenticado.', 401);
+            }
+
+            // Get the Coordinator record via the User's relationship
+            $coordinador = $user->coordinador;
+
+            if (!$coordinador) {
+                return RespuestaAPI::error('Coordinador no encontrado para el usuario autenticado.', 404);
+            }
+
+            // 2. Get all students from the view, as requested.
+            $alumnos = VwAlumnoPerfil::all();
+
+            return RespuestaAPI::exito('Lista de todos los alumnos', $alumnos);
+
+        } catch (\Exception $e) {
+            Log::error("Error al obtener alumnos: " . $e->getMessage());
+            return RespuestaAPI::error('Error interno del servidor al obtener alumnos: ' . $e->getMessage(), 500);
         }
     }
 

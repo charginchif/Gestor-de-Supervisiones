@@ -107,6 +107,11 @@ class PlanEstudioController extends Controller
 
         $grouped = [];
         foreach ($planEstudio as $item) {
+            if (!property_exists($item, 'id_carrera') || !property_exists($item, 'id_modalidad')) {
+                // Log a warning or handle this case as appropriate for your application
+                // For now, we will skip this item as it lacks the necessary grouping keys
+                continue;
+            }
             $key = $item->id_carrera . '-' . $item->id_modalidad;
             if (!isset($grouped[$key])) {
                 $grouped[$key] = [

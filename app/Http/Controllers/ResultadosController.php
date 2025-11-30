@@ -29,7 +29,7 @@ class ResultadosController extends Controller
     public function getResultadosSupervision()
     {
         try {
-            $resultados = DB::table('vw_supervision_rubro_porcentaje')->get();
+            $resultados = DB::table('vw_supervision_resumen')->get();
             return RespuestaAPI::exito('Resultados de la supervisión', $resultados);
         } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener los resultados de la supervisión: ' . $e->getMessage(), 500);
@@ -58,7 +58,7 @@ class ResultadosController extends Controller
     public function getResultadosEvaluacion()
     {
         try {
-            $resultados = DB::table('vw_eval_docente_porcentaje_total')->get();
+            $resultados = DB::table('vw_supervision_calificacion')->get();
             return RespuestaAPI::exito('Resultados de la evaluación docente', $resultados);
         } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener los resultados de la evaluación docente: ' . $e->getMessage(), 500);
