@@ -94,8 +94,7 @@ class SolicitudInscripcion extends Model
      */
     protected $fillable = [
         'id_alumno',
-        'id_grupo',
-        'estado',
+        'id_grupo'
     ];
 
     /**
@@ -103,7 +102,7 @@ class SolicitudInscripcion extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = false;
 
     /**
      * Get the student that owns the request.

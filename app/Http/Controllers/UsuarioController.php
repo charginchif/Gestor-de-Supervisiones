@@ -547,7 +547,7 @@ class UsuarioController extends Controller
             'correo'           => [
                 'sometimes',
                 'email',
-                \Illuminate\Validation\Rule::unique('usuario', 'correo')->ignore($docente->id_usuario, 'id'),
+                \Illuminate\Validation\Rule::unique('usuario', 'correo')->ignore($alumno->id_usuario, 'id'),
             ],
             'contrasena'       => 'sometimes|string|min:8',
             'matricula'        => 'sometimes|string|max:15|unique:alumno,matricula,' . $id . ',id_alumno',

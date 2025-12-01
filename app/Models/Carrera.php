@@ -40,4 +40,9 @@ class Carrera extends Model
         'nombre',
         'id_incorporacion',
     ];
+
+    public function coordinadores()
+    {
+        return $this->belongsToMany(Coordinador::class, 'carrera_coordinador', 'id_carrera', 'id_coordinador');
+    }
 }

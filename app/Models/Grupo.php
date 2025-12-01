@@ -118,4 +118,9 @@ class Grupo extends Model
         'id_carrera',
         'codigo_inscripcion',
     ];
+
+    public function carrera()
+    {
+        return $this->belongsTo(Carrera::class, 'id_carrera');
+    }
 }

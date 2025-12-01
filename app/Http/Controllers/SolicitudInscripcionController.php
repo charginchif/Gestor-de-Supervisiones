@@ -32,14 +32,14 @@ class SolicitudInscripcionController extends Controller
     public function index()
     {
         $coordinador = Auth::user();
-        $gruposCoordinador = DB::table('carrera_coordinador')->join('grupo', 'carrera_coordinador.id_carrera', '=', 'grupo.id_carrera')->where('carrera_coordinador.id_coordinador', $coordinador->id)->pluck('grupo.id_grupo');
 
-        $solicitudes = SolicitudInscripcion::with(['alumno', 'grupo'])
-            ->whereIn('id_grupo', $gruposCoordinador)
-            ->where('estado', 'pendiente')
+        $solicitudes = SolicitudInscripcion::with('alumno', 'grupo')
+            ->whereHas('grupo', function ($query) use ($coordinador) {
+                $query->where('id_coordinador', $coordinador->id);
+            })
             ->get();
-        
-        return RespuestaAPI::success($solicitudes, 'Solicitudes obtenidas correctamente');
+
+        return RespuestaAPI::success($solicitudes, 'Solicitudes obtenidas correctamente.');
     }
 
     /**

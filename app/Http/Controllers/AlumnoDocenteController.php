@@ -200,6 +200,7 @@ class AlumnoDocenteController extends Controller
             // Busca el alumno correspondiente al usuario autenticado
             $alumno = DB::table('vw_alumno_perfil')->where('id_usuario', $idUsuario)->first();
 
+            //No es error 404 si no se encuentra el alumno, ya que puede que el usuario no sea un alumno
             if (!$alumno) {
                 return RespuestaAPI::error('No se encontró el alumno correspondiente al usuario autenticado.', 404);
             }
@@ -213,16 +214,16 @@ class AlumnoDocenteController extends Controller
             ]);
 
             // El procedimiento devuelve un array con un objeto de resultado, lo extraemos.
-            $datosResultado = $resultadoInscripcion[0] ?? null;
+            $datosResultado = $resultadoInscripcion ?? null;
 
-            return RespuestaAPI::exito('Inscripción al grupo exitosa.', $datosResultado);
+            return RespuestaAPI::exito('Solicitud para inscribirse al grupo exitosa.', $datosResultado);
 
         } catch (QueryException $e) {
             // Capturar errores específicos de la base de datos (ej. SIGNAL SQLSTATE '45000')
-            $errorMessage = $e->errorInfo[2] ?? 'Error en la base de datos al inscribir al grupo.';
+            $errorMessage = $e->errorInfo[2] ?? 'Error en la base de datos al solicitar inscribirse al grupo.';
             return RespuestaAPI::error($errorMessage, 400);
         } catch (\Exception $e) {
-            return RespuestaAPI::error('Ocurrió un error al inscribir al grupo.', 500, ['details' => $e->getMessage()]);
+            return RespuestaAPI::error('Ocurrió un error al solicitar inscribirse al grupo.', 500, ['details' => $e->getMessage()]);
         }
     }
 }
