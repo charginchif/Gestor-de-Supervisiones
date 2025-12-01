@@ -70,6 +70,7 @@ class PlanEstudioController extends Controller
             $key = $item->id_carrera . '-' . $item->id_modalidad;
             if (!isset($grouped[$key])) {
                 $grouped[$key] = [
+                    'id' => $item->id_plan_estudio,
                     'id_carrera' => $item->id_carrera,
                     'id_modalidad' => $item->id_modalidad,
                     'nombre_modalidad' => $modalidades[$item->id_modalidad] ?? null,
