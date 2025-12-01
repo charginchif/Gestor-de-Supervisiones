@@ -642,11 +642,7 @@ class UsuarioController extends Controller
         }
     }
    
-    /**
-     * ===================================================================
-     * Métodos para la Gestión de Docentes
-     * ===================================================================
-     
+
     /**
      * @OA\Get(
      *     path="/docentes",
@@ -857,33 +853,16 @@ class UsuarioController extends Controller
         if (!$docente) {
             return RespuestaAPI::error('Docente no encontrado', 404);
         }
-        
-        // ... (validation rules remain the same) ...
 
         try {
-            $contrasenaHash = $request->has('contrasena') && $request->input('contrasena')
-                ? Hash::make($request->input('contrasena'))
-                : ($docente->usuario ? $docente->usuario->contrasena : null); 
-            
-            // If the user associated with the docente somehow doesn't exist,
-            // we cannot update their password. This case should ideally not happen
-            // if a docente always has an associated user.
-            if (!$docente->usuario && $request->has('contrasena')) {
-                 return RespuestaAPI::error('No se puede actualizar la contraseña: Usuario asociado no encontrado.', 500);
-            }
-            // If there's no associated user and no new password, $contrasenaHash will be null.
-            // The stored procedure must be able to handle a null password to not update it.
-
-
             DB::statement(
-                'CALL sp_actualizar_docente(?, ?, ?, ?, ?, ?, ?)',
+                'CALL sp_actualizar_docente(?, ?, ?, ?, ?, ?)',
                 [
-                    $docente->id_usuario, // Pass id_usuario as the first argument
+                    $id, // Pass id_usuario as the first argument
                     $request->input('nombre', $docente->nombre),
                     $request->input('apellido_paterno', $docente->apellido_paterno),
                     $request->input('apellido_materno', $docente->apellido_materno),
                     $request->input('correo', $docente->correo),
-                    $contrasenaHash,
                     $request->input('grado_academico', $docente->grado_academico),
                 ]
             );
