@@ -220,7 +220,7 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->put('coordinador-alumnos/{id}', 'UsuarioController@updateAlumno');
 
     //Obtener la lista de alumnos de las carreras que coordina
-    $router->get('coordinador/alumnos', 'CoordinadorController@getAlumnosCoordinados');
+    $router->get('coordinador-alumnos', 'CoordinadorController@getAlumnosCoordinados');
 
     // Gestión de docentes
     $router->get('coordinador-docentes', 'UsuarioController@indexDocentes');
