@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Utils\RespuestaAPI;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
 
 class CarreraController extends Controller
@@ -34,7 +35,17 @@ class CarreraController extends Controller
     public function index()
     {
         try {
-            $carreras = DB::select('SELECT * FROM vw_admin_carreras');
+            $user = Auth::user();
+            
+            // Si el usuario es coordinador, solo devolver sus carreras asignadas
+            if ($user && $user->id_rol == 3) { // 3 es el rol de coordinador
+                $query = 'SELECT * FROM vw_coord_carreras WHERE id_coordinador = ?';
+                $carreras = DB::select($query, [$user->id_usuario]);
+            } else {
+                // Si es administrador u otro rol, devolver todas las carreras
+                $carreras = DB::select('SELECT * FROM vw_admin_carreras');
+            }
+            
             return RespuestaAPI::exito('Listado de carreras', $carreras);
         } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener las carreras: ' . $e->getMessage(), 500);
@@ -72,7 +83,20 @@ class CarreraController extends Controller
     public function show($id)
     {
         try {
-            $carrera = DB::select('SELECT * FROM vw_admin_carreras WHERE id_carrera = ?', [$id]);
+            $user = Auth::user();
+            $query = 'SELECT * FROM vw_admin_carreras WHERE id_carrera = ?';
+            $params = [$id];
+            
+            // Si el usuario es coordinador, agregar filtro para validar que es su carrera
+            if ($user && $user->id_rol == 3) { // 3 es el rol de coordinador
+                // Usar la vista de coordinador y filtrar por coordinador
+                $query = 'SELECT c.* FROM vw_admin_carreras c ' .
+                         'INNER JOIN vw_coord_carreras cc ON c.id_carrera = cc.id_carrera ' .
+                         'WHERE c.id_carrera = ? AND cc.id_coordinador = ?';
+                $params = [$id, $user->id_usuario];
+            }
+            
+            $carrera = DB::select($query, $params);
             if (empty($carrera)) {
                 return RespuestaAPI::error('Carrera no encontrada', 404);
             }
@@ -174,6 +198,22 @@ class CarreraController extends Controller
         ]);
 
         try {
+            $user = Auth::user();
+            
+            // Si el usuario es coordinador, validar que sea su carrera
+            if ($user && $user->id_rol == 3) { // 3 es el rol de coordinador
+                $carrera = DB::select(
+                    'SELECT c.* FROM vw_admin_carreras c ' .
+                    'INNER JOIN vw_coord_carreras cc ON c.id_carrera = cc.id_carrera ' .
+                    'WHERE c.id_carrera = ? AND cc.id_coordinador = ?',
+                    [$id, $user->id_usuario]
+                );
+                
+                if (empty($carrera)) {
+                    return RespuestaAPI::error('No tienes permiso para actualizar esta carrera', 403);
+                }
+            }
+            
             DB::statement(
                 'CALL sp_carrera_actualizar(?, ?)',
                 [$id, $request->input('nombre')]
@@ -222,6 +262,22 @@ class CarreraController extends Controller
     public function destroy($id)
     {
         try {
+            $user = Auth::user();
+            
+            // Si el usuario es coordinador, validar que sea su carrera
+            if ($user && $user->id_rol == 3) { // 3 es el rol de coordinador
+                $carrera = DB::select(
+                    'SELECT c.* FROM vw_admin_carreras c ' .
+                    'INNER JOIN vw_coord_carreras cc ON c.id_carrera = cc.id_carrera ' .
+                    'WHERE c.id_carrera = ? AND cc.id_coordinador = ?',
+                    [$id, $user->id_usuario]
+                );
+                
+                if (empty($carrera)) {
+                    return RespuestaAPI::error('No tienes permiso para eliminar esta carrera', 403);
+                }
+            }
+            
             DB::statement('CALL sp_carrera_eliminar(?)', [$id]);
             return RespuestaAPI::exito('Carrera eliminada exitosamente', null, 200);
 
