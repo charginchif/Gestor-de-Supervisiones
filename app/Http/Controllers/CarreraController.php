@@ -38,16 +38,17 @@ class CarreraController extends Controller
         try {
             $user = Auth::user();
             
+            
             // Si el usuario es coordinador, solo devolver sus carreras asignadas
             if ($user) {
                 $rolCoordinador = CatRol::where('nombre', 'coordinador')->first();
                 
                 if ($rolCoordinador && $user->id_rol == $rolCoordinador->id) {
                     // Obtener el ID del coordinador desde la relación de usuario
-                    $coordinador = DB::table('coordinador')->where('id_usuario', $user->id_usuario)->first();
-                    
+                    $coordinador = DB::table('coordinador')->where('usuario_id', $user->id)->first();
                     if ($coordinador) {
                         $query = 'SELECT * FROM vw_coord_carreras WHERE id_coordinador = ?';
+                        
                         $carreras = DB::select($query, [$coordinador->id_coordinador]);
                     } else {
                         $carreras = [];
