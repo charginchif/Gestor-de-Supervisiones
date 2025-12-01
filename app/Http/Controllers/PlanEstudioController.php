@@ -119,9 +119,11 @@ class PlanEstudioController extends Controller
                 // For now, we will skip this item as it lacks the necessary grouping keys
                 continue;
             }
-            $key = $item->id_carrera . '-' . $item->id_modalidad;
+
+            $key = $item->id_carrera . '-' . $item->id_modalidad;            
             if (!isset($grouped[$key])) {
                 $grouped[$key] = [
+                    'id' => $item->id_plan_estudio,
                     'id_carrera' => $item->id_carrera,
                     'id_modalidad' => $item->id_modalidad,
                     'materias' => [],
