@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Utils\RespuestaAPI;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ResultadosController extends Controller
 {
@@ -26,10 +27,18 @@ class ResultadosController extends Controller
      *     )
      * )
      */
-    public function getResultadosSupervision()
+    public function getResultadosSupervision(Request $request)
     {
+        $this->validate($request, [
+            'anio' => 'required|integer',
+            'periodo' => 'required|string|max:1',
+        ]);
+        $anio = $request->input('anio');
+        $periodo = (string) $request->input('periodo');
         try {
-            $resultados = DB::table('vw_supervision_resumen')->get();
+            $resultados = DB::table('vw_supervision_resumen')
+                ->where('anio', $anio)
+                ->where('periodo', $periodo)->get();
             return RespuestaAPI::exito('Resultados de la supervisión', $resultados);
         } catch (\Illuminate\Database\QueryException $e) {
             return RespuestaAPI::error('Error al obtener los resultados de la supervisión: ' . $e->getMessage(), 500);

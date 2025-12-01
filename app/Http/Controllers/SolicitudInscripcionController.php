@@ -10,7 +10,6 @@ use App\Utils\RespuestaAPI;
 use Illuminate\Support\Facades\DB;
 
 
-
 class SolicitudInscripcionController extends Controller
 {
     /**

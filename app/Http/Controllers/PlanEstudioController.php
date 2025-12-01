@@ -60,6 +60,11 @@ class PlanEstudioController extends Controller
             return RespuestaAPI::error('No se encontró un plan de estudio para la carrera especificada', 204);
         }
 
+        // Obtener nombres de modalidad
+        $modalidades = DB::table('cat_modalidad')->pluck('nombre', 'id');
+        // Obtener nombres de materia
+        $materias = DB::table('materia')->pluck('nombre', 'id_materia');
+
         $grouped = [];
         foreach ($planEstudio as $item) {
             $key = $item->id_carrera . '-' . $item->id_modalidad;
@@ -67,11 +72,13 @@ class PlanEstudioController extends Controller
                 $grouped[$key] = [
                     'id_carrera' => $item->id_carrera,
                     'id_modalidad' => $item->id_modalidad,
+                    'nombre_modalidad' => $modalidades[$item->id_modalidad] ?? null,
                     'materias' => [],
                 ];
             }
             $grouped[$key]['materias'][] = [
                 'id_materia' => $item->id_materia,
+                'nombre_materia' => $materias[$item->id_materia] ?? null,
                 'id_cat_nivel' => $item->id_cat_nivel,
             ];
         }
