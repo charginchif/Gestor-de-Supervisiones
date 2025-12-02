@@ -252,6 +252,8 @@ $router->group(['middleware' => ['auth.jwt', 'role:coordinador']], function () u
     $router->put('coordinador-carreras/{id}', 'CarreraController@update');
     $router->delete('coordinador-carreras/{id}', 'CarreraController@destroy');
 
+    //Agregar un coordinador-carrera-plantel; veria sus propias carreras
+
     // Gestión de agenda de supervisión
     $router->group(['prefix' => 'coordinador-agenda-supervision'], function () use ($router) {
         $router->get('/', 'AgendaSupervisionController@index');

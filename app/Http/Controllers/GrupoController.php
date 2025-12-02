@@ -59,19 +59,10 @@ class GrupoController extends Controller
      */
     public function index(Request $request)
     {
-        $grupos = DB::table('grupo')
-            ->leftJoin('plan_estudio', 'grupo.id_plan_estudio', '=', 'plan_estudio.id_plan_estudio')
-            ->leftJoin('carrera', 'plan_estudio.id_carrera', '=', 'carrera.id_carrera')
-            ->leftJoin('cat_modalidad', 'plan_estudio.id_modalidad', '=', 'cat_modalidad.id')
-            ->select(
-                'grupo.id_grupo',
-                'grupo.acronimo as grupo',
-                'carrera.nombre as carrera',
-                'cat_modalidad.nombre as modalidad'
-            )
-            ->distinct()
+        $grupos = DB::table('vw_grupo_plan_estudio')
             ->get();
 
+        // Si el usuario es coordinador, filtrar los grupos por los que coordina    
         return RespuestaAPI::exito('Lista de grupos', $grupos);
     }
 
